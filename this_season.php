@@ -1,0 +1,361 @@
+<?php
+include('top.php');
+$script_name = "this_season.php?".$_SERVER['QUERY_STRING'];
+
+echo "<form method='post' action='".$script_name."'>\n";
+echo "<table align='center' width='100%' cellspacing='0' cellpadding='0' border='0' bgcolor='#".(BORDERCOLOR)."'>\n";
+echo "<tr>\n";
+echo "<td>\n";
+echo "<table width='100%' cellspacing='1' cellpadding='5' border='0'>\n";
+echo "<tr>\n";
+echo "<td align='center' bgcolor='#".(CELLBGCOLORBOTTOM)."'>\n";
+echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
+switch (PRINT_DATE) {
+	case 1: {
+		$how_to_print_in_report = "%d.%m.%Y";
+	}
+	break;
+	case 2: {
+		$how_to_print_in_report = "%m.%d.%Y";
+	}
+	break;
+	case 3: {
+		$how_to_print_in_report = "%b %D %Y";
+	}
+	break;
+}
+$default_season_id = DEFAULT_SEASON;
+$wins = 0;
+$draws = 0;
+$loses = 0;
+$goals_for = 0;
+$goals_against = 0;
+$streak = 0;
+$streak2 = 0;
+$record = 0;
+$record2 = 0;
+$get_matches = mysqli_query($db_connect, "SELECT
+	M.MatchDateTime AS match_date,
+	M.MatchGoals AS goals,
+	M.MatchGoalsOpponent AS goals_o
+	FROM team_matches M
+	WHERE M.MatchSeasonID  = '".$default_season_id."'
+	AND M.MatchGoals IS NOT NULL
+	AND M.MatchGoalsOpponent IS NOT NULL
+	ORDER BY match_date
+") or die(mysqli_error());
+$k = 0;
+while ($data_m = mysqli_fetch_array($get_matches)) {
+	if ($k > 0) {
+		if ($track == 1) {
+			if ($streak >= $record) {
+				$record = $streak;
+			}
+		}
+		if ($track2 == 1) {
+			if ($streak2 >= $record2) {
+				$record2 = $streak2;
+			}
+		}
+	}
+	if ($data_m['goals'] > $data_m['goals_o']) {
+		$wins = $wins + 1;
+		$streak++;
+		$streak2++;
+		$t = $k + 1;
+		$track = 1;
+		$track2 = 1;
+	}
+	if ($data_m['goals'] == $data_m['goals_o']) {
+		$draws = $draws + 1;
+		$streak=0;
+		$track = 0;
+		$track2 = 1;
+		$streak2++;
+	}
+	if ($data_m['goals'] < $data_m['goals_o']) {
+		$loses = $loses + 1;
+		$streak=0;
+		$streak2=0;
+		$track = 0;
+		$track2 = 0;
+	}
+	$goals_for = $goals_for + $data_m['goals'];
+	$goals_against = $goals_against + $data_m['goals_o'];
+	$k = $k +1;
+}
+$all = $wins + $loses + $draws;
+if ($all == 0) {
+	$win_pros = round(0, 2);
+	$draw_pros = round(0, 2);
+	$lose_pros = round(0, 2);
+} else {
+	$win_pros = round(100*($wins/$all), 2);
+	$draw_pros = round(100*($draws/$all), 2);
+	$lose_pros = round(100*($loses/$all), 2);
+}
+mysqli_free_result($get_matches);
+
+echo "<tr>\n";
+echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."' colspan='4'><b>".$locale_this_season."</b></td>\n";
+echo "</tr>\n";
+$query = mysqli_query($db_connect, "SELECT
+	CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
+	P.PlayerID AS player_id,
+	P.PlayerNumber AS player_number,
+	P.PlayerPublish AS publish,
+	P.PlayerPositionID AS player_position_id,
+	DATE_FORMAT(P.PlayerDOB, '$how_to_print_in_report') AS player_dob
+	FROM (team_players P, team_seasons S)
+	WHERE P.PlayerID = S.SeasonPlayerID
+	AND S.SeasonID = '$default_season_id'
+	AND P.PlayerInSquadList = '1'
+	ORDER BY player_position_id, player_number
+") or die(mysqli_error());
+$n_of_players = mysqli_num_rows($query);
+$all_players_txt = "";
+$k = 1;
+while ($data = mysqli_fetch_array($query)) {
+	if ($data['publish'] == 1) {
+		$all_players_txt .= "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>";
+	} else {
+		$all_players_txt .= "".$data['player_name']."</a>";
+	}
+	if ($k<$n_of_players) {
+		$all_players_txt .= "<br>\n";
+	}
+	$k++;
+}
+mysqli_free_result($query);
+
+$query = mysqli_query($db_connect, "SELECT
+	CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
+	P.PlayerID AS player_id,
+	P.PlayerPublish AS publish,
+	DATE_FORMAT(P.PlayerDOB, '$how_to_print_in_report') AS player_dob
+	FROM (team_players P, team_seasons S)
+	WHERE P.PlayerID = S.SeasonPlayerID
+	AND S.SeasonID = '$default_season_id'
+	AND P.PlayerDOB NOT LIKE '1900-01-01'
+	ORDER BY player_dob DESC LIMIT 1
+") or die(mysqli_error());
+$data = mysqli_fetch_array($query);
+if ($data['publish'] == 1) {
+	$youngest = "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a> (".$locale_dob.": ".$data['player_dob'].")";
+} else {
+	$youngest = "".$data['player_name']."";
+}
+mysqli_free_result($query);
+
+$query = mysqli_query($db_connect, "SELECT
+	CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
+	P.PlayerID AS player_id,
+	P.PlayerPublish AS publish,
+	DATE_FORMAT(P.PlayerDOB, '$how_to_print_in_report') AS player_dob
+	FROM (team_players P, team_seasons S)
+	WHERE P.PlayerID = S.SeasonPlayerID
+	AND S.SeasonID = '$default_season_id'
+	AND P.PlayerDOB NOT LIKE '1900-01-01'
+	ORDER BY player_dob ASC LIMIT 1
+") or die(mysqli_error());
+$data = mysqli_fetch_array($query);
+if ($data['publish'] == 1) {
+	$oldest = "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a> (".$locale_dob.": ".$data['player_dob'].")";
+} else {
+	$oldest = "".$data['player_name']."";
+}
+mysqli_free_result($query);
+
+echo "<tr>\n";
+echo "<td align='left' valign='top' colspan='2'>".$locale_all_players." (".$n_of_players.")<br><a href='stats.php'>".$locale_see_player_stats."</a></td>\n";
+echo "<td align='left' valign='middle' colspan='2'>".$all_players_txt."</td>\n";
+echo "</tr>\n";
+echo "<tr>\n";
+echo "<td align='left' valign='middle' colspan='2'>".$locale_youngest_player."</td>\n";
+echo "<td align='left' valign='middle' colspan='2'>".$youngest."</td>\n";
+echo "</tr>\n";
+echo "<tr>\n";
+echo "<td align='left' valign='middle' colspan='2'>".$locale_oldest_player."</td>\n";
+echo "<td align='left' valign='middle' colspan='2'>".$oldest."</td>\n";
+echo "</tr>\n";
+echo "<tr>\n";
+echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."' colspan='4'><b>".$locale_match_stats."</b></td>\n";
+echo "</tr>\n";
+echo "<tr>\n";
+echo "<td align='left' valign='middle' colspan='2'>".$locale_all_matches."</td>\n";
+echo "<td align='left' valign='middle' colspan='2'>".$all."</td>\n";
+echo "</tr>\n";
+echo "<tr>\n";
+echo "<td align='left' valign='middle' colspan='2'>".$locale_wins."</td>\n";
+echo "<td align='left' valign='middle' colspan='2'>".$wins."</td>\n";
+echo "</tr>\n";
+echo "<tr>\n";
+echo "<td align='left' valign='middle' colspan='2'>".$locale_draws."</td>\n";
+echo "<td align='left' valign='middle' colspan='2'>".$draws."</td>\n";
+echo "</tr>\n";
+echo "<tr>\n";
+echo "<td align='left' valign='middle' colspan='2'>".$locale_loses."</td>\n";
+echo "<td align='left' valign='middle' colspan='2'>".$loses."</td>\n";
+echo "</tr>\n";
+echo "<tr>\n";
+echo "<td align='left' valign='middle' colspan='2'>".$locale_goals_for."</td>\n";
+echo "<td align='left' valign='middle' colspan='2'>".$goals_for."</td>\n";
+echo "</tr>\n";
+echo "<tr>\n";
+echo "<td align='left' valign='middle' colspan='2'>".$locale_goals_against."</td>\n";
+echo "<td align='left' valign='middle' colspan='2'>".$goals_against."</td>\n";
+echo "</tr>\n";
+echo "<tr>\n";
+echo "<td align='left' valign='middle' colspan='2'>".$locale_longest_winning_streak."</td>\n";
+echo "<td align='left' valign='middle' colspan='2'>".$record."</td>\n";
+echo "</tr>\n";
+echo "<tr>\n";
+echo "<td align='left' valign='middle' colspan='2'>".$locale_longest_undef_streak."</td>\n";
+echo "<td align='left' valign='middle' colspan='2'>".$record2."</td>\n";
+echo "</tr>\n";
+echo "<tr>\n";
+echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."' colspan='4'><b>".$locale_matchematical."</b></td>\n";
+echo "</tr>\n";
+echo "<tr>\n";
+echo "<td align='left' valign='middle' colspan='2'>".$locale_winning_percent."</td>\n";
+echo "<td align='left' valign='middle' colspan='2'>".$win_pros." %</td>\n";
+echo "</tr>\n";
+echo "<tr>\n";
+echo "<td align='left' valign='middle' colspan='2'>".$locale_draw_percent."</td>\n";
+echo "<td align='left' valign='middle' colspan='2'>".$draw_pros." %</td>\n";
+echo "</tr>\n";
+echo "<tr>\n";
+echo "<td align='left' valign='middle' colspan='2'>".$locale_losing_percent."</td>\n";
+echo "<td align='left' valign='middle' colspan='2'>".$lose_pros." %</td>\n";
+echo "</tr>\n";
+echo "<tr>\n";
+echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."' colspan='4'><b>".$locale_individual_leaders."</b></td>\n";
+echo "</tr>\n";
+echo "<tr>\n";
+echo "<td align='left' valign='middle' colspan='2'>".$locale_most_goals."</td>\n";
+echo "<td align='left' valign='middle' colspan='2'>";
+$query = mysqli_query($db_connect, "SELECT
+	P.PlayerID AS player_id,
+	CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
+	COUNT( G.GoalPlayerID ) AS goals
+	FROM team_seasons S
+	LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID
+	AND S.SeasonID LIKE '$default_season_id'
+	LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID
+	LEFT OUTER JOIN team_goals G ON G.GoalPlayerID = S.SeasonPlayerID
+	AND G.GoalMatchID = M.MatchID AND G.GoalOwn = '0'
+	WHERE P.PlayerID != ''
+	GROUP BY player_id
+	ORDER BY goals DESC, player_name
+") or die(mysqli_error());
+$i = 0;
+$check = 92892892892;
+while ($data = mysqli_fetch_array($query)) {
+	if ($i==0) {
+		echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>";
+		$best_goal_amount = $data['goals'];
+	}
+	if ($i > 0) {
+		if ($data['goals'] == $check) {
+			echo ", <a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>";
+		} else {
+			break;
+		}
+	}
+	$check = $data['goals'];
+	$i++;
+}
+echo " (".$best_goal_amount.")";
+mysqli_free_result($query);
+
+echo "</td>\n";
+echo "</tr>\n";
+echo "<tr>\n";
+echo "<td align='left' valign='middle' colspan='2'>".$locale_most_booked."</td>\n";
+echo "<td align='left' valign='middle' colspan='2'>";
+$query = mysqli_query($db_connect, "SELECT
+	P.PlayerID AS player_id,
+	CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
+	COUNT( Y.YellowCardPlayerID ) AS yellows
+	FROM team_seasons S
+	LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID
+	AND S.SeasonID = '$default_season_id'
+	LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID
+	LEFT OUTER JOIN team_yellow_cards Y ON Y.YellowCardPlayerID = S.SeasonPlayerID
+	AND Y.YellowCardMatchID = M.MatchID
+	WHERE P.PlayerID != ''
+	GROUP BY player_id
+	ORDER BY yellows DESC, player_name
+") or die(mysqli_error());
+$i = 0;
+$check = 92892892892;
+while ($data = mysqli_fetch_array($query)) {
+	if ($i==0) {
+		echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>";
+		$most_yellows = $data['yellows'];
+	}
+	if ($i > 0) {
+		if ($data['yellows'] == $check) {
+			echo ", <a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>";
+		} else {
+			break;
+		}
+	}
+	$check = $data['yellows'];
+	$i++;
+}
+echo " (".$most_yellows.")";
+mysqli_free_result($query);
+
+echo "</td>\n";
+echo "</tr>\n";
+echo "<tr>\n";
+echo "<td align='left' valign='middle' colspan='2'>".$locale_most_appearances."</td>\n";
+echo "<td align='left' valign='middle' colspan='2'>";
+$query = mysqli_query($db_connect, "SELECT
+	P.PlayerID AS player_id,
+	CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
+	COUNT( A.AppearancePlayerID ) AS appearance
+	FROM team_seasons S
+	LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID
+	AND S.SeasonID = '$default_season_id'
+	LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID
+	LEFT OUTER JOIN team_appearances A ON A.AppearancePlayerID = S.SeasonPlayerID
+	AND A.AppearanceMatchID = M.MatchID
+	WHERE P.PlayerID != ''
+	GROUP BY player_id
+	ORDER BY appearance DESC, player_name
+") or die(mysqli_error());
+$i = 0;
+$check = 92892892892;
+while ($data = mysqli_fetch_array($query)) {
+	if ($i==0) {
+		echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>";
+		$most_appearances = $data['appearance'];
+	}
+	if ($i > 0) {
+		if ($data['appearance'] == $check) {
+			echo ", <a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>";
+		} else {
+			break;
+		}
+	}
+	$check = $data['appearance'];
+	$i++;
+}
+echo " (".$most_appearances.")";
+mysqli_free_result($query);
+
+echo "</td>\n";
+echo "</tr>\n";
+echo "</table>\n";
+echo "</td>\n";
+echo "</tr>\n";
+echo "</table>\n";
+echo "</td>\n";
+echo "</tr>\n";
+echo "</table>\n";
+echo "</form>\n";
+
+include('bottom.php');
+?>
