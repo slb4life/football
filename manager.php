@@ -86,18 +86,24 @@ echo "<tr>\n";
 echo "<td align='center' valign='top' width='20%'>\n";
 
 if (file_exists($image_url) || file_exists($image_url2)) {
-	if (file_exists($image_url))
+	if (file_exists($image_url)) {
 		echo "<img src='".$image_url."'>";
-	if (file_exists($image_url2))
+	}
+	if (file_exists($image_url2)) {
 		echo "<img src='".$image_url2."'>";
-	if (file_exists($image_url3))
+	}
+	if (file_exists($image_url3)) {
 		echo "<br><br><img src='".$image_url3."'>";
-	if (file_exists($image_url4))
+	}
+	if (file_exists($image_url4)) {
 		echo "<br><br><img src='".$image_url4."'>";
-	if (file_exists($image_url5))
+	}
+	if (file_exists($image_url5)) {
 		echo "<br><br><img src='".$image_url5."'>";
-	if (file_exists($image_url6))
-	echo "<br><br><img src='".$image_url6."'>";
+	}
+	if (file_exists($image_url6)) {
+		echo "<br><br><img src='".$image_url6."'>";
+	}
 } else {
 	echo "<img src='images/no_image.png'>";
 }
@@ -106,7 +112,10 @@ echo "<td align='left' valign='top' width='50%'>".$manager_data['manager_descrip
 echo "<td align='left' valign='top' width='30%'>";
 echo "<p><b>".$locale_pob."</b><br>".$manager_data['manager_pob']."</p>";
 echo "<p><b>".$locale_dob."</b><br>".$manager_data['manager_dob']."</p>";
-echo "<p><b>".$locale_playing_career."</b><br>".$manager_data['manager_pc']."</p>";
+
+if ($manager_data['manager_pc'] == 1) {
+	echo "<p><b>".$locale_playing_career."</b><br>".$manager_data['manager_pc']."</p>";
+}
 
 if ($manager_data['manager_player_id'] != 0) {
 	$get_player_info = mysqli_query($db_connect, "SELECT
