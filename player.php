@@ -1014,7 +1014,7 @@ if (!isset($season_id_page)) {
 			COUNT( G.GoalPlayerID ) AS goals
 			FROM team_goals G
 			WHERE G.GoalOwn = '0'
-			AND G.GoalMatchID = '$data['id']'
+			AND G.GoalMatchID = '$data[id]'
 			AND G.GoalPlayerID = '$id';
 		") or die(mysqli_error());
 		$goals_temp = mysqli_fetch_array($get_goals);
