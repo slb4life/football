@@ -45,7 +45,6 @@ $get_details = mysqli_query($db_connect, "SELECT
 	M.MatchReferee AS match_referee,
 	M.MatchAttendance AS match_attendance,
 	M.MatchStadium AS match_stadium,
-	M.MatchReport AS match_report,
 	M.MatchAdditionalType AS match_additional_type,
 	MT.MatchTypeName AS match_type_name,
 	M.MatchPublishOptional AS publish_optional,
