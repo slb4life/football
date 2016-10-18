@@ -16,8 +16,6 @@ switch (PRINT_DATE) {
 	}
 	break;
 }
-
-$default_season_query = DEFAULT_SEASON;
 echo "<form method='post' action='change.php'>\n";
 echo "<input name='script_name' type='hidden' value='".$script_name."'>\n";
 echo "<table align='center' width='100%' cellspacing='0' cellpadding='0' border='0' bgcolor='#".(BORDERCOLOR)."'>\n";
@@ -40,36 +38,37 @@ echo "<td align='center' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><b>".$l
 echo "<td align='center' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><b>".$locale_height."</b></td>\n";
 echo "<td align='center' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><b>".$locale_weight."</b></td>\n";
 echo "</tr>\n";
+$default_season = DEFAULT_SEASON;
 $query = mysqli_query($db_connect, "SELECT
 	CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
 	P.PlayerID AS player_id,
 	P.PlayerPublish AS publish,
-	P.PlayerPositionID AS player_position,
-	DATE_FORMAT(P.PlayerDOB, '".$how_to_print_in_report."') AS player_dob,
+	P.PlayerPositionID AS player_position_id,
+	DATE_FORMAT(P.PlayerDOB, '$how_to_print_in_report') AS player_dob,
 	P.PlayerPOB AS player_pob,
 	P.PlayerHeight AS player_height,
 	P.PlayerWeight AS player_weight,
 	P.PlayerNumber AS player_number
 	FROM (team_players P, team_seasons S)
 	WHERE P.PlayerID = S.SeasonPlayerID
-	AND S.SeasonID = '".$default_season_query."'
+	AND S.SeasonID = '$default_season'
 	AND P.PlayerInSquadList = '1'
-	ORDER BY P.PlayerPositionID, P.PlayerNumber
+	ORDER BY player_position_id, player_number
 ") or die(mysqli_error());
 echo "<tr>\n";
 echo "<td colspan='5' align='left' bgcolor='".(CELLBGCOLORTOP)."'><b>".$locale_goalkeepers."</b></td>\n";
 echo "</tr>\n";
 $j = 1;
-$player_position = 1;
+$player_position_id = 1;
 while ($data = mysqli_fetch_array($query)) {
 	if ($j % 2 == 0) {
 		$bg_color = BGCOLOR1;
 	} else {
 		$bg_color = BGCOLOR2;
 	}
-	if ($data['player_position'] > 1) {
-		if ($player_position != $data['player_position']) {
-			switch ($player_position) {
+	if ($data['player_position_id'] > 1) {
+		if ($player_position_id != $data['player_position_id']) {
+			switch ($player_position_id) {
 				case 1: {
 					echo "<tr>\n";
 					echo "<td colspan='5' align='left' bgcolor='".(CELLBGCOLORTOP)."'><b>".$locale_defenders."</b></td>\n";
@@ -93,6 +92,7 @@ while ($data = mysqli_fetch_array($query)) {
 	}
 	echo "<tr>\n";
 	echo "<td align='left' valign='middle' bgcolor='".$bg_color."'>";
+
 	if ($data['publish'] == 1) {
 		echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a> (#".$data['player_number'].")";
 	} else {
@@ -105,7 +105,7 @@ while ($data = mysqli_fetch_array($query)) {
 	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>".$data['player_weight']."</td>\n";
 	echo "</tr>\n";
 	$j++;
-	$player_position = $data['player_position'];
+	$player_position_id = $data['player_position_id'];
 }
 mysqli_free_result($query);
 

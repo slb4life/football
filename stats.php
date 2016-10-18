@@ -606,16 +606,6 @@ if ($get_total > 0) {
 }
 echo "</table>\n";
 if (SHOW_STAFF == 1) {
-	if ($default_season_id == 0) {
-		$tdefault_season_id = '%';
-	} else {
-		$tdefault_season_id = $default_season_id;
-	}
-	if ($default_match_type_id == 0) {
-		$tdefault_match_type_id = '%';
-	} else {
-		$tdefault_match_type_id = $default_match_type_id;
-	}
 	echo "<br><br>\n";
 	echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
 	echo "<tr align='left' bgcolor='#".(CELLBGCOLORTOP)."'>\n";
@@ -629,6 +619,17 @@ if (SHOW_STAFF == 1) {
 	echo "<td align='center' valign='middle'><b>".$locale_draw_proc_short."</b></td>\n";
 	echo "<td align='center' valign='middle'><b>".$locale_lose_proc_short."</b></td>\n";
 	echo "</tr>\n";
+
+	if ($default_season_id == 0) {
+		$tdefault_season_id = '%';
+	} else {
+		$tdefault_season_id = $default_season_id;
+	}
+	if ($default_match_type_id == 0) {
+		$tdefault_match_type_id = '%';
+	} else {
+		$tdefault_match_type_id = $default_match_type_id;
+	}
 	$query = mysqli_query($db_connect, "SELECT
 		M.ManagerID AS id,
 		M.ManagerLastName AS manager_last_name,

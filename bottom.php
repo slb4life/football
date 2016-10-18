@@ -12,15 +12,15 @@ if (SHOW_NEXT_MATCH == 1) {
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORBOTTOM)."'>";
-	$range = 1;
+	$max_show = 1;
 	$get_matches = mysqli_query($db_connect, "SELECT
 		O.OpponentName AS opponent_name,
 		O.OpponentID AS opponent_id,
-		M.MatchPlaceID AS match_place,
-		M.MatchID AS id,
+		M.MatchPlaceID AS match_place_id,
+		M.MatchID AS match_id,
 		MT.MatchTypeName AS match_type_name,
 		M.MatchAdditionalType AS match_additional_type,
-		DATE_FORMAT(M.MatchDateTime, '".$how_to_print_in_report."') AS match_date
+		DATE_FORMAT(M.MatchDateTime, '$how_to_print_in_report') AS match_date
 		FROM (team_matches M, team_match_types MT, team_opponents O)
 		WHERE M.MatchDateTime > CURRENT_TIMESTAMP
 		AND MT.MatchTypeID = M.MatchTypeID
@@ -50,18 +50,18 @@ if (SHOW_NEXT_MATCH == 1) {
 			$query = mysqli_query($db_connect, "SELECT							
 				P.PreviewText AS preview_text
 				FROM team_previews P
-				WHERE P.PreviewMatchID = ".$data['id']."
+				WHERE P.PreviewMatchID = $data[match_id]
 				LIMIT 1
 			") or die(mysqli_error());
 			$pr_data = mysqli_fetch_array($query);
 			if ($pr_data['preview_text'] != '') {
-				echo "<a href='preview.php?id=".$data['id']."'>".$locale_preview."</a><br><br>\n";
+				echo "<a href='preview.php?id=".$data['match_id']."'>".$locale_preview."</a><br><br>\n";
 			} else {
 				echo "<br>";
 			}									
 			mysqli_free_result($query);
 
-			if ($data['match_place'] == 1) {
+			if ($data['match_place_id'] == 1) {
 				if ($logos == 1) {
 					echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
 					echo "<tr>\n";
@@ -89,7 +89,7 @@ if (SHOW_NEXT_MATCH == 1) {
 					echo "</tr>\n";
 					echo "</table>\n";
 				}
-			} else if ($data['match_place'] == 2) {
+			} else if ($data['match_place_id'] == 2) {
 				if ($logos == 1) {
 					echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
 					echo "<tr>\n";
@@ -152,25 +152,25 @@ if (SHOW_TOP_SCORERS == 1) {
 	} else {
 		$tdefault_season_id = $default_season_id;
 	}
-	$range = 5;
+	$max_show = 5;
 	$query = mysqli_query($db_connect, "SELECT
-		P.PlayerID AS id,
+		P.PlayerID AS player_id,
 		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
 		COUNT( G.GoalPlayerID ) AS goals
 		FROM team_seasons S
-		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID LIKE '".$tdefault_season_id."'
-		LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID LIKE '".$tdefault_match_type_id."'
+		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID LIKE '$tdefault_season_id'
+		LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID LIKE '$tdefault_match_type_id'
 		LEFT OUTER JOIN team_goals G ON G.GoalPlayerID = S.SeasonPlayerID AND G.GoalMatchID = M.MatchID AND G.GoalOwn = '0'
 		WHERE P.PlayerID != ''
-		GROUP BY id
+		GROUP BY player_id
 		ORDER BY goals DESC, player_name
-		LIMIT ".$range."
+		LIMIT $max_show
 	") or die(mysqli_error());
 	$i = 1;
 	while ($data = mysqli_fetch_array($query)) {
 		echo "<tr>\n";
 		echo "<td align='right' valign='top'>".$i.".</td>\n";
-		echo "<td align='left' valign='top' width='90%'><a href='player.php?id=".$data['id']."'>".$data['player_name']."</a></td>\n";
+		echo "<td align='left' valign='top' width='90%'><a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a></td>\n";
 		echo "<td align='right' valign='top'>".$data['goals']."</td>\n";
 		echo "</tr>\n";
 		$i++;
@@ -198,6 +198,7 @@ if (SHOW_TOP_APPS == 1) {
 	echo "<tr>\n";
 	echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORBOTTOM)."'>\n";
 	echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
+
 	if ($default_match_type_id == 0) {
 		$tdefault_match_type_id = '%';
 	} else {
@@ -208,26 +209,26 @@ if (SHOW_TOP_APPS == 1) {
 	} else {
 		$tdefault_season_id = $default_season_id;
 	}
-	$range = 5;
+	$max_show = 5;
 	$query = mysqli_query($db_connect, "SELECT
-		P.PlayerID AS id,
+		P.PlayerID AS player_id,
 		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
-		COUNT( A.AppearancePlayerID ) AS apps
+		COUNT( A.AppearancePlayerID ) AS appearance_player_id
 		FROM team_seasons S
 		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID LIKE '$tdefault_season_id'
 		LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID LIKE '$tdefault_match_type_id'
 		LEFT OUTER JOIN team_appearances A ON A.AppearancePlayerID = S.SeasonPlayerID AND A.AppearanceMatchID = M.MatchID
 		WHERE P.PlayerID != ''
-		GROUP BY id
-		ORDER BY apps DESC, player_name
-		LIMIT ".$range."
+		GROUP BY player_id
+		ORDER BY appearance_player_id DESC, player_name
+		LIMIT $max_show
 	") or die(mysqli_error());
 	$i = 1;
 	while ($data = mysqli_fetch_array($query)) {
 		echo "<tr>\n";
 		echo "<td align='right' valign='top'>".$i.".</td>\n";
-		echo "<td align='left' valign='top' width='90%'><a href='player.php?id=".$data['id']."'>".$data['player_name']."</a></td>\n";
-		echo "<td align='right' valign='top'>".$data['apps']."</td>\n";
+		echo "<td align='left' valign='top' width='90%'><a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a></td>\n";
+		echo "<td align='right' valign='top'>".$data['appearance_player_id']."</td>\n";
 		echo "</tr>\n";
 		$i++;
 	}
@@ -264,25 +265,25 @@ if (SHOW_TOP_BOOKINGS == 1) {
 	} else {
 		$tdefault_season_id = $default_season_id;
 	}
-	$range = 5;
+	$max_show = 5;
 	$query = mysqli_query($db_connect, "SELECT
-		P.PlayerID AS id,
+		P.PlayerID AS player_id,
 		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
 		COUNT( Y.YellowCardPlayerID ) AS yellows
 		FROM team_seasons S
-		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID LIKE '".$tdefault_season_id."'
-		LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID LIKE '".$tdefault_match_type_id."'
+		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID LIKE '$tdefault_season_id'
+		LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID LIKE '$tdefault_match_type_id'
 		LEFT OUTER JOIN team_yellow_cards Y ON Y.YellowCardPlayerID = S.SeasonPlayerID AND Y.YellowCardMatchID = M.MatchID
 		WHERE P.PlayerID != ''
-		GROUP BY id
+		GROUP BY player_id
 		ORDER BY yellows DESC, player_name
-		LIMIT ".$range."
+		LIMIT $max_show
 	") or die(mysqli_error());
 	$i = 1;
 	while ($data = mysqli_fetch_array($query)) {
 		echo "<tr>\n";
 		echo "<td align='right' valign='top'>".$i.".</td>\n";
-		echo "<td align='left' valign='top' width='90%'><a href='player.php?id=".$data['id']."'>".$data['player_name']."</a></td>\n";
+		echo "<td align='left' valign='top' width='90%'><a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a></td>\n";
 		echo "<td align='right' valign='top'>".$data['yellows']."</td>\n";
 		echo "</tr>\n";
 		$i++;
