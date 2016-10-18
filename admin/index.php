@@ -1,7 +1,7 @@
 <?php
 if (file_exists('installer.php')) {
 	echo "Remove installer.php from your Server.";
-	exit();
+	//exit();
 }
 
 include('user.php');

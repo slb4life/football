@@ -41,84 +41,84 @@ echo "<tr>\n";
 echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."' colspan='5'><b>".$locale_biggest_win."</b></td>\n";
 echo "</tr>\n";
 $query = mysqli_query($db_connect, "SELECT
-	MAX( MatchGoals - MatchGoalsOpponent ) AS maxwin,
-	MAX( MatchGoalsOpponent - MatchGoals ) AS maxloss,
-	MAX( MatchGoals + MatchGoalsOpponent ) AS maxgoals
+	MAX( MatchGoals - MatchGoalsOpponent ) AS max_wins,
+	MAX( MatchGoalsOpponent - MatchGoals ) AS max_losses,
+	MAX( MatchGoals + MatchGoalsOpponent ) AS max_goals
 	FROM team_matches
-	WHERE MatchGoals IS NOT NULL AND
-	MatchTypeID LIKE '".$default_match_type_id."'
+	WHERE MatchGoals IS NOT NULL
+	AND MatchTypeID LIKE '$default_match_type_id'
 ") or die(mysqli_error());
 $data = mysqli_fetch_array($query);
-$maxwin = $data['maxwin'];
-$maxloss = $data['maxloss'];
-$maxaggregate = $data['maxgoals'];
+$max_wins = $data['max_wins'];
+$max_losses = $data['max_losses'];
+$max_goals = $data['max_goals'];
 mysqli_free_result($query);
 
 $query = mysqli_query($db_connect, "SELECT
-	MAX( MatchGoals - MatchGoalsOpponent ) AS maxwin,
-	MAX( MatchGoalsOpponent - MatchGoals ) AS maxloss
+	MAX( MatchGoals - MatchGoalsOpponent ) AS max_wins,
+	MAX( MatchGoalsOpponent - MatchGoals ) AS max_losses
 	FROM team_matches
-	WHERE MatchGoals IS NOT NULL AND
-	MatchPlaceID = '1' AND
-	MatchNeutral = '0' AND
-	MatchTypeID LIKE '".$default_match_type_id."'
+	WHERE MatchGoals IS NOT NULL
+	AND MatchPlaceID = '1'
+	AND MatchNeutral = '0'
+	AND MatchTypeID LIKE '$default_match_type_id'
 ") or die(mysqli_error());
 $data = mysqli_fetch_array($query);
-$maxhomewin = $data['maxwin'];
-$maxhomeloss = $data['maxloss'];
+$max_home_wins = $data['max_wins'];
+$max_home_losses = $data['max_losses'];
 mysqli_free_result($query);
 
 $query = mysqli_query($db_connect, "SELECT
-	MAX( MatchGoals - MatchGoalsOpponent ) AS maxwin,
-	MAX( MatchGoalsOpponent - MatchGoals ) AS maxloss
+	MAX( MatchGoals - MatchGoalsOpponent ) AS max_wins,
+	MAX( MatchGoalsOpponent - MatchGoals ) AS max_losses
 	FROM team_matches
-	WHERE MatchGoals IS NOT NULL AND
-	MatchPlaceID = '2' AND
-	MatchNeutral = '0' AND
-	MatchTypeID LIKE '".$default_match_type_id."'
+	WHERE MatchGoals IS NOT NULL
+	AND MatchPlaceID = '2'
+	AND MatchNeutral = '0'
+	AND MatchTypeID LIKE '$default_match_type_id'
 ") or die(mysqli_error());
 $data = mysqli_fetch_array($query);
-$maxawaywin = $data['maxwin'];
-$maxawayloss = $data['maxloss'];
+$max_away_wins = $data['max_wins'];
+$max_away_losses = $data['max_losses'];
 mysqli_free_result($query);
 
 $query = mysqli_query($db_connect, "SELECT
-	MAX( MatchGoals + MatchGoalsOpponent ) AS maxdraw
+	MAX( MatchGoals + MatchGoalsOpponent ) AS max_draws
 	FROM team_matches
-	WHERE MatchGoals IS NOT NULL AND
-	MatchGoals =  MatchGoalsOpponent AND
-	MatchTypeID LIKE '".$default_match_type_id."'
+	WHERE MatchGoals IS NOT NULL
+	AND MatchGoals =  MatchGoalsOpponent
+	AND MatchTypeID LIKE '$default_match_type_id'
 ") or die(mysqli_error());
 $data = mysqli_fetch_array($query);
-$maxdraw = $data['maxdraw'];
+$max_draws = $data['max_draws'];
 mysqli_free_result($query);
 
 $query = mysqli_query($db_connect, "SELECT
-	MAX( MatchAttendance ) AS maxatt,
-	MIN( MatchAttendance ) AS minatt
+	MAX( MatchAttendance ) AS max_atts,
+	MIN( MatchAttendance ) AS min_atts
 	FROM team_matches
-	WHERE MatchGoals IS NOT NULL AND
-	MatchPlaceID = '1' AND
-	MatchNeutral = '0' AND
-	MatchTypeID LIKE '".$default_match_type_id."'
+	WHERE MatchGoals IS NOT NULL
+	AND MatchPlaceID = '1'
+	AND MatchNeutral = '0'
+	AND MatchTypeID LIKE '$default_match_type_id'
 ") or die(mysqli_error());
 $data = mysqli_fetch_array($query);
-$maxhomeatt = $data['maxatt'];
-$minhomeatt = $data['minatt'];
+$maxhomeatt = $data['max_atts'];
+$min_home_atts = $data['min_atts'];
 mysqli_free_result($query);
 
 $query = mysqli_query($db_connect, "SELECT
-	MAX( MatchAttendance ) AS maxatt,
-	MIN( MatchAttendance ) AS minatt
+	MAX( MatchAttendance ) AS max_atts,
+	MIN( MatchAttendance ) AS min_atts
 	FROM team_matches
-	WHERE MatchGoals IS NOT NULL AND
-	MatchPlaceID = '2' AND
-	MatchNeutral = '0' AND
-	MatchTypeID LIKE '".$default_match_type_id."'
+	WHERE MatchGoals IS NOT NULL
+	AND MatchPlaceID = '2'
+	AND MatchNeutral = '0'
+	AND MatchTypeID LIKE '$default_match_type_id'
 ") or die(mysqli_error());
 $data = mysqli_fetch_array($query);
-$maxawayatt = $data['maxatt'];
-$minawayatt = $data['minatt'];
+$max_away_atts = $data['max_atts'];
+$min_away_atts = $data['min_atts'];
 mysqli_free_result($query);
 
 $query = mysqli_query($db_connect, "SELECT
@@ -126,20 +126,20 @@ $query = mysqli_query($db_connect, "SELECT
 	M.MatchGoals AS goals,
 	M.MatchGoalsOpponent AS goals_opponent,
 	M.MatchPublish AS publish,
-	DATE_FORMAT(M.MatchDateTime, '".$how_to_print_in_report."') AS time,
-	MT.MatchTypeName AS type,
-	M.MatchAdditionalType AS add_type,
-	O.OpponentName AS opponent,
-	O.OpponentID AS oppid,
-	M.MatchPlaceID AS place,
+	DATE_FORMAT(M.MatchDateTime, '$how_to_print_in_report') AS match_date,
+	MT.MatchTypeName AS match_type_name,
+	M.MatchAdditionalType AS match_additional_type,
+	O.OpponentName AS opponent_name,
+	O.OpponentID AS opponent_id,
+	M.MatchPlaceID AS match_place_id,
 	M.MatchNeutral AS neutral
 	FROM team_matches M, team_match_types MT, team_opponents O
-	WHERE M.MatchTypeID = MT.MatchTypeID AND
-	(M.MatchGoals - M.MatchGoalsOpponent) = '".$maxwin."' AND
-	M.MatchTypeID LIKE '".$default_match_type_id."' AND
-	M.MatchOpponent = O.OpponentID AND
-	M.MatchGoals > M.MatchGoalsOpponent
-	ORDER BY M.MatchDateTime DESC
+	WHERE M.MatchTypeID = MT.MatchTypeID
+	AND (M.MatchGoals - M.MatchGoalsOpponent) = '$max_wins'
+	AND M.MatchTypeID LIKE '$default_match_type_id'
+	AND M.MatchOpponent = O.OpponentID
+	AND M.MatchGoals > M.MatchGoalsOpponent
+	ORDER BY match_date DESC
 ") or die(mysqli_error());
 $j = 1;
 while ($data = mysqli_fetch_array($query)) {
@@ -149,26 +149,26 @@ while ($data = mysqli_fetch_array($query)) {
 		$bg_color = BGCOLOR2;
 	}
 	echo "<tr>\n";
-	echo "<td align='left' valign='middle' bgcolor='".$bg_color."'>".$data['time']."</td>\n";
+	echo "<td align='left' valign='middle' bgcolor='".$bg_color."'>".$data['match_date']."</td>\n";
 	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
-	if ($data['add_type'] == '') {
-		echo "".$data['type']."";
+	if ($data['match_additional_type'] == '') {
+		echo "".$data['match_type_name']."";
 	} else {
-		echo "".$data['type']." / ".$data['add_type']."";
+		echo "".$data['match_type_name']." / ".$data['match_additional_type']."";
 	}
 	echo "</td>\n";
 	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
 	if ($data['neutral'] == 1) {
 		echo "".$locale_neutral_short."";
 	} else {
-		if ($data['place'] == 1) {
+		if ($data['match_place_id'] == 1) {
 			echo "".$locale_home_short."";
-		} else if ($data['place'] == 2) {
+		} else if ($data['match_place_id'] == 2) {
 			echo "".$locale_away_short."";
 		}
 	}
 	echo "</td>\n";
-	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'><a href='opponent.php?id=".$data['oppid']."'>".$data['opponent']."</a></td>\n";
+	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'><a href='opponent.php?id=".$data['opponent_id']."'>".$data['opponent_name']."</a></td>\n";
 	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
 	if ($data['goals'] == NULL || $data['goals_opponent'] == NULL) {
 		echo "&nbsp;";
@@ -198,20 +198,20 @@ $query = mysqli_query($db_connect, "SELECT
 	M.MatchGoals AS goals,
 	M.MatchGoalsOpponent AS goals_opponent,
 	M.MatchPublish AS publish,
-	DATE_FORMAT(M.MatchDateTime, '".$how_to_print_in_report."') AS time,
-	MT.MatchTypeName AS type,
-	M.MatchAdditionalType AS add_type,
-	O.OpponentName AS opponent,
-	O.OpponentID AS oppid,
-	M.MatchPlaceID AS place,
+	DATE_FORMAT(M.MatchDateTime, '$how_to_print_in_report') AS match_date,
+	MT.MatchTypeName AS match_type_name,
+	M.MatchAdditionalType AS match_additional_type,
+	O.OpponentName AS opponent_name,
+	O.OpponentID AS opponent_id,
+	M.MatchPlaceID AS match_place_id,
 	M.MatchNeutral AS neutral
 	FROM team_matches M, team_match_types MT, team_opponents O
-	WHERE M.MatchTypeID = MT.MatchTypeID AND
-	(M.MatchGoalsOpponent - M.MatchGoals) = '".$maxloss."' AND
-	M.MatchTypeID LIKE '".$default_match_type_id."' AND
-	M.MatchOpponent = O.OpponentID AND
-	M.MatchGoals < M.MatchGoalsOpponent
-	ORDER BY M.MatchDateTime DESC
+	WHERE M.MatchTypeID = MT.MatchTypeID
+	AND (M.MatchGoalsOpponent - M.MatchGoals) = '$max_losses'
+	AND M.MatchTypeID LIKE '$default_match_type_id'
+	AND M.MatchOpponent = O.OpponentID
+	AND M.MatchGoals < M.MatchGoalsOpponent
+	ORDER BY match_date DESC
 ") or die(mysqli_error());
 $j = 1;
 while ($data = mysqli_fetch_array($query)) {
@@ -221,26 +221,26 @@ while ($data = mysqli_fetch_array($query)) {
 		$bg_color = BGCOLOR2;
 	}
 	echo "<tr>\n";
-	echo "<td align='left' valign='middle' bgcolor='".$bg_color."'>".$data['time']."</td>\n";
+	echo "<td align='left' valign='middle' bgcolor='".$bg_color."'>".$data['match_date']."</td>\n";
 	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
-	if ($data['add_type'] == '') {
-		echo "".$data['type']."";
+	if ($data['match_additional_type'] == '') {
+		echo "".$data['match_type_name']."";
 	} else {
-		echo "".$data['type']." / ".$data['add_type']."";
+		echo "".$data['match_type_name']." / ".$data['match_additional_type']."";
 	}
 	echo "</td>\n";
 	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
 	if ($data['neutral'] == 1) {
 		echo "".$locale_neutral_short."";
 	} else {
-		if ($data['place'] == 1) {
+		if ($data['match_place_id'] == 1) {
 			echo "".$locale_home_short."";
-		} else if ($data['place'] == 2) {
+		} else if ($data['match_place_id'] == 2) {
 			echo "".$locale_away_short."";
 		}
 	}
 	echo "</td>\n";
-	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'><a href='opponent.php?id=".$data['oppid']."'>".$data['opponent']."</a></td>\n";
+	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'><a href='opponent.php?id=".$data['opponent_id']."'>".$data['opponent_name']."</a></td>\n";
 	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
 	if ($data['goals'] == NULL || $data['goals_opponent'] == NULL) {
 		echo "&nbsp;";
@@ -270,19 +270,19 @@ $query = mysqli_query($db_connect, "SELECT
 	M.MatchGoals AS goals,
 	M.MatchGoalsOpponent AS goals_opponent,
 	M.MatchPublish AS publish,
-	DATE_FORMAT(M.MatchDateTime, '".$how_to_print_in_report."') AS time,
-	MT.MatchTypeName AS type,
-	M.MatchAdditionalType AS add_type,
-	O.OpponentName AS opponent,
-	O.OpponentID AS oppid,
-	M.MatchPlaceID AS place,
+	DATE_FORMAT(M.MatchDateTime, '$how_to_print_in_report') AS match_date,
+	MT.MatchTypeName AS match_type_name,
+	M.MatchAdditionalType AS match_additional_type,
+	O.OpponentName AS opponent_name,
+	O.OpponentID AS opponent_id,
+	M.MatchPlaceID AS match_place_id,
 	M.MatchNeutral AS neutral
 	FROM team_matches M, team_match_types MT, team_opponents O
-	WHERE M.MatchTypeID = MT.MatchTypeID AND
-	M.MatchTypeID LIKE '".$default_match_type_id."' AND
-	M.MatchOpponent = O.OpponentID AND
-	(M.MatchGoals + M.MatchGoalsOpponent) = '".$maxaggregate."'
-	ORDER BY M.MatchDateTime DESC
+	WHERE M.MatchTypeID = MT.MatchTypeID
+	AND M.MatchTypeID LIKE '$default_match_type_id'
+	AND M.MatchOpponent = O.OpponentID
+	AND (M.MatchGoals + M.MatchGoalsOpponent) = '$max_goals'
+	ORDER BY match_date DESC
 ") or die(mysqli_error());
 $j = 1;
 while ($data = mysqli_fetch_array($query)) {
@@ -292,26 +292,26 @@ while ($data = mysqli_fetch_array($query)) {
 		$bg_color = BGCOLOR2;
 	}
 	echo "<tr>\n";
-	echo "<td align='left' valign='middle' bgcolor='".$bg_color."'>".$data['time']."</td>\n";
+	echo "<td align='left' valign='middle' bgcolor='".$bg_color."'>".$data['match_date']."</td>\n";
 	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
-	if ($data['add_type'] == '') {
-		echo "".$data['type']."";
+	if ($data['match_additional_type'] == '') {
+		echo "".$data['match_type_name']."";
 	} else {
-		echo "".$data['type']." / ".$data['add_type']."";
+		echo "".$data['match_type_name']." / ".$data['match_additional_type']."";
 	}
 	echo "</td>\n";
 	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
 	if ($data['neutral'] == 1) {
 		echo "".$locale_neutral_short."";
 	} else {
-		if ($data['place'] == 1) {
+		if ($data['match_place_id'] == 1) {
 			echo "".$locale_home_short."";
-		} else if ($data['place'] == 2) {
+		} else if ($data['match_place_id'] == 2) {
 			echo "".$locale_away_short."";
 		}
 	}
 	echo "</td>\n";
-	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'><a href='opponent.php?id=".$data['oppid']."'>".$data['opponent']."</a></td>\n";
+	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'><a href='opponent.php?id=".$data['opponent_id']."'>".$data['opponent_name']."</a></td>\n";
 	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
 	if ($data['goals'] == NULL || $data['goals_opponent'] == NULL) {
 		echo "&nbsp;";
@@ -341,21 +341,21 @@ $query = mysqli_query($db_connect, "SELECT
 	M.MatchGoals AS goals,
 	M.MatchGoalsOpponent AS goals_opponent,
 	M.MatchPublish AS publish,
-	DATE_FORMAT(M.MatchDateTime, '".$how_to_print_in_report."') AS time,
-	MT.MatchTypeName AS type,
-	M.MatchAdditionalType AS add_type,
-	O.OpponentName AS opponent,
-	O.OpponentID AS oppid,
-	M.MatchPlaceID AS place,
+	DATE_FORMAT(M.MatchDateTime, '$how_to_print_in_report') AS match_date,
+	MT.MatchTypeName AS match_type_name,
+	M.MatchAdditionalType AS match_additional_type,
+	O.OpponentName AS opponent_name,
+	O.OpponentID AS opponent_id,
+	M.MatchPlaceID AS match_place_id,
 	M.MatchNeutral AS neutral
 	FROM team_matches M, team_match_types MT, team_opponents O
-	WHERE M.MatchTypeID = MT.MatchTypeID AND
-	(M.MatchGoals - M.MatchGoalsOpponent) = '".$maxhomewin."' AND
-	M.MatchTypeID LIKE '".$default_match_type_id."' AND
-	M.MatchPlaceID = '1' AND M.MatchNeutral = '0' AND
-	M.MatchOpponent = O.OpponentID AND
-	M.MatchGoals > M.MatchGoalsOpponent
-	ORDER BY M.MatchDateTime DESC
+	WHERE M.MatchTypeID = MT.MatchTypeID
+	AND (M.MatchGoals - M.MatchGoalsOpponent) = '$max_home_wins'
+	AND M.MatchTypeID LIKE '$default_match_type_id'
+	AND M.MatchPlaceID = '1' AND M.MatchNeutral = '0'
+	AND M.MatchOpponent = O.OpponentID
+	AND M.MatchGoals > M.MatchGoalsOpponent
+	ORDER BY match_date DESC
 ") or die(mysqli_error());
 $j = 1;
 while ($data = mysqli_fetch_array($query)) {
@@ -365,26 +365,26 @@ while ($data = mysqli_fetch_array($query)) {
 		$bg_color = BGCOLOR2;
 	}
 	echo "<tr>\n";
-	echo "<td align='left' valign='middle' bgcolor='".$bg_color."'>".$data['time']."</td>\n";
+	echo "<td align='left' valign='middle' bgcolor='".$bg_color."'>".$data['match_date']."</td>\n";
 	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
-	if ($data['add_type'] == '') {
-		echo "".$data['type']."";
+	if ($data['match_additional_type'] == '') {
+		echo "".$data['match_type_name']."";
 	} else {
-		echo "".$data['type']." / ".$data['add_type']."";
+		echo "".$data['match_type_name']." / ".$data['match_additional_type']."";
 	}
 	echo "</td>\n";
 	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
 	if ($data['neutral'] == 1) {
 		echo "".$locale_neutral_short."";
 	} else {
-		if ($data['place'] == 1) {
+		if ($data['match_place_id'] == 1) {
 			echo "".$locale_home_short."";
-		} else if ($data['place'] == 2) {
+		} else if ($data['match_place_id'] == 2) {
 			echo "".$locale_away_short."";
 		}
 	}
 	echo "</td>\n";
-	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'><a href='opponent.php?id=".$data['oppid']."'>".$data['opponent']."</a></td>\n";
+	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'><a href='opponent.php?id=".$data['opponent_id']."'>".$data['opponent_name']."</a></td>\n";
 	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
 	if ($data['goals'] == NULL || $data['goals_opponent'] == NULL) {
 		echo "&nbsp;";
@@ -414,21 +414,21 @@ $query = mysqli_query($db_connect, "SELECT
 	M.MatchGoals AS goals,
 	M.MatchGoalsOpponent AS goals_opponent,
 	M.MatchPublish AS publish,
-	DATE_FORMAT(M.MatchDateTime, '".$how_to_print_in_report."') AS time,
-	MT.MatchTypeName AS type,
-	M.MatchAdditionalType AS add_type,
-	O.OpponentName AS opponent,
-	O.OpponentID AS oppid,
-	M.MatchPlaceID AS place,
+	DATE_FORMAT(M.MatchDateTime, '$how_to_print_in_report') AS match_date,
+	MT.MatchTypeName AS match_type_name,
+	M.MatchAdditionalType AS match_additional_type,
+	O.OpponentName AS opponent_name,
+	O.OpponentID AS opponent_id,
+	M.MatchPlaceID AS match_place_id,
 	M.MatchNeutral AS neutral
 	FROM team_matches M, team_match_types MT, team_opponents O
-	WHERE M.MatchTypeID = MT.MatchTypeID AND
-	(M.MatchGoalsOpponent - M.MatchGoals) = '".$maxhomeloss."' AND
-	M.MatchTypeID LIKE '".$default_match_type_id."' AND
-	M.MatchPlaceID = '1' AND M.MatchNeutral = '0' AND
-	M.MatchOpponent = O.OpponentID AND
-	M.MatchGoals < M.MatchGoalsOpponent
-	ORDER BY M.MatchDateTime DESC
+	WHERE M.MatchTypeID = MT.MatchTypeID
+	AND (M.MatchGoalsOpponent - M.MatchGoals) = 'max_home_losses'
+	AND M.MatchTypeID LIKE '$default_match_type_id'
+	AND M.MatchPlaceID = '1' AND M.MatchNeutral = '0'
+	AND M.MatchOpponent = O.OpponentID
+	AND M.MatchGoals < M.MatchGoalsOpponent
+	ORDER BY match_date DESC
 ") or die(mysqli_error());
 $j = 1;
 while ($data = mysqli_fetch_array($query)) {
@@ -438,26 +438,26 @@ while ($data = mysqli_fetch_array($query)) {
 		$bg_color = BGCOLOR2;
 	}
 	echo "<tr>\n";
-	echo "<td align='left' valign='middle' bgcolor='".$bg_color."'>".$data['time']."</td>\n";
+	echo "<td align='left' valign='middle' bgcolor='".$bg_color."'>".$data['match_date']."</td>\n";
 	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
-	if ($data['add_type'] == '') {
-		echo "".$data['type']."";
+	if ($data['match_additional_type'] == '') {
+		echo "".$data['match_type_name']."";
 	} else {
-		echo "".$data['type']." / ".$data['add_type']."";
+		echo "".$data['match_type_name']." / ".$data['match_additional_type']."";
 	}
 	echo "</td>\n";
 	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
 	if ($data['neutral'] == 1) {
 		echo "".$locale_neutral_short."";
 	} else {
-		if ($data['place'] == 1) {
+		if ($data['match_place_id'] == 1) {
 			echo "".$locale_home_short."";
-		} else if ($data['place'] == 2) {
+		} else if ($data['match_place_id'] == 2) {
 			echo "".$locale_away_short."";
 		}
 	}
 	echo "</td>\n";
-	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'><a href='opponent.php?id=".$data['oppid']."'>".$data['opponent']."</a></td>\n";
+	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'><a href='opponent.php?id=".$data['opponent_id']."'>".$data['opponent_name']."</a></td>\n";
 	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
 	if ($data['goals'] == NULL || $data['goals_opponent'] == NULL) {
 		echo "&nbsp;";
@@ -487,21 +487,21 @@ $query = mysqli_query($db_connect, "SELECT
 	M.MatchGoals AS goals,
 	M.MatchGoalsOpponent AS goals_opponent,
 	M.MatchPublish AS publish,
-	DATE_FORMAT(M.MatchDateTime, '".$how_to_print_in_report."') AS time,
-	MT.MatchTypeName AS type,
-	M.MatchAdditionalType AS add_type,
-	O.OpponentName AS opponent,
-	O.OpponentID AS oppid,
-	M.MatchPlaceID AS place,
+	DATE_FORMAT(M.MatchDateTime, '$how_to_print_in_report') AS match_date,
+	MT.MatchTypeName AS match_type_name,
+	M.MatchAdditionalType AS match_additional_type,
+	O.OpponentName AS opponent_name,
+	O.OpponentID AS opponent_id,
+	M.MatchPlaceID AS match_place_id,
 	M.MatchNeutral AS neutral
 	FROM team_matches M, team_match_types MT, team_opponents O
-	WHERE M.MatchTypeID = MT.MatchTypeID AND
-	(M.MatchGoals - M.MatchGoalsOpponent) = '".$maxawaywin."' AND
-	M.MatchTypeID LIKE '".$default_match_type_id."' AND
-	M.MatchPlaceID = '2' AND M.MatchNeutral = '0' AND
-	M.MatchOpponent = O.OpponentID AND
-	M.MatchGoals > M.MatchGoalsOpponent
-	ORDER BY M.MatchDateTime DESC
+	WHERE M.MatchTypeID = MT.MatchTypeID
+	AND (M.MatchGoals - M.MatchGoalsOpponent) = '$max_away_wins'
+	AND M.MatchTypeID LIKE '$default_match_type_id'
+	AND M.MatchPlaceID = '2' AND M.MatchNeutral = '0'
+	AND M.MatchOpponent = O.OpponentID
+	AND M.MatchGoals > M.MatchGoalsOpponent
+	ORDER BY match_date DESC
 ") or die(mysqli_error());
 $j = 1;
 while ($data = mysqli_fetch_array($query)) {
@@ -511,26 +511,26 @@ while ($data = mysqli_fetch_array($query)) {
 		$bg_color = BGCOLOR2;
 	}
 	echo "<tr>\n";
-	echo "<td align='left' valign='middle' bgcolor='".$bg_color."'>".$data['time']."</td>\n";
+	echo "<td align='left' valign='middle' bgcolor='".$bg_color."'>".$data['match_date']."</td>\n";
 	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
-	if ($data['add_type'] == '') {
-		echo "".$data['type']."";
+	if ($data['match_additional_type'] == '') {
+		echo "".$data['match_type_name']."";
 	} else {
-		echo "".$data['type']." / ".$data['add_type']."";
+		echo "".$data['match_type_name']." / ".$data['match_additional_type']."";
 	}
 	echo "</td>\n";
 	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
 	if ($data['neutral'] == 1) {
 		echo "".$locale_neutral_short."";
 	} else {
-		if ($data['place'] == 1) {
+		if ($data['match_place_id'] == 1) {
 			echo "".$locale_home_short."";
-		} else if ($data['place'] == 2) {
+		} else if ($data['match_place_id'] == 2) {
 			echo "".$locale_away_short."";
 		}
 	}
 	echo "</td>\n";
-	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'><a href='opponent.php?id=".$data['oppid']."'>".$data['opponent']."</a></td>\n";
+	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'><a href='opponent.php?id=".$data['opponent_id']."'>".$data['opponent_name']."</a></td>\n";
 	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
 	if ($data['goals'] == NULL || $data['goals_opponent'] == NULL) {
 		echo "&nbsp;";
@@ -560,21 +560,21 @@ $query = mysqli_query($db_connect, "SELECT
 	M.MatchGoals AS goals,
 	M.MatchGoalsOpponent AS goals_opponent,
 	M.MatchPublish AS publish,
-	DATE_FORMAT(M.MatchDateTime, '".$how_to_print_in_report."') AS time,
-	MT.MatchTypeName AS type,
-	M.MatchAdditionalType AS add_type,
-	O.OpponentName AS opponent,
-	O.OpponentID AS oppid,
-	M.MatchPlaceID AS place,
+	DATE_FORMAT(M.MatchDateTime, '$how_to_print_in_report') AS match_date,
+	MT.MatchTypeName AS match_type_name,
+	M.MatchAdditionalType AS match_additional_type,
+	O.OpponentName AS opponent_name,
+	O.OpponentID AS opponent_id,
+	M.MatchPlaceID AS match_place_id,
 	M.MatchNeutral AS neutral
 	FROM team_matches M, team_match_types MT, team_opponents O
-	WHERE M.MatchTypeID = MT.MatchTypeID AND
-	(M.MatchGoalsOpponent - M.MatchGoals) = '".$maxawayloss."' AND
-	M.MatchTypeID LIKE '".$default_match_type_id."' AND
-	M.MatchPlaceID = '2' AND M.MatchNeutral = '0' AND
-	M.MatchOpponent = O.OpponentID AND
-	M.MatchGoals < M.MatchGoalsOpponent
-	ORDER BY M.MatchDateTime DESC
+	WHERE M.MatchTypeID = MT.MatchTypeID
+	AND (M.MatchGoalsOpponent - M.MatchGoals) = '$max_away_losses'
+	AND M.MatchTypeID LIKE '$default_match_type_id'
+	AND M.MatchPlaceID = '2' AND M.MatchNeutral = '0'
+	AND M.MatchOpponent = O.OpponentID
+	AND M.MatchGoals < M.MatchGoalsOpponent
+	ORDER BY match_date DESC
 ") or die(mysqli_error());
 $j = 1;
 while ($data = mysqli_fetch_array($query)) {
@@ -584,26 +584,26 @@ while ($data = mysqli_fetch_array($query)) {
 		$bg_color = BGCOLOR2;
 	}
 	echo "<tr>\n";
-	echo "<td align='left' valign='middle' bgcolor='".$bg_color."'>".$data['time']."</td>\n";
+	echo "<td align='left' valign='middle' bgcolor='".$bg_color."'>".$data['match_date']."</td>\n";
 	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
-	if ($data['add_type'] == '') {
-		echo "".$data['type']."";
+	if ($data['match_additional_type'] == '') {
+		echo "".$data['match_type_name']."";
 	} else {
-		echo "".$data['type']." / ".$data['add_type']."";
+		echo "".$data['match_type_name']." / ".$data['match_additional_type']."";
 	}
 	echo "</td>\n";
 	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
 	if ($data['neutral'] == 1) {
 		echo "".$locale_neutral_short."";
 	} else {
-		if ($data['place'] == 1) {
+		if ($data['match_place_id'] == 1) {
 			echo "".$locale_home_short."";
-		} else if ($data['place'] == 2) {
+		} else if ($data['match_place_id'] == 2) {
 			echo "".$locale_away_short."";
 		}
 	}
 	echo "</td>\n";
-	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'><a href='opponent.php?id=".$data['oppid']."'>".$data['opponent']."</a></td>\n";
+	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'><a href='opponent.php?id=".$data['opponent_id']."'>".$data['opponent_name']."</a></td>\n";
 	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
 	if ($data['goals'] == NULL || $data['goals_opponent'] == NULL) {
 		echo "&nbsp;";
@@ -633,21 +633,21 @@ $query = mysqli_query($db_connect, "SELECT
 	M.MatchGoals AS goals,
 	M.MatchGoalsOpponent AS goals_opponent,
 	M.MatchPublish AS publish,
-	DATE_FORMAT(M.MatchDateTime, '".$how_to_print_in_report."') AS time,
-	MT.MatchTypeName AS type,
-	M.MatchAdditionalType AS add_type,
-	O.OpponentName AS opponent,
-	O.OpponentID AS oppid,
-	M.MatchPlaceID AS place,
+	DATE_FORMAT(M.MatchDateTime, '$how_to_print_in_report') AS match_date,
+	MT.MatchTypeName AS match_type_name,
+	M.MatchAdditionalType AS match_additional_type,
+	O.OpponentName AS opponent_name,
+	O.OpponentID AS opponent_id,
+	M.MatchPlaceID AS match_place_id,
 	M.MatchNeutral AS neutral
 	FROM team_matches M, team_match_types MT, team_opponents O
-	WHERE M.MatchTypeID = MT.MatchTypeID AND
-	M.MatchGoals = M.MatchGoalsOpponent AND
-	(M.MatchGoals + M.MatchGoalsOpponent) = '".$maxdraw."' AND
-	M.MatchTypeID LIKE '".$default_match_type_id."' AND
-	M.MatchOpponent = O.OpponentID AND
-	M.MatchGoals = M.MatchGoalsOpponent
-	ORDER BY M.MatchDateTime DESC
+	WHERE M.MatchTypeID = MT.MatchTypeID
+	AND M.MatchGoals = M.MatchGoalsOpponent
+	AND (M.MatchGoals + M.MatchGoalsOpponent) = '$max_draws'
+	AND M.MatchTypeID LIKE '$default_match_type_id'
+	AND M.MatchOpponent = O.OpponentID
+	AND M.MatchGoals = M.MatchGoalsOpponent
+	ORDER BY match_date DESC
 ") or die(mysqli_error());
 $j = 1;
 while ($data = mysqli_fetch_array($query)) {
@@ -657,26 +657,26 @@ while ($data = mysqli_fetch_array($query)) {
 		$bg_color = BGCOLOR2;
 	}
 	echo "<tr>\n";
-	echo "<td align='left' valign='middle' bgcolor='".$bg_color."'>".$data['time']."</td>\n";
+	echo "<td align='left' valign='middle' bgcolor='".$bg_color."'>".$data['match_date']."</td>\n";
 	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
-	if ($data['add_type'] == '') {
-		echo "".$data['type']."";
+	if ($data['match_additional_type'] == '') {
+		echo "".$data['match_type_name']."";
 	} else {
-		echo "".$data['type']." / ".$data['add_type']."";
+		echo "".$data['match_type_name']." / ".$data['match_additional_type']."";
 	}
 	echo "</td>\n";
 	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
 	if ($data['neutral'] == 1) {
 		echo "".$locale_neutral_short."";
 	} else {
-		if ($data['place'] == 1) {
+		if ($data['match_place_id'] == 1) {
 			echo "".$locale_home_short."";
-		} else if ($data['place'] == 2) {
+		} else if ($data['match_place_id'] == 2) {
 			echo "".$locale_away_short."";
 		}
 	}
 	echo "</td>\n";
-	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'><a href='opponent.php?id=".$data['oppid']."'>".$data['opponent']."</a></td>\n";
+	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'><a href='opponent.php?id=".$data['opponent_id']."'>".$data['opponent_name']."</a></td>\n";
 	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
 	if ($data['goals'] == NULL || $data['goals_opponent'] == NULL) {
 		echo "&nbsp;";
@@ -705,24 +705,24 @@ $query = mysqli_query($db_connect, "SELECT
 	M.MatchID AS id,
 	M.MatchGoals AS goals,
 	M.MatchGoalsOpponent AS goals_opponent,
-	M.MatchAttendance AS attendance,
+	M.MatchAttendance AS match_attendance,
 	M.MatchPublish AS publish,
-	DATE_FORMAT(M.MatchDateTime, '".$how_to_print_in_report."') AS time,
-	MT.MatchTypeName AS type,
-	M.MatchAdditionalType AS add_type,
-	O.OpponentName AS opponent,
-	O.OpponentID AS oppid,
-	M.MatchPlaceID AS place,
+	DATE_FORMAT(M.MatchDateTime, '$how_to_print_in_report') AS match_date,
+	MT.MatchTypeName AS match_type_name,
+	M.MatchAdditionalType AS match_additional_type,
+	O.OpponentName AS opponent_name,
+	O.OpponentID AS opponent_id,
+	M.MatchPlaceID AS match_place_id,
 	M.MatchNeutral AS neutral
 	FROM team_matches M, team_match_types MT, team_opponents O
 	WHERE M.MatchTypeID = MT.MatchTypeID AND
-	M.MatchTypeID LIKE '".$default_match_type_id."' AND
+	M.MatchTypeID LIKE '$default_match_type_id' AND
 	M.MatchPlaceID = '1' AND
 	M.MatchNeutral = '0' AND
 	M.MatchAttendance != '' AND
 	M.MatchAttendance = '".$maxhomeatt."' AND
 	M.MatchOpponent = O.OpponentID
-	ORDER BY M.MatchDateTime DESC
+	ORDER BY match_date DESC
 ") or die(mysqli_error());
 $j = 1;
 while ($data = mysqli_fetch_array($query)) {
@@ -732,34 +732,34 @@ while ($data = mysqli_fetch_array($query)) {
 		$bg_color = BGCOLOR2;
 	}
 	echo "<tr>\n";
-	echo "<td align='left' valign='middle' bgcolor='".$bg_color."'>".$data['time']."</td>\n";
+	echo "<td align='left' valign='middle' bgcolor='".$bg_color."'>".$data['match_date']."</td>\n";
 	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
-	if ($data['add_type'] == '') {
-		echo "".$data['type']."";
+	if ($data['match_additional_type'] == '') {
+		echo "".$data['match_type_name']."";
 	} else {
-		echo "".$data['type']." / ".$data['add_type']."";
+		echo "".$data['match_type_name']." / ".$data['match_additional_type']."";
 	}
 	echo "</td>\n";
 	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
 	if ($data['neutral'] == 1) {
 		echo "".$locale_neutral_short."";
 	} else {
-		if ($data['place'] == 1) {
+		if ($data['match_place_id'] == 1) {
 			echo "".$locale_home_short."";
-		} else if ($data['place'] == 2) {
+		} else if ($data['match_place_id'] == 2) {
 			echo "".$locale_away_short."";
 		}
 	}
 	echo "</td>\n";
-	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'><a href='opponent.php?id=".$data['oppid']."'>".$data['opponent']."</a></td>\n";
+	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'><a href='opponent.php?id=".$data['opponent_id']."'>".$data['opponent_name']."</a></td>\n";
 	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
 	if ($data['goals'] == NULL || $data['goals_opponent'] == NULL) {
 		echo "&nbsp;";
 	} else {
 		if ($data['publish'] == 1) {
-			echo "<a href='match_details.php?id=".$data['id']."'>".$data['attendance']."</a>";
+			echo "<a href='match_details.php?id=".$data['id']."'>".$data['match_attendance']."</a>";
 		} else {
-			echo "".$data['attendance']."";
+			echo "".$data['match_attendance']."";
 		}
 	}
 	echo "</td>\n";
@@ -778,26 +778,26 @@ echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."' colspan='
 echo "</tr>\n";
 $query = mysqli_query($db_connect, "SELECT
 	M.MatchID AS id,
-	M.MatchAttendance AS attendance,
+	M.MatchAttendance AS match_attendance,
 	M.MatchGoals AS goals,
 	M.MatchGoalsOpponent AS goals_opponent,
 	M.MatchPublish AS publish,
-	DATE_FORMAT(M.MatchDateTime, '".$how_to_print_in_report."') AS time,
-	MT.MatchTypeName AS type,
-	M.MatchAdditionalType AS add_type,
-	O.OpponentName AS opponent,
-	O.OpponentID AS oppid,
-	M.MatchPlaceID AS place,
+	DATE_FORMAT(M.MatchDateTime, '$how_to_print_in_report') AS match_date,
+	MT.MatchTypeName AS match_type_name,
+	M.MatchAdditionalType AS match_additional_type,
+	O.OpponentName AS opponent_name,
+	O.OpponentID AS opponent_id,
+	M.MatchPlaceID AS match_place_id,
 	M.MatchNeutral AS neutral
 	FROM team_matches M, team_match_types MT, team_opponents O
 	WHERE M.MatchTypeID = MT.MatchTypeID AND
-	M.MatchTypeID LIKE '".$default_match_type_id."' AND
-	M.MatchPlaceID = '2' AND
-	M.MatchNeutral = '0' AND
-	M.MatchAttendance != '' AND
-	M.MatchAttendance = '".$maxawayatt."' AND
-	M.MatchOpponent = O.OpponentID
-	ORDER BY M.MatchDateTime DESC
+	M.MatchTypeID LIKE '$default_match_type_id'
+	AND M.MatchPlaceID = '2'
+	AND M.MatchNeutral = '0'
+	AND M.MatchAttendance != ''
+	AND M.MatchAttendance = '$max_away_atts'
+	AND M.MatchOpponent = O.OpponentID
+	ORDER BY match_date DESC
 ") or die(mysqli_error());
 $j = 1;
 while ($data = mysqli_fetch_array($query)) {
@@ -807,34 +807,34 @@ while ($data = mysqli_fetch_array($query)) {
 		$bg_color = BGCOLOR2;
 	}
 	echo "<tr>\n";
-	echo "<td align='left' valign='middle' bgcolor='".$bg_color."'>".$data['time']."</td>\n";
+	echo "<td align='left' valign='middle' bgcolor='".$bg_color."'>".$data['match_date']."</td>\n";
 	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
-	if ($data['add_type'] == '') {
-		echo "".$data['type']."";
+	if ($data['match_additional_type'] == '') {
+		echo "".$data['match_type_name']."";
 	} else {
-		echo "".$data['type']." / ".$data['add_type']."";
+		echo "".$data['match_type_name']." / ".$data['match_additional_type']."";
 	}
 	echo "</td>\n";
 	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
 	if ($data['neutral'] == 1) {
 		echo "".$locale_neutral_short."";
 	} else {
-		if ($data['place'] == 1) {
+		if ($data['match_place_id'] == 1) {
 			echo "".$locale_home_short."";
-		} else if ($data['place'] == 2) {
+		} else if ($data['match_place_id'] == 2) {
 			echo "".$locale_away_short."";
 		}
 	}
 	echo "</td>\n";
-	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'><a href='opponent.php?id=".$data['oppid']."'>".$data['opponent']."</a></td>\n";
+	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'><a href='opponent.php?id=".$data['opponent_id']."'>".$data['opponent_name']."</a></td>\n";
 	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
 	if ($data['goals'] == NULL || $data['goals_opponent'] == NULL) {
 		echo "&nbsp;";
 	} else {
 		if ($data['publish'] == 1) {
-			echo "<a href='match_details.php?id=".$data['id']."'>".$data['attendance']."</a>";
+			echo "<a href='match_details.php?id=".$data['id']."'>".$data['match_attendance']."</a>";
 		} else {
-			echo "".$data['attendance']."";
+			echo "".$data['match_attendance']."";
 		}
 	}
 	echo "</td>\n";
@@ -853,26 +853,26 @@ echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."' colspan='
 echo "</tr>\n";
 $query = mysqli_query($db_connect, "SELECT
 	M.MatchID AS id,
-	M.MatchAttendance AS attendance,
+	M.MatchAttendance AS match_attendance,
 	M.MatchGoals AS goals,
 	M.MatchGoalsOpponent AS goals_opponent,
 	M.MatchPublish AS publish,
-	DATE_FORMAT(M.MatchDateTime, '".$how_to_print_in_report."') AS time,
-	MT.MatchTypeName AS type,
-	M.MatchAdditionalType AS add_type,
-	O.OpponentName AS opponent,
-	O.OpponentID AS oppid,
-	M.MatchPlaceID AS place,
+	DATE_FORMAT(M.MatchDateTime, '$how_to_print_in_report') AS match_date,
+	MT.MatchTypeName AS match_type_name,
+	M.MatchAdditionalType AS match_additional_type,
+	O.OpponentName AS opponent_name,
+	O.OpponentID AS opponent_id,
+	M.MatchPlaceID AS match_place_id,
 	M.MatchNeutral AS neutral
 	FROM team_matches M, team_match_types MT, team_opponents O
-	WHERE M.MatchTypeID = MT.MatchTypeID AND
-	M.MatchTypeID LIKE '".$default_match_type_id."' AND
-	M.MatchPlaceID = '1' AND
-	M.MatchNeutral = '0' AND
-	M.MatchAttendance != '' AND
-	M.MatchAttendance = '".$minhomeatt."' AND
-	M.MatchOpponent = O.OpponentID
-	ORDER BY M.MatchDateTime DESC
+	WHERE M.MatchTypeID = MT.MatchTypeID
+	AND M.MatchTypeID LIKE '$default_match_type_id'
+	AND M.MatchPlaceID = '1'
+	AND M.MatchNeutral = '0'
+	AND M.MatchAttendance != ''
+	AND M.MatchAttendance = '$min_home_atts'
+	AND M.MatchOpponent = O.OpponentID
+	ORDER BY match_date DESC
 ") or die(mysqli_error());
 $j = 1;
 while ($data = mysqli_fetch_array($query)) {
@@ -882,34 +882,34 @@ while ($data = mysqli_fetch_array($query)) {
 		$bg_color = BGCOLOR2;
 	}
 	echo "<tr>\n";
-	echo "<td align='left' valign='middle' bgcolor='".$bg_color."'>".$data['time']."</td>\n";
+	echo "<td align='left' valign='middle' bgcolor='".$bg_color."'>".$data['match_date']."</td>\n";
 	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
-	if ($data['add_type'] == '') {
-		echo "".$data['type']."";
+	if ($data['match_additional_type'] == '') {
+		echo "".$data['match_type_name']."";
 	} else {
-		echo "".$data['type']." / ".$data['add_type']."";
+		echo "".$data['match_type_name']." / ".$data['match_additional_type']."";
 	}
 	echo "</td>\n";
 	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
 	if ($data['neutral'] == 1) {
 		echo "".$locale_neutral_short."";
 	} else {
-		if ($data['place'] == 1) {
+		if ($data['match_place_id'] == 1) {
 			echo "".$locale_home_short."";
-		} else if ($data['place'] == 2) {
+		} else if ($data['match_place_id'] == 2) {
 			echo "".$locale_away_short."";
 		}
 	}
 	echo "</td>\n";
-	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'><a href='opponent.php?id=".$data['oppid']."'>".$data['opponent']."</a></td>\n";
+	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'><a href='opponent.php?id=".$data['opponent_id']."'>".$data['opponent_name']."</a></td>\n";
 	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
 	if ($data['goals'] == NULL || $data['goals_opponent'] == NULL) {
 		echo "&nbsp;";
 	} else {
 		if ($data['publish'] == 1) {
-			echo "<a href='match_details.php?id=".$data['id']."'>".$data['attendance']."</a>";
+			echo "<a href='match_details.php?id=".$data['id']."'>".$data['match_attendance']."</a>";
 		} else {
-			echo "".$data['attendance']."";
+			echo "".$data['match_attendance']."";
 		}
 	}
 	echo "</td>\n";
@@ -928,26 +928,26 @@ echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."' colspan='
 echo "</tr>\n";
 $query = mysqli_query($db_connect, "SELECT
 	M.MatchID AS id,
-	M.MatchAttendance AS attendance,
+	M.MatchAttendance AS match_attendance,
 	M.MatchGoals AS goals,
 	M.MatchGoalsOpponent AS goals_opponent,
 	M.MatchPublish AS publish,
-	DATE_FORMAT(M.MatchDateTime, '".$how_to_print_in_report."') AS time,
-	MT.MatchTypeName AS type,
-	M.MatchAdditionalType AS add_type,
-	O.OpponentName AS opponent,
-	O.OpponentID AS oppid,
-	M.MatchPlaceID AS place,
+	DATE_FORMAT(M.MatchDateTime, '$how_to_print_in_report') AS match_date,
+	MT.MatchTypeName AS match_type_name,
+	M.MatchAdditionalType AS match_additional_type,
+	O.OpponentName AS opponent_name,
+	O.OpponentID AS opponent_id,
+	M.MatchPlaceID AS match_place_id,
 	M.MatchNeutral AS neutral
 	FROM team_matches M, team_match_types MT, team_opponents O
-	WHERE M.MatchTypeID = MT.MatchTypeID AND
-	M.MatchTypeID LIKE '".$default_match_type_id."' AND
-	M.MatchPlaceID = '2' AND
-	M.MatchNeutral = '0' AND
-	M.MatchAttendance != '' AND
-	M.MatchAttendance = '".$minawayatt."' AND
-	M.MatchOpponent = O.OpponentID
-	ORDER BY M.MatchDateTime DESC
+	WHERE M.MatchTypeID = MT.MatchTypeID
+	AND M.MatchTypeID LIKE '$default_match_type_id'
+	AND M.MatchPlaceID = '2'
+	AND M.MatchNeutral = '0'
+	AND M.MatchAttendance != ''
+	AND M.MatchAttendance = '$min_away_atts'
+	AND M.MatchOpponent = O.OpponentID
+	ORDER BY match_date DESC
 ") or die(mysqli_error());
 $j = 1;
 $diff = 1000000;
@@ -958,34 +958,34 @@ while ($data = mysqli_fetch_array($query)) {
 		$bg_color = BGCOLOR2;
 	}
 	echo "<tr>\n";
-	echo "<td align='left' valign='middle' bgcolor='".$bg_color."'>".$data['time']."</td>\n";
+	echo "<td align='left' valign='middle' bgcolor='".$bg_color."'>".$data['match_date']."</td>\n";
 	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
-	if ($data['add_type'] == '') {
-		echo "".$data['type']."";
+	if ($data['match_additional_type'] == '') {
+		echo "".$data['match_type_name']."";
 	} else {
-		echo "".$data['type']." / ".$data['add_type']."";
+		echo "".$data['match_type_name']." / ".$data['match_additional_type']."";
 	}
 	echo "</td>\n";
 	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
 	if ($data['neutral'] == 1) {
 		echo "".$locale_neutral_short."";
 	} else {
-		if ($data['place'] == 1) {
+		if ($data['match_place_id'] == 1) {
 			echo "".$locale_home_short."";
-		} else if ($data['place'] == 2) {
+		} else if ($data['match_place_id'] == 2) {
 			echo "".$locale_away_short."";
 		}
 	}
 	echo "</td>\n";
-	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'><a href='opponent.php?id=".$data['oppid']."'>".$data['opponent']."</a></td>\n";
+	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'><a href='opponent.php?id=".$data['opponent_id']."'>".$data['opponent_name']."</a></td>\n";
 	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
 	if ($data['goals'] == NULL || $data['goals_opponent'] == NULL) {
 		echo "&nbsp;";
 	} else {
 		if ($data['publish'] == 1) {
-			echo "<a href='match_details.php?id=".$data['id']."'>".$data['attendance']."</a>";
+			echo "<a href='match_details.php?id=".$data['id']."'>".$data['match_attendance']."</a>";
 		} else {
-			echo "".$data['attendance']."";
+			echo "".$data['match_attendance']."";
 		}
 	}
 	echo "</td>\n";

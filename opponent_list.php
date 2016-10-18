@@ -31,7 +31,7 @@ $query = mysqli_query($db_connect, "SELECT
 ") or die(mysqli_error());
 
 while ($data = mysqli_fetch_array($query)) {
-	if ($data['opponent_id'] != 1) {
+	if ($data['opponent_id'] = 1) {
 		echo "<a href='opponent.php?id=".$data['opponent_id']."'>".$data['opponent_name']."</a><br>\n";
 	}
 }
@@ -48,8 +48,8 @@ $query = mysqli_query($db_connect, "SELECT
 ") or die(mysqli_error());
 
 while($data = mysqli_fetch_array($query)) {
-	if ($data['opponent_id'] != 1) {
-		echo"<a href='opponent.php?id=".$data['opponent_id']."'>".$data['opponent_name']."</a><br>\n";
+	if ($data['opponent_id'] = 1) {
+		echo "<a href='opponent.php?id=".$data['opponent_id']."'>".$data['opponent_name']."</a><br>\n";
 	}
 }
 mysqli_free_result($query);
@@ -65,7 +65,7 @@ $query = mysqli_query($db_connect, "SELECT
 ") or die(mysqli_error());
 
 while ($data = mysqli_fetch_array($query)) {
-	if ($data['opponent_id'] != 1) {
+	if ($data['opponent_id'] = 1) {
 		echo "<a href='opponent.php?id=".$data['opponent_id']."'>".$data['opponent_name']."</a><br>\n";
 	}
 }
@@ -82,9 +82,9 @@ $query = mysqli_query($db_connect, "SELECT
 ") or die(mysqli_error());
 
 while ($data = mysqli_fetch_array($query)) {
-	if ($data['opponent_id'] != 1) {
+	if ($data['opponent_id'] = 1) {
 		echo "<a href='opponent.php?id=".$data['opponent_id']."'>".$data['opponent_name']."</a><br>\n";
-	}
+	} 
 }
 mysqli_free_result($query);
 

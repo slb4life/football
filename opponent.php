@@ -158,7 +158,6 @@ $query = mysqli_query($db_connect, "SELECT
 	OpponentName As opponent_name,
 	OpponentID AS opponent_id
 	FROM team_opponents
-	WHERE OpponentID != '1'
 	ORDER BY opponent_name
 ") or die(mysqli_error());
 echo "<br>".$locale_change_opponent.": \n";
@@ -182,10 +181,10 @@ echo "</tr>\n";
 echo "</table>\n";
 $get_matches = mysqli_query($db_connect, "SELECT
 	M.MatchID AS id,
-	M.MatchPlaceID AS place,
+	M.MatchPlaceID AS match_place_id,
 	M.MatchPublish AS publish,
 	M.MatchNeutral AS neutral,
-	DATE_FORMAT(M.MatchDateTime, '".$how_to_print_in_report."') AS time,
+	DATE_FORMAT(M.MatchDateTime, '$how_to_print_in_report') AS match_date,
 	MT.MatchTypeName AS type_name,
 	M.MatchAdditionalType AS add_typename,
 	M.MatchGoals AS goals,
@@ -193,12 +192,12 @@ $get_matches = mysqli_query($db_connect, "SELECT
 	M.MatchStadium AS stadium,
 	M.MatchAttendance AS attendance
 	FROM team_matches M, team_match_types MT
-	WHERE MatchOpponent = '".$id."'
+	WHERE MatchOpponent = '$id'
 	AND MatchGoals IS NOT NULL
 	AND MatchGoalsOpponent IS NOT NULL
 	AND M.MatchTypeID = MT.MatchTypeID
-	AND M.MatchTypeID LIKE '".$default_match_type_id."'
-	ORDER BY M.MatchDateTime DESC
+	AND M.MatchTypeID LIKE '$default_match_type_id'
+	ORDER BY match_date DESC
 ") or die(mysqli_error());
 $home_matches = 0;
 $home_wins = 0;
@@ -227,12 +226,12 @@ $total_goals_against = 0;
 $i = 0;
 while ($data = mysqli_fetch_array($get_matches)) {
 	$id[$i] = $data['id'];
-	$date[$i] = $data['time'];
+	$date[$i] = $data['match_date'];
 	$stadium[$i] = $data['stadium'];
 	$attendance[$i] = $data['attendance'];
 	$type[$i] = $data['type_name'];
 	$add_type[$i] = $data['add_typename'];
-	$place[$i] = $data['place'];
+	$match_place_id[$i] = $data['match_place_id'];
 	$publish[$i] = $data['publish'];
 	$neutral[$i] = $data['neutral'];
 	$goals[$i] = $data['goals'];
@@ -244,12 +243,12 @@ while ($data = mysqli_fetch_array($get_matches)) {
 			$neutral_goals = $neutral_goals + $goals[$i];
 			$neutral_goals_against = $neutral_goals_against + $goals_against[$i];
 		} else {
-			if ($place[$i] == 1) {
+			if ($match_place_id[$i] == 1) {
 				$home_matches++;
 				$home_wins++;
 				$home_goals = $home_goals + $goals[$i];
 				$home_goals_against = $home_goals_against + $goals_against[$i];
-			} else if ($place[$i] == 2) {
+			} else if ($match_place_id[$i] == 2) {
 				$away_matches++;
 				$away_wins++;
 				$away_goals = $away_goals + $goals[$i];
@@ -263,12 +262,12 @@ while ($data = mysqli_fetch_array($get_matches)) {
 			$neutral_goals = $neutral_goals + $goals[$i];
 			$neutral_goals_against = $neutral_goals_against + $goals_against[$i];
 		} else {
-			if ($place[$i] == 1) {
+			if ($match_place_id[$i] == 1) {
 				$home_matches++;
 				$home_loses++;
 				$home_goals = $home_goals + $goals[$i];
 				$home_goals_against = $home_goals_against + $goals_against[$i];
-			} else if ($place[$i] == 2) {
+			} else if ($match_place_id[$i] == 2) {
 				$away_matches++;
 				$away_loses++;
 				$away_goals = $away_goals + $goals[$i];
@@ -282,12 +281,12 @@ while ($data = mysqli_fetch_array($get_matches)) {
 			$neutral_goals = $neutral_goals + $goals[$i];
 			$neutral_goals_against = $neutral_goals_against + $goals_against[$i];
 		} else {
-			if ($place[$i] == 1) {
+			if ($match_place_id[$i] == 1) {
 				$home_matches++;
 				$home_draws++;
 				$home_goals = $home_goals + $goals[$i];
 				$home_goals_against = $home_goals_against + $goals_against[$i];
-			} else if ($place[$i] == 2) {
+			} else if ($match_place_id[$i] == 2) {
 				$away_matches++;
 				$away_draws++;
 				$away_goals = $away_goals + $goals[$i];
@@ -306,17 +305,14 @@ echo "<td align='center' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><b>".$l
 echo "<td align='center' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><b>".$locale_lose_short."</b></td>\n";
 echo "<td align='center' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><b>".$locale_goals."</b></td>\n";
 echo "<td align='center' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><b>+ / -</b></td>\n";
-echo "</tr>\n";
-$bg_color_1 = BGCOLOR1;
-$bg_color_2 = BGCOLOR2;
-echo "<tr>\n";
-echo "<td align='center' valign='middle' bgcolor='#".$bg_color_1."'>".$locale_home_short."</td>\n";
-echo "<td align='center' valign='middle' bgcolor='#".$bg_color_1."'>".$home_matches."</td>\n";
-echo "<td align='center' valign='middle' bgcolor='#".$bg_color_1."'>".$home_wins."</td>\n";
-echo "<td align='center' valign='middle' bgcolor='#".$bg_color_1."'>".$home_draws."</td>\n";
-echo "<td align='center' valign='middle' bgcolor='#".$bg_color_1."'>".$home_loses."</td>\n";
-echo "<td align='center' valign='middle' bgcolor='#".$bg_color_1."'>".$home_goals." - ".$home_goals_against."</td>\n";
-echo "<td align='center' valign='middle' bgcolor='#".$bg_color_1."'>";
+echo "</tr><tr>\n";
+echo "<td align='center' valign='middle' bgcolor='#".(BGCOLOR1)."'>".$locale_home_short."</td>\n";
+echo "<td align='center' valign='middle' bgcolor='#".(BGCOLOR1)."'>".$home_matches."</td>\n";
+echo "<td align='center' valign='middle' bgcolor='#".(BGCOLOR1)."'>".$home_wins."</td>\n";
+echo "<td align='center' valign='middle' bgcolor='#".(BGCOLOR1)."'>".$home_draws."</td>\n";
+echo "<td align='center' valign='middle' bgcolor='#".(BGCOLOR1)."'>".$home_loses."</td>\n";
+echo "<td align='center' valign='middle' bgcolor='#".(BGCOLOR1)."'>".$home_goals." - ".$home_goals_against."</td>\n";
+echo "<td align='center' valign='middle' bgcolor='#".(BGCOLOR1)."'>";
 $diff = $home_goals - $home_goals_against;
 if ($diff >= 0) {
 	echo "+".$diff."";
@@ -324,15 +320,14 @@ if ($diff >= 0) {
 	echo "".$diff."";
 }
 echo "</td>\n";
-echo "</tr>\n";
-echo "<tr>\n";
-echo "<td align='center' valign='middle' bgcolor='#".$bg_color_1."'>".$locale_away_short."</td>\n";
-echo "<td align='center' valign='middle' bgcolor='#".$bg_color_1."'>".$away_matches."</td>\n";
-echo "<td align='center' valign='middle' bgcolor='#".$bg_color_1."'>".$away_wins."</td>\n";
-echo "<td align='center' valign='middle' bgcolor='#".$bg_color_1."'>".$away_draws."</td>\n";
-echo "<td align='center' valign='middle' bgcolor='#".$bg_color_1."'>".$away_loses."</td>\n";
-echo "<td align='center' valign='middle' bgcolor='#".$bg_color_1."'>".$away_goals." - ".$away_goals_against."</td>\n";
-echo "<td align='center' valign='middle' bgcolor='#".$bg_color_1."'>";
+echo "</tr><tr>\n";
+echo "<td align='center' valign='middle' bgcolor='#".(BGCOLOR1)."'>".$locale_away_short."</td>\n";
+echo "<td align='center' valign='middle' bgcolor='#".(BGCOLOR1)."'>".$away_matches."</td>\n";
+echo "<td align='center' valign='middle' bgcolor='#".(BGCOLOR1)."'>".$away_wins."</td>\n";
+echo "<td align='center' valign='middle' bgcolor='#".(BGCOLOR1)."'>".$away_draws."</td>\n";
+echo "<td align='center' valign='middle' bgcolor='#".(BGCOLOR1)."'>".$away_loses."</td>\n";
+echo "<td align='center' valign='middle' bgcolor='#".(BGCOLOR1)."'>".$away_goals." - ".$away_goals_against."</td>\n";
+echo "<td align='center' valign='middle' bgcolor='#".(BGCOLOR1)."'>";
 $diff = $away_goals - $away_goals_against;
 if ($diff >= 0) {
 	echo "+".$diff."";
@@ -340,15 +335,14 @@ if ($diff >= 0) {
 	echo "".$diff."";
 }
 echo "</td>\n";
-echo "</tr>\n";
-echo "<tr>\n";
-echo "<td align='center' valign='middle' bgcolor='#".$bg_color_1."'>".$locale_neutral_short."</td>\n";
-echo "<td align='center' valign='middle' bgcolor='#".$bg_color_1."'>".$neutral_matches."</td>\n";
-echo "<td align='center' valign='middle' bgcolor='#".$bg_color_1."'>".$neutral_wins."</td>\n";
-echo "<td align='center' valign='middle' bgcolor='#".$bg_color_1."'>".$neutral_draws."</td>\n";
-echo "<td align='center' valign='middle' bgcolor='#".$bg_color_1."'>".$neutral_loses."</td>\n";
-echo "<td align='center' valign='middle' bgcolor='#".$bg_color_1."'>".$neutral_goals." - ".$neutral_goals_against."</td>\n";
-echo "<td align='center' valign='middle' bgcolor='#".$bg_color_1."'>";
+echo "</tr><tr>\n";
+echo "<td align='center' valign='middle' bgcolor='#".(BGCOLOR1)."'>".$locale_neutral_short."</td>\n";
+echo "<td align='center' valign='middle' bgcolor='#".(BGCOLOR1)."'>".$neutral_matches."</td>\n";
+echo "<td align='center' valign='middle' bgcolor='#".(BGCOLOR1)."'>".$neutral_wins."</td>\n";
+echo "<td align='center' valign='middle' bgcolor='#".(BGCOLOR1)."'>".$neutral_draws."</td>\n";
+echo "<td align='center' valign='middle' bgcolor='#".(BGCOLOR1)."'>".$neutral_loses."</td>\n";
+echo "<td align='center' valign='middle' bgcolor='#".(BGCOLOR1)."'>".$neutral_goals." - ".$neutral_goals_against."</td>\n";
+echo "<td align='center' valign='middle' bgcolor='#".(BGCOLOR1)."'>";
 $diff = $neutral_goals - $neutral_goals_against;
 if ($diff >= 0) {
 	echo "+".$diff."";
@@ -356,7 +350,7 @@ if ($diff >= 0) {
 	echo "".$diff."";
 }
 echo "</td>\n";
-echo "</tr>\n";
+echo "</tr><tr>\n";
 $total_matches = $home_matches + $away_matches + $neutral_matches;
 $total_wins = $home_wins + $away_wins + $neutral_wins;
 $total_loses = $home_loses + $away_loses + $neutral_loses;
@@ -364,7 +358,6 @@ $total_draws = $home_draws + $away_draws + $neutral_draws;
 $total_goals = $home_goals + $away_goals + $neutral_goals;
 $total_goals_against = $home_goals_against + $away_goals_against + $neutral_goals_against;
 $diff = $total_goals - $total_goals_against;
-echo "<tr>\n";
 echo "<td align='center' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><b>".$locale_total."</b></td>\n";
 echo "<td align='center' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><b>".$total_matches."</b></td>\n";
 echo "<td align='center' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><b>".$total_wins."</b></td>\n";
@@ -394,16 +387,16 @@ if ($total_matches > 0) {
 	$j = 0;
 	while ($j < $i) {
 		if ($j % 2 == 0) {
-			$bg_color = "".$bg_color_1."";
+			$bg_color = BGCOLOR1;
 		} else {
-			$bg_color = "".$bg_color_2."";
+			$bg_color = BGCOLOR2;
 		}
 		if ($neutral[$j] == 1) {
 			$p = "".$locale_neutral_short."";
 		} else {
-			if ($place[$j] == 1) {
+			if ($match_place_id[$j] == 1) {
 				$p = "".$locale_home_short."";
-			} else if ($place[$j] == 2) {
+			} else if ($match_place_id[$j] == 2) {
 				$p = "".$locale_away_short."";
 			}
 		}

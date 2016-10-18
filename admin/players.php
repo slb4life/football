@@ -473,7 +473,6 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			OpponentName AS opponent_name,
 			OpponentID AS opponent_id
 			FROM team_opponents
-			WHERE OpponentID != '1'
 			ORDER by opponent_name
 		") or die(mysqli_error());
 		echo "<select name='opponent_id'>";

@@ -21,9 +21,9 @@ if (!isset($news_id)) {
 		M.MatchGoalsOpponent AS goals_opponent,
 		M.MatchPenaltyGoals AS penalty_goals,
 		M.MatchPenaltyGoalsOpponent AS penalty_goals_opponent,
-		M.MatchOvertime AS overtime,
+		M.MatchOvertime AS match_overtime,
 		M.MatchPenaltyShootout AS penalty_shootout,
-		M.MatchPlaceID AS place,
+		M.MatchPlaceID AS match_place_id,
 		MT.MatchTypeName AS match_type_name
 		FROM (team_matches M, team_match_types MT, team_opponents O)
 		WHERE M.MatchDateTime < CURRENT_TIMESTAMP 
@@ -47,7 +47,7 @@ if (!isset($news_id)) {
 		$logos = 1;
 	}
 
-	if ($data['place'] == 1) {
+	if ($data['match_place_id'] == 1) {
 		echo "<a href='match_details.php?id=".$data['match_id']."'>\n";
 		echo "<table width='100%' align='center' cellspacing='2' cellpadding='2' border='0'>\n";
 		echo "<tr>\n";
@@ -72,7 +72,7 @@ if (!isset($news_id)) {
 		echo "<td align='center' valign='middle' width='10%'><font class='bigname'>";
 		if ($data['penalty_goals'] == NULL || $data['penalty_goals_opponent'] == NULL) {
 			echo "".$data['goals']." - ".$data['goals_opponent']."";
-			if ($data['overtime'] == 1) {
+			if ($data['match_overtime'] == 1) {
 				echo "".$locale_overtime_short."";
 			}
 		} else {
@@ -126,7 +126,7 @@ if (!isset($news_id)) {
 		echo "<font class='bigname'>\n";
 		if ($data['penalty_goals'] == NULL || $data['penalty_goals_opponent'] == NULL) {
 			echo "".$data['goals_opponent']." - ".$data['goals']."";
-			if ($data['overtime'] == 1) {
+			if ($data['match_overtime'] == 1) {
 				echo "".$locale_overtime_short."";
 			}
 		} else {
@@ -176,7 +176,7 @@ if (!isset($news_id)) {
 		N.news_content AS news_content,
 		DATE_FORMAT(N.news_date, '".$how_to_print."') AS news_date
 		FROM team_news N
-		ORDER BY N.news_date DESC, N.news_id DESC
+		ORDER BY news_date DESC, news_id DESC
 		LIMIT 5
 	") or die(mysqli_error());
 	$i = 0;
@@ -192,10 +192,11 @@ if (!isset($news_id)) {
 		echo "</tr>\n";
 		$i++;
 	}
+	mysqli_free_result($query);
+
 	echo "<tr>\n";
 	echo "<td colspan='2' align='left' valign='top'><br><a href='news_archive.php'>".$locale_to_news_archive."</a></td>\n";
 	echo "</tr>\n";
-	mysqli_free_result($query);
 	echo "</table>\n";
 	echo "</td>\n";
 	echo "</tr>\n";

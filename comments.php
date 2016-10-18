@@ -31,26 +31,25 @@ echo "<table width='100%' cellspacing='1' cellpadding='5' border='0'>\n";
 echo "<tr>\n";
 echo "<td bgcolor='#".(CELLBGCOLORBOTTOM)."' align='center'>\n";
 $get_details = mysqli_query($db_connect, "SELECT
-	O.OpponentName AS opponent,
+	O.OpponentName AS opponent_name,
 	O.OpponentID AS opponent_id,
 	M.MatchID AS match_id,
 	M.MatchGoals AS goals,
 	M.MatchGoalsOpponent AS goals_opponent,
 	M.MatchPenaltyGoals AS penalty_goals,
 	M.MatchPenaltyGoalsOpponent AS penalty_goals_opponent,
-	M.MatchOvertime AS overtime,
+	M.MatchOvertime AS match_overtime,
 	M.MatchPenaltyShootout AS penalty_shootout,
-	DATE_FORMAT(M.MatchDateTime, '$how_to_print_in_report') AS time,
-	M.MatchPlaceID AS place,
-	M.MatchReport AS report,
-	M.MatchReferee AS referee,
-	M.MatchAttendance AS att,
-	M.MatchStadium AS stadium,
-	M.MatchReport AS report,
-	M.MatchAdditionalType AS add_type,
-	MT.MatchTypeName AS type_name,
+	DATE_FORMAT(M.MatchDateTime, '$how_to_print_in_report') AS match_date,
+	M.MatchPlaceID AS match_place_id,
+	M.MatchReferee AS match_referee,
+	M.MatchAttendance AS match_attendance,
+	M.MatchStadium AS match_stadium,
+	M.MatchReport AS match_report,
+	M.MatchAdditionalType AS match_additional_type,
+	MT.MatchTypeName AS match_type_name,
 	M.MatchPublishOptional AS publish_optional,
-	P.PreviewText AS prewtext
+	P.PreviewText AS preview_text
 	FROM (team_matches M, team_match_types MT, team_opponents O)
 	LEFT OUTER JOIN team_previews P ON M.MatchID = P.PreviewMatchID
 	WHERE M.MatchID = '$id'
@@ -71,27 +70,26 @@ $image_url_4 = "images/opponent_logo_".$mdata['opponent_id'].".jpg";
 if ((file_exists($image_url_1) && file_exists($image_url_3)) || (file_exists($image_url_2) && file_exists($image_url_4)) || (file_exists($image_url_1) && file_exists($image_url_4)) || (file_exists($image_url_2) && file_exists($image_url_3))) {
 	$logos = 1;
 }
-
-if (isset($mdata['goal_scorers_opponent']) == '')
-	$mdata['goal_scorers_opponent'] = "$locale_none";
-
-if (isset($mdata['substitutions_opponent']) == '')
-	$mdata['substitutions_opponent'] = "$locale_none";
-
-if (isset($mdata['yellow_cards_opponent']) == '')
-	$mdata['yellow_cards_opponent'] = "$locale_none";
-
-if (isset($mdata['red_cards_opponent']) == '')
-	$mdata['red_cards_opponent'] = "$locale_none";
-
+if (isset($mdata['goal_scorers_opponent']) == '') {
+	$mdata['goal_scorers_opponent'] = "".$locale_none."";
+}
+if (isset($mdata['substitutions_opponent']) == '') {
+	$mdata['substitutions_opponent'] = "".$locale_none."";
+}
+if (isset($mdata['yellow_cards_opponent']) == '') {
+	$mdata['yellow_cards_opponent'] = "".$locale_none."";
+}
+if (isset($mdata['red_cards_opponent']) == '') {
+	$mdata['red_cards_opponent'] = "".$locale_none."";
+}
 echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
 echo "<tr bgcolor='".(CELLBGCOLORTOP)."'>\n";
-echo "<td align='left' valign='middle' width='50%'><b>".$mdata['time']." / ".$locale_stadium.": ".$mdata['stadium']."</b></td>\n";
-echo "<td align='right' valign='middle' width='50%'><b>".$locale_attendance.":</b> ".$mdata['att']."</td>\n";
+echo "<td align='left' valign='middle' width='50%'><b>".$mdata['match_date']." / ".$locale_stadium.": ".$mdata['match_stadium']."</b></td>\n";
+echo "<td align='right' valign='middle' width='50%'><b>".$locale_attendance.":</b> ".$mdata['match_attendance']."</td>\n";
 echo "</tr>\n";
 echo "</table>\n";
 
-if ($mdata['place'] == 1) {
+if ($mdata['match_place_id'] == 1) {
 	echo "<table width='100%' align='center' cellspacing='2' cellpadding='2' border='0'>\n";
 	echo "<tr>\n";
 	echo "<td align='left' valign='middle' width='45%'>";
@@ -117,7 +115,7 @@ if ($mdata['place'] == 1) {
 	echo "<font class='bigname'>";
 	if ($mdata['penalty_goals'] == NULL || $mdata['penalty_goals_opponent'] == NULL) {
 		echo "".$mdata['goals']." - ".$mdata['goals_opponent']."";
-		if ($mdata['overtime'] == 1) {
+		if ($mdata['match_overtime'] == 1) {
 			echo " ".$locale_overtime_short."";
 		}
 	} else {
@@ -129,7 +127,7 @@ if ($mdata['place'] == 1) {
 	if ($logos == 1) {
 		echo "<table width='100%' border='0' cellspacing='2' cellpadding='0'>\n";
 		echo "<tr>\n";
-		echo "<td width='95%' valign='middle' align='right'><font class='bigname'>$mdata[opponent]</font></td>\n";
+		echo "<td width='95%' valign='middle' align='right'><font class='bigname'>".$mdata['opponent_name']."</font></td>\n";
 		echo "<td width='5%' valign='middle' align='center'>";
 		if (file_exists($image_url_3)) {
 			echo "<img src='".$image_url_3."' alt=''>";
@@ -140,19 +138,19 @@ if ($mdata['place'] == 1) {
 		echo "</tr>\n";
 		echo "</table>\n";
 	} else {
-		echo "<font class='bigname'>".$mdata['opponent']."</font>";
+		echo "<font class='bigname'>".$mdata['opponent_name']."</font>";
 	}
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
 	echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
 	echo "<tr bgcolor='".(CELLBGCOLORTOP)."'>\n";
-	echo "<td align='left' valign='middle' width='50%'><b>".$locale_referee.":</b> ".$mdata['referee']."</td>\n";
+	echo "<td align='left' valign='middle' width='50%'><b>".$locale_referee.":</b> ".$mdata['match_referee']."</td>\n";
 	echo "<td align='right' valign='middle' width='50%'>";
-	if ($mdata['add_type'] == '') {
-		echo "$mdata[type_name]-$locale_match";
+	if ($mdata['match_additional_type'] == '') {
+		echo "".$mdata['match_type_name']."-".$locale_match."";
 	} else {
-		echo "$mdata[type_name] / $mdata[add_type]-$locale_match";
+		echo "".$mdata['match_type_name']." / ".$mdata['match_additional_type']."-".$locale_match."";
 	}
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -168,28 +166,28 @@ if ($mdata['place'] == 1) {
 		echo "<tr>\n";
 		echo "<td width='5%' valign='middle' align='center'>";
 		if (file_exists($image_url_3)) {
-			echo "<img src='$image_url_3' alt=''>";
+			echo "<img src='".$image_url_3."' alt=''>";
 		} else {
-			echo "<img src='$image_url_4' alt=''>";
+			echo "<img src='".$image_url_4."' alt=''>";
 		}
 		echo "</td>\n";
-		echo "<td width='95%' valign='middle' align='left'><font class='bigname'>$mdata[opponent]</font></td>\n";
+		echo "<td width='95%' valign='middle' align='left'><font class='bigname'>".$mdata['opponent_name']."</font></td>\n";
 		echo "</tr>\n";
 		echo "</table>\n";
 	} else {
-		echo "<font class='bigname'>$mdata[opponent]</font>";
+		echo "<font class='bigname'>".$mdata['opponent_name']."</font>";
 	}
 	echo "</td>\n";
 	echo "<td align='center' valign='middle' width='10%' bgcolor='".(BGCOLOR1)."'>";
 	echo "<font class='bigname'>";
 	if ($mdata['penalty_goals'] == NULL || $mdata['penalty_goals_opponent'] == NULL) {
-		echo "$mdata[goals_opponent] - $mdata[goals]";
+		echo "".$mdata['goals_opponent']." - ".$mdata['goals']."";
 
-		if ($mdata['overtime'] == 1) {
-			echo" $locale_overtime_short";
+		if ($mdata['match_overtime'] == 1) {
+			echo " ".$locale_overtime_short."";
 		}
 	} else {
-		echo "$mdata[goals_opponent] - $mdata[goals]<br>($mdata[penalty_goals_opponent] - $mdata[penalty_goals] $locale_penalty_shootout_short)";
+		echo "".$mdata['goals_opponent']." - ".$mdata['goals']."<br>(".$mdata['penalty_goals_opponent']." - ".$mdata['penalty_goals']." ".$locale_penalty_shootout_short.")";
 	}
 	echo "</font>";
 	echo "</td>\n";
@@ -200,9 +198,9 @@ if ($mdata['place'] == 1) {
 		echo "<td width='95%' valign='middle' align='right'><font class='bigname'>".$team_name."</font></td>\n";
 		echo "<td width='5%' valign='middle' align='center'>";
 		if(file_exists($image_url_1)) {
-			echo "<img src='$image_url_1' alt=''>";
+			echo "<img src='".$image_url_1."' alt=''>";
 		} else {
-			echo "<img src='$image_url_2' alt=''>";
+			echo "<img src='".$image_url_2."' alt=''>";
 		}
 		echo "</td>\n";
 		echo "</tr>\n";
@@ -215,12 +213,12 @@ if ($mdata['place'] == 1) {
 	echo "</table>\n";
 	echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
 	echo "<tr bgcolor='".(CELLBGCOLORTOP)."'>\n";
-	echo "<td align='left' valign='middle' width='50%'><b>".$locale_referee.":</b> ".$mdata['referee']."</td>\n";
+	echo "<td align='left' valign='middle' width='50%'><b>".$locale_referee.":</b> ".$mdata['match_referee']."</td>\n";
 	echo "<td align='right' valign='middle' width='50%'>";
-	if ($mdata['add_type'] == '') {
-		echo "$mdata[type_name]-$locale_match";
+	if ($mdata['match_additional_type'] == '') {
+		echo "".$mdata['match_type_name']."-".$locale_match."";
 	} else {
-		echo "$mdata[type_name] / $mdata[add_type]-$locale_match";
+		echo "".$mdata['match_type_name']." / ".$mdata['match_additional_type']."-".$locale_match."";
 	}
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -230,11 +228,11 @@ if ($mdata['place'] == 1) {
 }
 $show_pictures = 0;
 $query = mysqli_query($db_connect, "SELECT
-	PictureID AS id,
+	PictureID AS picture_id,
 	PictureName AS picture_name,
 	PictureText AS picture_text
 	FROM team_picture_gallery
-	WHERE PictureMatchID = '$mdata[match_id]'
+	WHERE PictureMatchID = '$id'
 	LIMIT 1
 ") or die(mysqli_error());
 
@@ -248,9 +246,9 @@ echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
 echo "<tr align='left' bgcolor='".(CELLBGCOLORTOP)."'>\n";
 echo "<td align='left' valign='middle'><a href='match_details.php?id=".$id."'>".$locale_report."</a> | <b>".$locale_fan_comments."</b>";
 if ($show_pictures == 1) {
-	echo" | <a href='picture_gallery.php?id=".$id."'>".$locale_match_pictures."</a>";
+	echo" | <a href='picture_gallery.php?id=".$picture_id."'>".$locale_match_pictures."</a>";
 }
-if ($mdata['prewtext'] != '') {
+if ($mdata['preview_text'] != '') {
 	echo " | <a href='preview.php?id=".$id."'>".$locale_preview."</a>";
 }
 echo "</td>\n";
@@ -277,9 +275,10 @@ echo "</table>\n";
 echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
 echo "<tr bgcolor='".(CELLBGCOLORTOP)."'>\n";
 echo "<td align='left' valign='top'>";
-$query = mysqli_query($db_connect, "SELECT Name,
+$query = mysqli_query($db_connect, "SELECT
+	Name,
 	Comments,
-	DATE_FORMAT(Time, '$how_to_print_in_report') AS t
+	DATE_FORMAT(Time, '$how_to_print_in_report') AS Time
 	FROM team_comments
 	WHERE MatchID = '$id'
 	ORDER BY Time DESC
@@ -289,7 +288,7 @@ if (mysqli_num_rows($query) == 0) {
 	echo "".$locale_no_comments_yet."";
 } else {
 	while($data = mysqli_fetch_array($query)) {
-		echo "<b>- ".$data['Name']." -</b> ".$data['t']."<br>".$data['Comments']."<br><br>";
+		echo "<b>- ".$data['Name']." -</b> ".$data['Time']."<br>".$data['Comments']."<br><br>";
 	}
 }
 mysqli_free_result($query);

@@ -21,43 +21,43 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 	if (isset($_POST['delete_submit'])){ $delete_submit = $_POST['delete_submit']; }
 
 	if (isset($add_submit)) {
-		$opponent = trim($_POST['opponent']);
-		$query = mysqli_query($db_connect, "SELECT OpponentName FROM team_opponents WHERE OpponentName = '$opponent'") or die(mysqli_error());
+		$opponent_name = trim($_POST['opponent_name']);
+		$query = mysqli_query($db_connect, "SELECT OpponentName FROM team_opponents WHERE OpponentName = '$opponent_name'") or die(mysqli_error());
 
 		if (mysqli_num_rows($query) > 0) {
-			echo "There is already opponent named: $opponent in database.";
+			echo "There is already Opponent Named: ".$opponent_name." in Database.";
 			exit();
 		}
 		mysqli_free_result($query);
 
 		if (!get_magic_quotes_gpc()) {
-			$opponent = addslashes($opponent);
+			$opponent_name = addslashes($opponent_name);
 		}
 
-		if ($opponent != '') {
-			mysqli_query($db_connect, "INSERT INTO team_opponents SET OpponentName = '$opponent'") or die(mysqli_error());
+		if ($opponent_name != '') {
+			mysqli_query($db_connect, "INSERT INTO team_opponents SET OpponentName = '$opponent_name'") or die(mysqli_error());
 			header("Location: $PHP_SELF?session_id=$session");
 		}
 	} else if (isset($modify_submit)) {
-		$opponent = trim($_POST['opponent']);
-		$www = str_replace('http://', '', trim($_POST['www']));
-		$info = str_replace("\r\n", '<br>', trim($_POST['info']));
 		$opponent_id = $_POST['opponent_id'];
-		$all_data = $_POST['all_data'];
+		$opponent_name = trim($_POST['opponent_name']);
+		$opponent_www = str_replace('http://', '', trim($_POST['opponent_www']));
+		$opponent_info = str_replace("\r\n", '<br>', trim($_POST['opponent_info']));
+		$opponent_all_data = $_POST['opponent_all_data'];
 		
 		if (!get_magic_quotes_gpc()) {
-			$opponent = addslashes($opponent);
-			$info = addslashes($info);
+			$opponent_name = addslashes($opponent_name);
+			$opponent_info = addslashes($opponent_info);
 		}
 
-		if (!isset($all_data)){ $all_data = 0; }
+		if (!isset($opponent_all_data)){ $opponent_all_data = 0; }
 
-		if ($opponent != '') {
+		if ($opponent_name != '') {
 			mysqli_query($db_connect, "UPDATE team_opponents SET
-				OpponentName = '$opponent',
-				OpponentWWW = '$www',
-				OpponentInfo = '$info',
-				OpponentAllData = '$all_data'
+				OpponentName = '$opponent_name',
+				OpponentWWW = '$opponent_www',
+				OpponentInfo = '$opponent_info',
+				OpponentAllData = '$opponent_all_data'
 				WHERE OpponentID = '$opponent_id'
 			") or die(mysqli_error());
 		}
@@ -91,13 +91,13 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<table width='100%' cellspacing='3' cellpadding='3' border='0'>\n";
 		echo "<tr>\n";
 		echo "<td align='left' valign='top'>Opponent Name:</td>\n";
-		echo "<td align='left' valign='top'><input type='text' name='opponent'></td>\n";
+		echo "<td align='left' valign='top'><input type='text' name='opponent_name'></td>\n";
 		echo "</tr>\n";
 		echo "</table>\n";
 		echo "<input type='submit' name='add_submit' value='Add Opponent'>\n";
 		echo "</form>\n";
 	} else if ($action == 'modify') {
-		$opponent_id = $_REQUEST['opponent'];
+		$opponent_id = $_REQUEST['opponent_id'];
 		$get_opponent = mysqli_query($db_connect, "SELECT * FROM team_opponents WHERE OpponentID = '$opponent_id' LIMIT 1") or die(mysqli_error());
 		$data = mysqli_fetch_array($get_opponent);
 		$data['OpponentInfo'] = str_replace('<br>', "\r\n", $data['OpponentInfo']);
@@ -106,20 +106,20 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<table width='100%' cellspacing='3' cellpadding='3' border='0'>\n";
 		echo "<tr>\n";
 		echo "<td align='left' valign='top'>Opponent Name:</td>\n";
-		echo "<td align='left' valign='top'><input type='text' name='opponent' value='".$data['OpponentName']."'><input type='hidden' name='opponent_id' value='".$data['OpponentID']."'></td>\n";
+		echo "<td align='left' valign='top'><input type='text' name='opponent_name' value='".$data['OpponentName']."'><input type='hidden' name='opponent_id' value='".$data['OpponentID']."'></td>\n";
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top'>WWW-Address:</td>\n";
-		echo "<td align='left' valign='top'><input type='text' name='www' value='".$data['OpponentWWW']."'></td>\n";
+		echo "<td align='left' valign='top'><input type='text' name='opponent_www' value='".$data['OpponentWWW']."'></td>\n";
 		echo "</tr><tr>\n";
-		echo "<td align='left' valign='top' colspan='2'>Club Info:<br>(You may use HTML)<br><textarea name='info' cols='40' rows='15'>".$data['OpponentInfo']."</textarea></td>\n";
+		echo "<td align='left' valign='top' colspan='2'>Club Info:<br>(You may use HTML)<br><textarea name='opponent_info' cols='40' rows='15'>".$data['OpponentInfo']."</textarea></td>\n";
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top'>All Data filled to Database?</td>\n";
 		echo "<td align='left' valign='top'>";
 
 		if ($data['OpponentAllData'] == 1) {
-			echo "<input type='checkbox' name='all_data' value='1' CHECKED>";
+			echo "<input type='checkbox' name='opponent_all_data' value='1' CHECKED>";
 		} else {
-			echo "<input type='checkbox' name='all_data' value='1'>";
+			echo "<input type='checkbox' name='opponent_all_data' value='1'>";
 		}
 		echo "</td>\n";
 		echo "</tr><tr>\n";
@@ -164,11 +164,11 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		$get_opponents = mysqli_query($db_connect, "SELECT * FROM team_opponents ORDER BY OpponentName") or die(mysqli_error());
 
 		if (mysqli_num_rows($get_opponents) < 1) {
-			echo '<b>No Opponents so far in Database</b>';
+			echo "<b>No Opponents so far in Database</b>";
 		} else {
-			echo '<b>Opponents so far in Database:</b><br><br>';
+			echo "<b>Opponents so far in Database:</b><br><br>";
 			while($data = mysqli_fetch_array($get_opponents)) {
-				echo "<a href='".$PHP_SELF."?session_id=".$session."&amp;action=modify&amp;opponent=".$data['OpponentID']."'>".$data['OpponentName']."</a><br>\n";
+				echo "<a href='".$PHP_SELF."?session_id=".$session."&amp;action=modify&amp;opponent_id=".$data['OpponentID']."'>".$data['OpponentName']."</a><br>\n";
 			}
 		}
 	echo "</td>\n";

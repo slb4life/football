@@ -251,7 +251,7 @@ $query = mysqli_query($db_connect, "SELECT
 $i = 0;
 $check = 92892892892;
 while ($data = mysqli_fetch_array($query)) {
-	if ($i==0) {
+	if ($i == 0) {
 		echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>";
 		$best_goal_amount = $data['goals'];
 	}
@@ -265,7 +265,11 @@ while ($data = mysqli_fetch_array($query)) {
 	$check = $data['goals'];
 	$i++;
 }
-echo " (".$best_goal_amount.")";
+if ($data['goals'] == 1) {
+	echo " (".$best_goal_amount.")";
+} else {
+	echo "0";
+}
 mysqli_free_result($query);
 
 echo "</td>\n";
@@ -304,7 +308,11 @@ while ($data = mysqli_fetch_array($query)) {
 	$check = $data['yellows'];
 	$i++;
 }
-echo " (".$most_yellows.")";
+if ($data['yellows'] == 1) {
+	echo " (".$most_yellows.")";
+} else {
+	echo "0";
+}
 mysqli_free_result($query);
 
 echo "</td>\n";
@@ -329,7 +337,7 @@ $query = mysqli_query($db_connect, "SELECT
 $i = 0;
 $check = 92892892892;
 while ($data = mysqli_fetch_array($query)) {
-	if ($i==0) {
+	if ($i == 0) {
 		echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>";
 		$most_appearances = $data['appearance'];
 	}
@@ -343,7 +351,12 @@ while ($data = mysqli_fetch_array($query)) {
 	$check = $data['appearance'];
 	$i++;
 }
-echo " (".$most_appearances.")";
+
+if ($data['appearance'] == 1) {
+	echo " (".$most_appearances.")";
+} else {
+	echo "0";
+}
 mysqli_free_result($query);
 
 echo "</td>\n";
