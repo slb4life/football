@@ -72,7 +72,7 @@ switch (PRINT_DATE) {
 $get_seasons = mysqli_query($db_connect, "SELECT * FROM team_season_names WHERE SeasonPublish = '1' ORDER BY SeasonName DESC") or die(mysqli_error());
 $get_types = mysqli_query($db_connect, "SELECT * FROM team_match_types ORDER BY MatchTypeName") or die(mysqli_error());
 
-echo "<!DOCTYPE HTML PUBLIC '-//W3C//DTD HTML 4.0 Transitional//EN'>\n";
+echo "<!DOCTYPE html>\n";
 echo "<html>\n";
 echo "<head>\n";
 echo "<title>".(SITE_TITLE)."</title>\n";

@@ -17,6 +17,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 	if (isset($_REQUEST['action'])){ $action = $_REQUEST['action']; }
 	if (isset($_POST['add_squad_submit'])){ $add_squad_submit = $_POST['add_squad_submit']; }
 	if (isset($_POST['add_goal_scorer_submit'])){ $add_goal_scorer_submit = $_POST['add_goal_scorer_submit']; }
+	if (isset($_POST['add_to_assists_scorer'])){ $add_to_assists_scorer = $_POST['add_to_assists_scorer']; }
 	if (isset($_POST['add_yellow_card_submit'])){ $add_yellow_card_submit = $_POST['add_yellow_card_submit']; }
 	if (isset($_POST['add_red_card_submit'])){ $add_red_card_submit = $_POST['add_red_card_submit']; }
 	if (isset($_POST['add_substitutes_submit'])){ $add_substitutes_submit = $_POST['add_substitutes_submit']; }
@@ -50,10 +51,10 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		$player_id = $_POST['add_to_goal_scorers'];
 		$match_id = $_POST['match_id'];
 		$season_id = $_POST['season_id'];
-		$minute = trim($_POST['minute']);
+		$goal_minute = trim($_POST['goal_minute']);
 		if (isset($_POST['own_goal'])){ $own_goal = $_POST['own_goal']; }
 		if (isset($_POST['penalty'])){ $penalty = $_POST['penalty']; }
-		$own_scorer = trim($_POST['own_scorer']);
+		$goal_own_scorer = trim($_POST['goal_own_scorer']);
 
 		if (isset($own_goal) && isset($penalty)) {
 			header("Location: $HTTP_REFERER");
@@ -61,7 +62,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		}
 
 		$query = mysqli_query($db_connect, "SELECT
-			team_substitutes.SubstitutePlayerID AS subs_player_id
+			team_substitutes.SubstitutePlayerID AS substitute_player_id
 			FROM team_substitutes,team_appearances
 			WHERE (team_substitutes.SubstitutePlayerID = '$player_id'
 			AND team_substitutes.SubstituteMatchID = '$match_id'
@@ -81,7 +82,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 					GoalMatchID = '$match_id',
 					GoalSeasonID = '$season_id',
 					GoalPenalty = '1',
-					GoalMinute = '$minute',
+					GoalMinute = '$goal_minute',
 					GoalOwnScorer = ''
 				") or die(mysqli_error());
 				header("Location: $HTTP_REFERER");
@@ -92,8 +93,8 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 					GoalMatchID = '$match_id',
 					GoalSeasonID = '$season_id',
 					GoalOwn = '1',
-					GoalMinute = '$minute',
-					GoalOwnScorer = '$own_scorer'
+					GoalMinute = '$goal_minute',
+					GoalOwnScorer = '$goal_own_scorer'
 				") or die(mysqli_error());
 				header("Location: $HTTP_REFERER");
 
@@ -102,7 +103,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 					GoalPlayerID = '$player_id',
 					GoalMatchID = '$match_id',
 					GoalSeasonID = '$season_id',
-					GoalMinute = '$minute',
+					GoalMinute = '$goal_minute',
 					GoalOwnScorer = ''
 				") or die(mysqli_error());
 				header("Location: $HTTP_REFERER");
@@ -110,13 +111,15 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		}
 		mysqli_free_result($query);
 
+	} else if (isset($add_to_assists_scorer)) {
+		// 
 	} else if (isset($add_yellow_card_submit)) {
 		$player_id = $_POST['add_to_yellow_cards'];
 		$match_id = $_POST['match_id'];
 		$season_id = $_POST['season_id'];
-		$minute = $_POST['minute'];
+		$yellow_card_minute = $_POST['yellow_card_minute'];
 		$query = mysqli_query($db_connect, "SELECT
-			team_substitutes.SubstitutePlayerID AS subs_player_id
+			team_substitutes.SubstitutePlayerID AS substitute_player_id
 			FROM team_substitutes,team_appearances
 			WHERE (team_substitutes.SubstitutePlayerID = '$player_id'
 			AND team_substitutes.SubstituteMatchID = '$match_id'
@@ -134,7 +137,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 				YellowCardPlayerID = '$player_id',
 				YellowCardMatchID = '$match_id',
 				YellowCardSeasonID = '$season_id',
-				YellowCardMinute = '$minute'
+				YellowCardMinute = '$yellow_card_minute'
 			") or die(mysqli_error());
 			header("Location: $HTTP_REFERER");
 		}
@@ -144,16 +147,16 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		$player_id = $_POST['add_to_red_cards'];
 		$match_id = $_POST['match_id'];
 		$season_id = $_POST['season_id'];
-		$minute = $_POST['minute'];
+		$red_card_minute = $_POST['red_card_minute'];
 		$query = mysqli_query($db_connect, "SELECT
-			team_substitutes.SubstitutePlayerID AS subs_player_id
+			team_substitutes.SubstitutePlayerID AS substitute_player_id
 			FROM team_substitutes,team_appearances
 			WHERE (team_substitutes.SubstitutePlayerID = '$player_id'
 			AND team_substitutes.SubstituteMatchID = '$match_id'
 			AND team_substitutes.SubstituteSeasonID = '$season_id')
-			OR (team_appearances.AppearancePlayerID = '$player_id' AND
-			team_appearances.AppearanceMatchID = '$match_id' AND
-			team_appearances.AppearanceSeasonID = '$season_id')
+			OR (team_appearances.AppearancePlayerID = '$player_id'
+			AND team_appearances.AppearanceMatchID = '$match_id'
+			AND team_appearances.AppearanceSeasonID = '$season_id')
 		") or die(mysqli_error());
 
 		if (mysqli_num_rows($query) == 0) {
@@ -164,7 +167,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 				RedCardPlayerID = '$player_id',
 				RedCardMatchID = '$match_id',
 				RedCardSeasonID = '$season_id',
-				RedCardMinute = '$minute'
+				RedCardMinute = '$red_card_minute'
 			") or die(mysqli_error());
 			header("Location: $HTTP_REFERER");
 		}
@@ -176,7 +179,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		$season_id = $_POST['season_id'];
 		foreach($add_to_substitutes as $player_id) {
 			$get_substitutes = mysqli_query($db_connect, "SELECT
-				team_substitutes.SubstitutePlayerID AS subs_player_id
+				team_substitutes.SubstitutePlayerID AS substitute_player_id
 				FROM team_substitutes,team_appearances
 				WHERE (team_substitutes.SubstitutePlayerID = '$player_id'
 				AND team_substitutes.SubstituteMatchID = '$match_id'
@@ -202,7 +205,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		$player_id_out = $_POST['add_to_substitutions_out'];
 		$match_id = $_POST['match_id'];
 		$season_id = $_POST['season_id'];
-		$minute = $_POST['minute'];
+		$substitution_minute = $_POST['substitution_minute'];
 
 		if ($player_id_in == "$player_id_out") {
 			echo "In and Out Player can't be the same.<br>Push Back Button to get Back.";
@@ -213,7 +216,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			SubstitutionPlayerIDOut = '$player_id_out',
 			SubstitutionMatchID = '$match_id',
 			SubstitutionSeasonID = '$season_id',
-			SubstitutionMinute = '$minute'
+			SubstitutionMinute = '$substitution_minute'
 		") or die(mysqli_error());
 		header("Location: $HTTP_REFERER");
 

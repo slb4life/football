@@ -19,7 +19,7 @@ if (isset($submit)) {
 	$db_user = $_POST['user'];
 	$db_password = $_POST['password'];
 	$season = $_POST['season'];
-	if ($db_user == "$data[PasswordUser]" && md5($db_password) == "$data[PasswordPassword]") {
+	if ($db_user == "".$data['PasswordUser']."" && md5($db_password) == "".$data['PasswordPassword']."") {
 		session_start();
 		unset($_SESSION['session']);
 		srand((double)microtime()*1000000);

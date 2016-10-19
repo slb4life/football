@@ -30,33 +30,33 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		$day = $_POST['day'];
 		$hour = $_POST['hour'];
 		$minute = $_POST['minute'];
-		$opponent = trim($_POST['opponent']);
-		$place = $_POST['place'];
-		if (isset($_POST['neutral'])){ $neutral = $_POST['neutral']; }
-		$stadium = trim($_POST['stadium']);
-		$type = $_POST['type'];
-		$additional_type = trim($_POST['additional_type']);
-		$referee = trim($_POST['referee']);
-		$attendance = trim($_POST['attendance']);
+		$match_opponent = trim($_POST['match_opponent']);
+		$match_place_id = $_POST['match_place_id'];
+		if (isset($_POST['match_neutral'])){ $match_neutral = $_POST['match_neutral']; }
+		$match_stadium = trim($_POST['match_stadium']);
+		$match_type_id = $_POST['match_type_id'];
+		$match_additional_type = trim($_POST['match_additional_type']);
+		$match_referee = trim($_POST['match_referee']);
+		$match_attendance = trim($_POST['match_attendance']);
 		$goals = trim($_POST['goals']);
 		$goals_opponent = trim($_POST['goals_opponent']);
-		if (isset($_POST['overtime'])){ $overtime = $_POST['overtime']; }
+		if (isset($_POST['match_overtime'])){ $match_overtime = $_POST['match_overtime']; }
 		if (isset($_POST['penalty_shootout'])){ $penalty_shootout = $_POST['penalty_shootout']; }
 		$penalty_goals = trim($_POST['penalty_goals']);
 		$penalty_goals_opponent = trim($_POST['penalty_goals_opponent']);
-		$report = str_replace("\r\n",'<br>', trim($_POST['report']));
+		$match_report = str_replace("\r\n",'<br>', trim($_POST['match_report']));
 		$publish = $_POST['publish'];
 		$match_date = $year."-".$month."-".$day." ".$hour."-".$minute."-00";
 
 		if (!get_magic_quotes_gpc()) {
-		    $additional_type = addslashes($additional_type);
-		    $referee = addslashes($referee);
-		    $report = addslashes($report);
-		    $stadium = addslashes($stadium);
+		    $match_additional_type = addslashes($match_additional_type);
+		    $match_referee = addslashes($match_referee);
+		    $match_report = addslashes($match_report);
+		    $match_stadium = addslashes($match_stadium);
 		}
 
-		if (!isset($neutral)){ $neutral = 0; }
-		if (!isset($overtime)){ $overtime = 0; }
+		if (!isset($match_neutral)){ $match_neutral = 0; }
+		if (!isset($match_overtime)){ $match_overtime = 0; }
 		if (!isset($penalty_shootout)){ $penalty_shootout = 0; }
 
 		if (!isset($publish)){
@@ -65,16 +65,16 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			$publish = 1;
 		}
 
-		if ($opponent != '') {
+		if ($match_opponent != '') {
 			$add = "INSERT INTO team_matches SET
 				MatchSeasonID = '$season_id',
 				MatchDateTime = '$match_date',
-				MatchTypeID = '$type',
-				MatchAdditionalType = '$additional_type',
-				MatchOpponent = '$opponent',
-				MatchPlaceID = '$place',
-				MatchNeutral = '$neutral',
-				MatchStadium = '$stadium',
+				MatchTypeID = '$match_type_id',
+				MatchAdditionalType = '$match_additional_type',
+				MatchOpponent = '$match_opponent',
+				MatchPlaceID = '$match_place_id',
+				MatchNeutral = '$match_neutral',
+				MatchStadium = '$match_stadium',
 			";
 			if ($goals == '' || $goals_opponent == '') {
 				$add .= "MatchGoals = NULL,";
@@ -90,14 +90,14 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 				$add .= "MatchPenaltyGoals = '$penalty_goals',";
 				$add .= "MatchPenaltyGoalsOpponent = '$penalty_goals_opponent',";
 			}
-			if (!is_numeric($attendance) || $attendance == '') {
+			if (!is_numeric($match_attendance) || $match_attendance == '') {
 				$add .= "MatchAttendance = NULL,";
 			} else {
-				$add .= "MatchAttendance = '$attendance',";
+				$add .= "MatchAttendance = '$match_attendance',";
 			}
-			$add .= "MatchReferee = '$referee',
-				MatchReport = '$report',
-				MatchOvertime = '$overtime',
+			$add .= "MatchReferee = '$match_referee',
+				MatchReport = '$match_report',
+				MatchOvertime = '$match_overtime',
 				MatchPenaltyShootout  = '$penalty_shootout',
 				MatchPublish = '$publish'
 			";
@@ -112,17 +112,17 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		$day = $_POST['day'];
 		$hour = $_POST['hour'];
 		$minute = $_POST['minute'];
-		$opponent = trim($_POST['opponent']);
-		$place = $_POST['place'];
-		if (isset($_POST['neutral'])){ $neutral = $_POST['neutral']; }
-		$stadium = trim($_POST['stadium']);
-		$type = $_POST['type'];
-		$additional_type = trim($_POST['additional_type']);
-		$referee = trim($_POST['referee']);
-		$attendance = trim($_POST['attendance']);
+		$match_opponent = trim($_POST['match_opponent']);
+		$match_place_id = $_POST['match_place_id'];
+		if (isset($_POST['match_neutral'])){ $match_neutral = $_POST['match_neutral']; }
+		$match_stadium = trim($_POST['match_stadium']);
+		$match_type_id = $_POST['match_type_id'];
+		$match_additional_type = trim($_POST['match_additional_type']);
+		$match_referee = trim($_POST['match_referee']);
+		$match_attendance = trim($_POST['match_attendance']);
 		$goals = trim($_POST['goals']);
 		$goals_opponent = trim($_POST['goals_opponent']);
-		if (isset($_POST['overtime'])){ $overtime = $_POST['overtime']; }
+		if (isset($_POST['match_overtime'])){ $match_overtime = $_POST['match_overtime']; }
 		if (isset($_POST['penalty_shootout'])){ $penalty_shootout = $_POST['penalty_shootout']; }
 		$penalty_goals = trim($_POST['penalty_goals']);
 		$penalty_goals_opponent = trim($_POST['penalty_goals_opponent']);
@@ -140,7 +140,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		$penalties_opponent = trim($_POST['penalties_opponent']);
 		$publish = $_POST['publish'];
 		$publish_optional = $_POST['publish_optional'];
-		$report = str_replace("\r\n",'<br>', trim($_POST['report']));
+		$match_report = str_replace("\r\n",'<br>', trim($_POST['match_report']));
 		$opening_opponent = str_replace("\r\n",'<br>', trim($_POST['opening_opponent']));
 		$substitutes_opponent = str_replace("\r\n",'<br>', trim($_POST['substitutes_opponent']));
 		$substitutions_opponent = str_replace("\r\n",'<br>', trim($_POST['substitutions_opponent']));
@@ -150,10 +150,10 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		$match_date = $year."-".$month."-".$day." ".$hour."-".$minute."-00";
 		
 		if (!get_magic_quotes_gpc()) {
-			$additional_type = addslashes($additional_type);
-			$referee = addslashes($referee);
-			$report = addslashes($report);
-			$stadium = addslashes($stadium);
+			$match_additional_type = addslashes($match_additional_type);
+			$match_referee = addslashes($match_referee);
+			$match_report = addslashes($match_report);
+			$match_stadium = addslashes($match_stadium);
 			$opening_opponent = addslashes($opening_opponent);
 			$substitutes_opponent = addslashes($substitutes_opponent);
 			$substitutions_opponent = addslashes($substitutions_opponent);
@@ -162,8 +162,8 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			$red_cards_opponent = addslashes($red_cards_opponent);
 		}
 
-		if (!isset($neutral)){ $neutral = 0; }
-		if (!isset($overtime)){ $overtime = 0; }
+		if (!isset($match_neutral)){ $match_neutral = 0; }
+		if (!isset($match_overtime)){ $match_overtime = 0; }
 		if (!isset($penalty_shootout)){ $penalty_shootout = 0; }
 		
 		if (!isset($publish)){ 
@@ -178,15 +178,15 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			$publish_optional = 1;
 		}
 
-		if ($opponent != '') {
+		if ($match_opponent != '') {
 			$modify = "UPDATE team_matches SET
 				MatchDateTime = '$match_date',
-				MatchTypeID = '$type',
-				MatchAdditionalType = '$additional_type',
-				MatchOpponent = '$opponent',
-				MatchPlaceID = '$place',
-				MatchNeutral = '$neutral',
-				MatchStadium = '$stadium',
+				MatchTypeID = '$match_type_id',
+				MatchAdditionalType = '$match_additional_type',
+				MatchOpponent = '$match_opponent',
+				MatchPlaceID = '$match_place_id',
+				MatchNeutral = '$match_neutral',
+				MatchStadium = '$match_stadium',
 			";
 			if ($goals == '' || $goals_opponent == '') {
 				$modify .= "MatchGoals = NULL,";
@@ -202,12 +202,12 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 				$modify .= "MatchPenaltyGoals = '$penalty_goals',";
 				$modify .= "MatchPenaltyGoalsOpponent = '$penalty_goals_opponent',";
 			}
-			if (!is_numeric($attendance) || $attendance == '') {
+			if (!is_numeric($match_attendance) || $match_attendance == '') {
 				$modify .= "MatchAttendance = NULL,";
 			} else {
-				$modify .= "MatchAttendance = '$attendance',";
+				$modify .= "MatchAttendance = '$match_attendance',";
 			}
-			$modify .= "MatchOvertime = '$overtime',
+			$modify .= "MatchOvertime = '$match_overtime',
 				MatchPenaltyShootout = '$penalty_shootout',
 				MatchShots = '$shots',
 				MatchShotsOpponent = '$shots_opponent',
@@ -221,8 +221,8 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 				MatchFreekicksOpponent = '$freekicks_opponent',
 				MatchPenalties = '$penalties',
 				MatchPenaltiesOpponent = '$penalties_opponent',
-				MatchReferee = '$referee',
-				MatchReport = '$report',
+				MatchReferee = '$match_referee',
+				MatchReport = '$match_report',
 				MatchPublish = '$publish',
 				MatchPublishOptional = '$publish_optional',
 				MatchOpeningOpponent = '$opening_opponent',
@@ -334,16 +334,16 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top'>*Home or Away?</td>\n";
 		echo "<td align='left' valign='top'>";
-		echo "<input type='radio' name='place' value='1' CHECKED> Home Match<br>";
-		echo "<input type='radio' name='place' value='2'> Away Match<br>";
+		echo "<input type='radio' name='match_place_id' value='1' CHECKED> Home Match<br>";
+		echo "<input type='radio' name='match_place_id' value='2'> Away Match<br>";
 		echo "</td>\n";
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top'>*Opponent:</td>\n";
 		echo "<td align='left' valign='top'>";
-		echo "<select name='opponent'>";
+		echo "<select name='match_opponent'>";
 		$get_opponents = mysqli_query($db_connect, "SELECT * FROM team_opponents ORDER BY OpponentName") or die(mysqli_error());
 		while($data = mysqli_fetch_array($get_opponents)) {
-			echo "<option value='$data[OpponentID]'>$data[OpponentName]</option>\n";
+			echo "<option value='".$data['OpponentID']."'>".$data['OpponentName']."</option>\n";
 		}
 		mysqli_free_result($get_opponents);
 
@@ -351,14 +351,14 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "</td>\n";
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top'>Neutral?</td>\n";
-		echo "<td align='left' valign='top'><input type='checkbox' name='neutral' value='1'></td>\n";
+		echo "<td align='left' valign='top'><input type='checkbox' name='match_neutral' value='1'></td>\n";
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top'>*Match Type:</td>\n";
 		echo "<td align='left' valign='top'>";
-		echo "<select name='type'>";
+		echo "<select name='match_type_id'>";
 		$get_types = mysqli_query($db_connect, "SELECT * FROM team_match_types ORDER BY MatchTypeName") or die(mysqli_error());
 		while($data = mysqli_fetch_array($get_types)) {
-			echo "<option value='$data[MatchTypeID]'>$data[MatchTypeName]</option>\n";
+			echo "<option value='".$data['MatchTypeID']."'>".$data['MatchTypeName']."</option>\n";
 		}
 		mysqli_free_result($get_types);
 
@@ -366,7 +366,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "</td>\n";
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top'>Additional Match Type:</td>\n";
-		echo "<td align='left' valign='top'><input type='text' name='additional_type'></td>\n";
+		echo "<td align='left' valign='top'><input type='text' name='match_additional_type'></td>\n";
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top'>Goals:</td>\n";
 		echo "<td align='left' valign='top'><input type='text' name='goals' size='3'></td>\n";
@@ -375,7 +375,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<td align='left' valign='top'><input type='text' name='goals_opponent' size='3'></td>\n";
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top'>Overtime?</td>\n";
-		echo "<td align='left' valign='top'><input type='checkbox' name='overtime' value='1'></td>\n";
+		echo "<td align='left' valign='top'><input type='checkbox' name='match_overtime' value='1'></td>\n";
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top'>Penalty Shootout?</td>\n";
 		echo "<td align='left' valign='top'><input type='checkbox' name='penalty_shootout' value='1'></td>\n";
@@ -387,15 +387,15 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<td align='left' valign='top'><input type='text' name='penalty_goals_opponent' size='3'></td>\n";
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top'>Referee:</td>\n";
-		echo "<td align='left' valign='top'><input type='text' name='referee'></td>\n";
+		echo "<td align='left' valign='top'><input type='text' name='match_referee'></td>\n";
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top'>Attendance:</td>\n";
-		echo "<td align='left' valign='top'><input type='text' name='attendance'></td>\n";
+		echo "<td align='left' valign='top'><input type='text' name='match_attendance'></td>\n";
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top'>City/Stadium:</td>\n";
-		echo "<td align='left' valign='top'><input type='text' name='stadium'></td>\n";
+		echo "<td align='left' valign='top'><input type='text' name='match_stadium'></td>\n";
 		echo "</tr><tr>\n";
-		echo "<td align='left' valign='top' colspan='2'>Report:<br><textarea name='report' cols='40' rows='15'></textarea></td>\n";
+		echo "<td align='left' valign='top' colspan='2'>Report:<br><textarea name='match_report' cols='40' rows='15'></textarea></td>\n";
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top' colspan='2'>Published:<input type='checkbox' name='publish' value='1' CHECKED></td>\n";
 		echo "</tr><tr>\n";
@@ -406,22 +406,22 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "</form>\n";
 	} else if ($action == 'modify') {
 		$get_match = mysqli_query($db_connect, "SELECT
-			DAYOFMONTH(MatchDateTime) AS day_of_month,
+			DAYOFMONTH(MatchDateTime) AS day,
 			MONTH(MatchDateTime) AS month,
 			YEAR(MatchDateTime) AS year,
 			HOUR(MatchDateTime) AS hour,
 			MINUTE(MatchDateTime) AS minute,
-			MatchPlaceID AS placeid,
-			MatchNeutral AS neutral,
-			MatchOpponent AS opponent,
-			MatchStadium AS stadium,
-			MatchReport AS report,
-			MatchReferee AS referee,
+			MatchPlaceID AS match_place_id,
+			MatchNeutral AS match_neutral,
+			MatchOpponent AS match_opponent,
+			MatchStadium AS match_stadium,
+			MatchReport AS match_report,
+			MatchReferee AS match_referee,
 			MatchGoals AS goals,
 			MatchGoalsOpponent AS goals_opponent,
 			MatchPenaltyGoals AS penalty_goals,
 			MatchPenaltyGoalsOpponent AS penalty_goals_opponent,
-			MatchOvertime AS overtime,
+			MatchOvertime AS match_overtime,
 			MatchPenaltyShootout AS penalty_shootout,
 			MatchShots AS shots,
 			MatchShotsOpponent AS shots_opponent,
@@ -435,11 +435,11 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			MatchFreekicksOpponent AS freekicks_opponent,
 			MatchPenalties AS penalties,
 			MatchPenaltiesOpponent AS penalties_opponent,
-			MatchAttendance AS attendance,
+			MatchAttendance AS match_attendance,
 			MatchPublish as publish,
 			MatchPublishOptional AS publish_optional,
-			MatchTypeID AS typeid,
-			MatchAdditionalType AS additional_type,
+			MatchTypeID AS match_type_id,
+			MatchAdditionalType AS match_additional_type,
 			MatchOpeningOpponent AS opening_opponent,
 			MatchSubstitutesOpponent AS substitutes_opponent,
 			MatchSubstitutionsOpponent AS substitutions_opponent,
@@ -452,7 +452,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		$match_data = mysqli_fetch_array($get_match);
 		mysqli_free_result($get_match);
 
-		$match_data['report'] = str_replace('<br>',"\r\n", $match_data['report']);
+		$match_data['match_report'] = str_replace('<br>',"\r\n", $match_data['match_report']);
 		$match_data['opening_opponent'] = str_replace('<br>',"\r\n", $match_data['opening_opponent']);
 		$match_data['substitutes_opponent'] = str_replace('<br>',"\r\n", $match_data['substitutes_opponent']);
 		$match_data['substitutions_opponent'] = str_replace('<br>',"\r\n", $match_data['substitutions_opponent']);
@@ -471,10 +471,10 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<td align='left' valign='top'>";
 		echo "<select name='day'>";
 		for($i = 1 ; $i < 32 ; $i++) {
-			if($i<10) {
+			if ($i<10) {
 				$i = "0".$i;
 			}
-			if ($match_data['day_of_month'] == $i)
+			if ($match_data['day'] == $i)
 				echo "<option value='$i' SELECTED>$i</option>\n";
 			else
 				echo "<option value='$i'>$i</option>\n";
@@ -529,33 +529,33 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top'>*Home or Away?</td>\n";
 		echo "<td align='left' valign='top'>";
-		if ($match_data['placeid'] == 1) {
-			echo "<input type='radio' name='place' value='1' CHECKED> Home Match<br>\n";
-			echo "<input type='radio' name='place' value='2'> Away Match<br>\n";
+		if ($match_data['match_place_id'] == 1) {
+			echo "<input type='radio' name='match_place_id' value='1' CHECKED> Home Match<br>\n";
+			echo "<input type='radio' name='match_place_id' value='2'> Away Match<br>\n";
 		} else {
-			echo "<input type='radio' name='place' value='1'> Home Match<br>\n";
-			echo "<input type='radio' name='place' value='2' CHECKED> Away Match<br>\n";
+			echo "<input type='radio' name='match_place_id' value='1'> Home Match<br>\n";
+			echo "<input type='radio' name='match_place_id' value='2' CHECKED> Away Match<br>\n";
 		}
 		echo "</td>\n";
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top'>Neutral ?</td>\n";
 		echo "<td align='left' valign='top'>";
-		if ($match_data['neutral'] == 1) {
-			echo "<input type='checkbox' name='neutral' value='1' CHECKED>";
+		if ($match_data['match_neutral'] == 1) {
+			echo "<input type='checkbox' name='match_neutral' value='1' CHECKED>";
 		} else {
-			echo "<input type='checkbox' name='neutral' value='1'>";
+			echo "<input type='checkbox' name='match_neutral' value='1'>";
 		}
 		echo "</td>\n";
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top'>*Opponent:</td>\n";
 		echo "<td align='left' valign='top'>";
-		echo "<select name='opponent'>";
+		echo "<select name='match_opponent'>";
 		$get_opponents = mysqli_query($db_connect, "SELECT * FROM team_opponents ORDER BY OpponentName") or die(mysqli_error());
 		while($data = mysqli_fetch_array($get_opponents)) {
-			if ($match_data['opponent'] == $data['OpponentID']) {
-				echo "<option value='$data[OpponentID]' SELECTED>$data[OpponentName]</option>\n";
+			if ($match_data['match_opponent'] == $data['OpponentID']) {
+				echo "<option value='".$data['OpponentID']."' SELECTED>".$data['OpponentName']."</option>\n";
 			} else {
-				echo "<option value='$data[OpponentID]'>$data[OpponentName]</option>\n";
+				echo "<option value='".$data['OpponentID']."'>".$data['OpponentName']."</option>\n";
 			}
 		}
 		mysqli_free_result($get_opponents);
@@ -565,10 +565,10 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top'>*Match Type:</td>\n";
 		echo "<td align='left' valign='top'>";
-		echo "<select name='type'>";
+		echo "<select name='match_type_id'>";
 		$get_types = mysqli_query($db_connect, "SELECT * FROM team_match_types ORDER BY MatchTypeName") or die(mysqli_error());
 		while($data = mysqli_fetch_array($get_types)) {
-			if ($match_data['typeid'] == $data['MatchTypeID']) {
+			if ($match_data['match_type_id'] == $data['MatchTypeID']) {
 				echo "<option value='$data[MatchTypeID]' SELECTED>$data[MatchTypeName]</option>\n";
 			} else {
 				echo "<option value='$data[MatchTypeID]'>$data[MatchTypeName]</option>\n";
@@ -580,7 +580,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "</td>\n";
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top'>Additional Match Type:</td>\n";
-		echo "<td align='left' valign='top'><input type='text' name='additional_type' value='".$match_data['additional_type']."'></td>\n";
+		echo "<td align='left' valign='top'><input type='text' name='match_additional_type' value='".$match_data['match_additional_type']."'></td>\n";
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top'>Goals:</td>\n";
 		echo "<td align='left' valign='top'><input type='text' name='goals' value='".$match_data['goals']."' size='3'></td>\n";
@@ -590,10 +590,10 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top'>Overtime?</td>\n";
 		echo "<td align='left' valign='top'>";
-		if ($match_data['overtime'] == 1) {
-			echo "<input type='checkbox' name='overtime' value='1' CHECKED>";
+		if ($match_data['match_overtime'] == 1) {
+			echo "<input type='checkbox' name='match_overtime' value='1' CHECKED>";
 		} else {
-			echo "<input type='checkbox' name='overtime' value='1'>";
+			echo "<input type='checkbox' name='match_overtime' value='1'>";
 		}
 		echo "</td>\n";
 		echo "</tr><tr>\n";
@@ -613,22 +613,22 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<td align='left' valign='top'><input type='text' name='penalty_goals_opponent' value='".$match_data['penalty_goals_opponent']."' size='3'></td>\n";
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top'>Referee:</td>\n";
-		echo "<td align='left' valign='top'><input type='text' name='referee' value='".$match_data['referee']."'></td>\n";
+		echo "<td align='left' valign='top'><input type='text' name='match_referee' value='".$match_data['match_referee']."'></td>\n";
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top'>Attendance:</td>\n";
-		echo "<td align='left' valign='top'><input type='text' name='attendance' value='".$match_data['attendance']."'></td>\n";
+		echo "<td align='left' valign='top'><input type='text' name='match_attendance' value='".$match_data['match_attendance']."'></td>\n";
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top'>City/Stadium:</td>\n";
-		echo "<td align='left' valign='top'><input type='text' name='stadium' value='".$match_data['stadium']."'></td>\n";
+		echo "<td align='left' valign='top'><input type='text' name='match_stadium' value='".$match_data['match_stadium']."'></td>\n";
 		echo "</tr><tr>\n";
-		echo "<td align='left' valign='top' colspan='2'>Report:<br><textarea name='report' cols='40' rows='15'>".$match_data['report']."</textarea></td>\n";
+		echo "<td align='left' valign='top' colspan='2'>Report:<br><textarea name='match_report' cols='40' rows='15'>".$match_data['match_report']."</textarea></td>\n";
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top' colspan='2'>";
 		echo "<input type='hidden' name='match_id' value='".$match_id."'>Published:";
 		if ($match_data['publish'] == 1) {
-			echo'<input type="checkbox" name="publish" value="1" CHECKED>';
+			echo "<input type='checkbox' name='publish' value='1' CHECKED>";
 		} else {
-			echo'<input type="checkbox" name="publish" value="1">';
+			echo "<input type='checkbox' name='publish' value='1'>";
 		}
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top' colspan='2'><input type='submit' name='modify_submit' value='Modify Match'></td>\n";
@@ -709,7 +709,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<td align='left' valign='top' colspan='2'>";
 		$get_players = mysqli_query($db_connect, "SELECT
 			CONCAT(team_players.PlayerFirstName, ' ', team_players.PlayerLastName) AS player_name,
-			team_players.PlayerID AS player
+			team_players.PlayerID AS player_id
 			FROM team_players,team_seasons
 			WHERE team_players.PlayerID = team_seasons.SeasonPlayerID
 			AND team_seasons.SeasonID = '$season_id'
@@ -721,7 +721,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "(NOTE: hold down CTRL to select more than one.)<br>\n";
 		echo "<select name='add_to_squad[]' size='10' multiple='multiple'>";
 		while($data = mysqli_fetch_array($get_players)) {
-			echo "<option value='$data[player]'>$data[player_name]</option>\n";
+			echo "<option value='".$data['player_id']."'>".$data['player_name']."</option>\n";
 		}
 		echo "</select>\n";
 		echo "<input type='submit' name='add_squad_submit' value='Add'><br>\n";
@@ -730,7 +730,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		$get_squad = mysqli_query($db_connect, "SELECT
 			CONCAT(team_players.PlayerFirstName, ' ', team_players.PlayerLastName) AS player_name,
 			team_players.PlayerNumber AS player_number,
-			team_appearances.AppearanceID AS id
+			team_appearances.AppearanceID AS appearance_id
 			FROM team_players, team_appearances
 			WHERE team_players.PlayerID = team_appearances.AppearancePlayerID
 			AND team_appearances.AppearanceMatchID = '$match_id'
@@ -739,10 +739,10 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		") or die(mysqli_error());
 
 		if (mysqli_num_rows($get_squad) == 0) {
-			echo "No Opening Line-up Players added yet.";
+			echo "No Opening Line-up Players Added Yet.";
 		} else {
-			while($squaddata = mysqli_fetch_array($get_squad)) {
-				echo "#$squaddata[player_number] $squaddata[player_name] <a href='match_data.php?session_id=$session&amp;action=remove_from_squad&amp;id=$squaddata[id]'><img src='../images/remove.png' border='0' alt='Remove'></a><br>\n";
+			while($data = mysqli_fetch_array($get_squad)) {
+				echo "#".$data['player_number']." ".$data['player_name']." <a href='match_data.php?session_id=".$session."&amp;action=remove_from_squad&amp;id=".$data['appearance_id']."'><img src='../images/remove.png' border='0' alt='Remove'></a><br>\n";
 			}
 		}
 		mysqli_free_result($get_squad);
@@ -760,7 +760,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "(NOTE: hold down CTRL to select more than one.)<br>\n";
 		echo "<select name='add_to_substitutes[]' size='10' multiple='multiple'>";
 		while($data = mysqli_fetch_array($get_players)) {
-			echo "<option value='$data[player]'>$data[player_name]</option>\n";
+			echo "<option value='".$data['player_id']."'>".$data['player_name']."</option>\n";
 		}
 		echo "</select>\n";
 		echo "<input type='submit' name='add_substitutes_submit' value='Add'><br>\n";
@@ -769,7 +769,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		$get_substitutes = mysqli_query($db_connect, "SELECT
 			CONCAT(team_players.PlayerFirstName, ' ', team_players.PlayerLastName) AS player_name,
 			team_players.PlayerNumber AS player_number,
-			team_substitutes.SubstituteID AS id
+			team_substitutes.SubstituteID AS substitute_id
 			FROM team_players, team_substitutes
 			WHERE team_players.PlayerID = team_substitutes.SubstitutePlayerID
 			AND team_substitutes.SubstituteMatchID = '$match_id'
@@ -778,10 +778,10 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		") or die(mysqli_error());
 
 		if (mysqli_num_rows($get_substitutes) == 0) {
-			echo "No substitutes added yet.";
+			echo "No Substitutes Added Yet.";
 		} else {
-			while($sdata = mysqli_fetch_array($get_substitutes)) {
-				echo "#$sdata[player_number] $sdata[player_name] <a href='match_data.php?session_id=$session&amp;action=remove_from_substitutes&amp;id=$sdata[id]'><img src='../images/remove.png' border='0' alt='Remove'></a><br>\n";
+			while($data = mysqli_fetch_array($get_substitutes)) {
+				echo "#".$data['player_number']." ".$data['player_name']." <a href='match_data.php?session_id=".$session."&amp;action=remove_from_substitutes&amp;id=".$data['substitute_id']."'><img src='../images/remove.png' border='0' alt='Remove'></a><br>\n";
 			}
 		}
 		mysqli_free_result($get_substitutes);
@@ -794,77 +794,76 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top' colspan='2'>";
 		$get_opening = mysqli_query($db_connect, "SELECT
-			CONCAT(team_players.PlayerFirstName, ' ', team_players.PlayerLastName) AS name,
-			team_players.PlayerID AS id
+			CONCAT(team_players.PlayerFirstName, ' ', team_players.PlayerLastName) AS player_name,
+			team_players.PlayerID AS player_id
 			FROM team_players, team_appearances
 			WHERE
 			team_players.PlayerID = team_appearances.AppearancePlayerID
 			AND team_appearances.AppearanceMatchID = '$match_id'
 			AND team_appearances.AppearanceSeasonID = '$season_id'
-			ORDER BY name
+			ORDER BY player_name
 		") or die(mysqli_error());
 		$get_sub = mysqli_query($db_connect, "SELECT
-			CONCAT(team_players.PlayerFirstName, ' ', team_players.PlayerLastName) AS name,
-			team_players.PlayerID AS id
+			CONCAT(team_players.PlayerFirstName, ' ', team_players.PlayerLastName) AS player_name,
+			team_players.PlayerID AS player_id
 			FROM team_players, team_substitutes
 			WHERE team_players.PlayerID = team_substitutes.SubstitutePlayerID
 			AND team_substitutes.SubstituteMatchID = '$match_id'
 			AND team_substitutes.SubstituteSeasonID = '$season_id'
-			ORDER BY name
+			ORDER BY player_name
 		") or die(mysqli_error());
 		$get_sub_in = mysqli_query($db_connect, "SELECT
-			CONCAT(team_players.PlayerFirstName, ' ', team_players.PlayerLastName) AS name,
-			team_players.PlayerID AS id
+			CONCAT(team_players.PlayerFirstName, ' ', team_players.PlayerLastName) AS player_name,
+			team_players.PlayerID AS player_id
 			FROM team_players, team_substitutions
 			WHERE team_players.PlayerID = team_substitutions.SubstitutionPlayerIDIn
 			AND team_substitutions.SubstitutionMatchID = '$match_id'
 			AND team_substitutions.SubstitutionSeasonID = '$season_id'
-			ORDER BY name
+			ORDER BY player_name
 		") or die(mysqli_error());
 		echo "<form method='post' action='match_data.php?session_id=".$session."'>\n";
 		echo "<input name='script_name' type='hidden' value='".$script_name."'>\n";
 		echo "Out: <select name='add_to_substitutions_out'>";
 		while($data = mysqli_fetch_array($get_opening)) {
-			echo "<option value='$data[id]'>$data[name]</option>\n";
+			echo "<option value='".$data['player_id']."'>".$data['player_name']."</option>\n";
 		}
-
 		if (mysqli_num_rows($get_sub_in) > 0) {
 			echo "<option value='-'>----------------------</option>\n";
 			while($data = mysqli_fetch_array($get_sub_in)) {
-				echo "<option value='$data[id]'>$data[name]</option>\n";
+				echo "<option value='".$data['player_id']."'>".$data['player_name']."</option>\n";
 			}
 		}
 		echo "</select>\n";
 		echo "In: <select name='add_to_substitutions_in'>";
 		while($data = mysqli_fetch_array($get_sub)) {
-			echo "<option value='$data[id]'>$data[name]</option>\n";
+			echo "<option value='".$data['player_id']."'>".$data['player_name']."</option>\n";
 		}
 		mysqli_free_result($get_sub);
 
 		echo "</select>\n";
 		echo "<br>\n";
-		echo "Minute: <input type='text' name='minute' size='2'>\n";
+		echo "Minute: <input type='text' name='substitution_minute' size='2'>\n";
 		echo "<input type='submit' name='add_substitutions_submit' value='Add'><br>\n";
 		echo "<input type='hidden' name='match_id' value='".$match_id."'>\n";
 		echo "<input type='hidden' name='season_id' value='".$season_id."'>\n";
 		$get_substitutions = mysqli_query($db_connect, "SELECT
 			CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
 			CONCAT(PL.PlayerFirstName, ' ', PL.PlayerLastName) AS player_name2,
-			S.SubstitutionMinute AS minute,
-			S.SubstitutionID AS id
+			S.SubstitutionMinute AS substitution_minute,
+			S.SubstitutionID AS substitute_id
 			FROM team_players P, team_players PL, team_substitutions S
 			WHERE S.SubstitutionMatchID = '$match_id'
 			AND S.SubstitutionSeasonID = '$season_id'
 			AND P.PlayerID = S.SubstitutionPlayerIDIn
 			AND PL.PlayerID = S.SubstitutionPlayerIDOut
-			ORDER BY minute
+			ORDER BY substitution_minute
 		") or die(mysqli_error());
 
-		if(mysqli_num_rows($get_substitutions) == 0) {
-			echo "No substitutions added yet.";
+		if (mysqli_num_rows($get_substitutions) == 0) {
+			echo "No Substitutions Added Yet.";
 		} else {
-			while($sudata = mysqli_fetch_array($get_substitutions)) {
-				echo "$sudata[player_name] for $sudata[player_name2] ($sudata[minute])<a href='match_data.php?session_id=$session&amp;action=remove_from_substitutions&amp;id=$sudata[id]'><img src='../images/remove.png' border='0' alt='Remove'></a><br>\n";
+			while($data = mysqli_fetch_array($get_substitutions)) {
+				echo "".$data['player_name']." for ".$data['player_name2']." (".$data['substitution_minute'].")<a href='match_data.php?session_id=".$session."&amp;action=remove_from_substitutions&amp;id=".$data['substitute_id']."'><img src='../images/remove.png' border='0' alt='Remove'></a><br>\n";
 			}
 		}
 		mysqli_free_result($get_substitutions);
@@ -876,57 +875,56 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top' colspan='2'>";
 		
-		if (mysqli_num_rows($get_opening) > 0)
+		if (mysqli_num_rows($get_opening) > 0) {
 			mysqli_data_seek($get_opening, 0);
-
-		if (mysqli_num_rows($get_sub_in) > 0)
+		}
+		if (mysqli_num_rows($get_sub_in) > 0) {
 			mysqli_data_seek($get_sub_in, 0);
-
+		}
 		echo "<form method='post' action='match_data.php?session_id=".$session."'>\n";
 		echo "<input name='script_name' type='hidden' value='".$script_name."'>\n";
 		echo "<select name='add_to_goal_scorers'>";
 		while($data = mysqli_fetch_array($get_opening)) {
-			echo "<option value='$data[id]'>$data[name]</option>\n";
+			echo "<option value='".$data['player_id']."'>".$data['player_name']."</option>\n";
 		}
-
 		if (mysqli_num_rows($get_sub_in) > 0) {
 			echo "<option value='-'>----------------------</option>\n";
 			while($data = mysqli_fetch_array($get_sub_in)) {
-				echo"<option value='$data[id]'>$data[name]</option>\n";
+				echo"<option value='".$data['player_id']."'>".$data['player_name']."</option>\n";
 			}
 		}
 		echo "</select>\n";
-		echo "Minute: <input type='text' name='minute' size='2'><br>\n";
+		echo "Minute: <input type='text' name='goal_minute' size='2'><br>\n";
 		echo "Penalty Shot? <input type='checkbox' value='1' name='penalty'><br>\n";
 		echo "Own goal? <input type='checkbox' value='1' name='own_goal'><br>\n";
-		echo "If Own Goal, Scorer? <input type='text' name='own_scorer'><br>\n";
+		echo "If Own Goal, Scorer? <input type='text' name='goal_own_scorer'><br>\n";
 		echo "<input type='submit' name='add_goal_scorer_submit' value='Add'><br>\n";
 		echo "<input type='hidden' name='match_id' value='".$match_id."'>\n";
 		echo "<input type='hidden' name='season_id' value='".$season_id."'>\n";
 		$get_goal_scorers = mysqli_query($db_connect, "SELECT
 			CONCAT(team_players.PlayerFirstName, ' ', team_players.PlayerLastName) AS player_name,
-			team_goals.GoalMinute AS minute,
-			team_goals.GoalID AS id,
-			team_goals.GoalPenalty AS pen,
-			team_goals.GoalOwn AS own,
-			team_goals.GoalOwnScorer AS own_scorer
+			team_goals.GoalMinute AS goal_minute,
+			team_goals.GoalID AS goal_id,
+			team_goals.GoalPenalty AS goal_penalty,
+			team_goals.GoalOwn AS goal_own,
+			team_goals.GoalOwnScorer AS goal_own_scorer
 			FROM team_players, team_goals
 			WHERE team_players.PlayerID = team_goals.GoalPlayerID
 			AND team_goals.GoalMatchID = '$match_id'
 			AND team_goals.GoalSeasonID = '$season_id'
-			ORDER BY minute
+			ORDER BY goal_minute
 		") or die(mysqli_error());
 
 		if (mysqli_num_rows($get_goal_scorers) == 0) {
-			echo "No Goals added yet.";
+			echo "<br>No Goals Added Yet.";
 		} else {
-			while($gsdata = mysqli_fetch_array($get_goal_scorers)) {
-				if ($gsdata['own'] == 1) {
-					echo "$gsdata[own_scorer] (O.G.) ($gsdata[minute]) <a href='match_data.php?session_id=$session&amp;action=remove_from_goal_scorers&amp;id=$gsdata[id]'><img src='../images/remove.png' border='0' alt='Remove'></a><br>\n";
-				} else if ($gsdata['pen'] == 1) {
-					echo "$gsdata[player_name] (Penalty) ($gsdata[minute]) <a href='match_data.php?session_id=$session&amp;action=remove_from_goal_scorers&amp;id=$gsdata[id]'><img src='../images/remove.png' border='0' alt='Remove'></a><br>\n";
+			while($data = mysqli_fetch_array($get_goal_scorers)) {
+				if ($data['goal_own'] == 1) {
+					echo "".$data['goal_own_scorer']." (O.G.) (".$data['goal_minute'].") <a href='match_data.php?session_id=".$session."&amp;action=remove_from_goal_scorers&amp;id=".$data['goal_id']."'><img src='../images/remove.png' border='0' alt='Remove'></a><br>\n";
+				} else if ($data['goal_penalty'] == 1) {
+					echo "".$data['player_name']." (Penalty) (".$data['goal_minute'].") <a href='match_data.php?session_id=".$session."&amp;action=remove_from_goal_scorers&amp;id=".$data['goal_id']."'><img src='../images/remove.png' border='0' alt='Remove'></a><br>\n";
 				} else {
-					echo "$gsdata[player_name] ($gsdata[minute]) <a href='match_data.php?session_id=$session&amp;action=remove_from_goal_scorers&amp;id=$gsdata[id]'><img src='../images/remove.png' border='0' alt='Remove'></a><br>\n";
+					echo "".$data['player_name']." (".$data['goal_minute'].") <a href='match_data.php?session_id=".$session."&amp;action=remove_from_goal_scorers&amp;id=".$data['goal_id']."'><img src='../images/remove.png' border='0' alt='Remove'></a><br>\n";
 				}
 			}
 		}
@@ -944,45 +942,45 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		$get_goal_scorers = mysqli_query($db_connect, "SELECT
 			CONCAT(team_players.PlayerFirstName, ' ', team_players.PlayerLastName) AS player_name,
 			team_players.PlayerID AS player_id,
-			team_goals.GoalID AS id,
-			team_goals.GoalMinute AS minute
+			team_goals.GoalID AS goal_id,
+			team_goals.GoalMinute AS goal_minute
 			FROM team_players, team_goals
 			WHERE team_players.PlayerID = team_goals.GoalPlayerID
 			AND team_goals.GoalMatchID = '$match_id'
 			AND team_goals.GoalSeasonID = '$season_id'
 			AND team_goals.GoalOwn = 0
 			AND team_goals.GoalPenalty = 0
-			ORDER BY minute
+			ORDER BY goal_minute
 		") or die(mysqli_error());
 
 		if (mysqli_num_rows($get_goal_scorers) > 0) {
 			echo "<select name='add_to_assists_scorer'>";
 			while($data = mysqli_fetch_array($get_goal_scorers)) {
-				echo "<option value='$data[player_id]'>$data[player_name] ($data[minute])</option>\n";
+				echo "<option value='".$data['player_id']."'>".$data['player_name']." (".$data['goal_minute'].")</option>\n";
 			}
 			echo "</select>\n Assisted by ";
 
-			if (mysqli_num_rows($get_opening) > 0)
+			if (mysqli_num_rows($get_opening) > 0) {
 				mysqli_data_seek($get_opening, 0);
-			if (mysqli_num_rows($get_sub_in) > 0)
+			}
+			if (mysqli_num_rows($get_sub_in) > 0) {
 				mysqli_data_seek($get_sub_in, 0);
-
+			}
 			echo "<select name='add_to_assists'>";
 			while($data = mysqli_fetch_array($get_opening)) {
-				echo "<option value='$data[id]'>$data[name]</option>\n";
+				echo "<option value='".$data['player_id']."'>".$data['player_name']."</option>\n";
 			}
-
 			if (mysqli_num_rows($get_sub_in) > 0) {
 				echo "<option value='-'>----------------------</option>\n";
 				while($data = mysqli_fetch_array($get_sub_in)) {
-					echo "<option value='$data[id]'>$data[name]</option>\n";
+					echo "<option value='".$data['player_id']."'>".$data['player_name']."</option>\n";
 				}
 			}
 			echo "</select> <input type='submit' name='add_assist_submit' value='Add'><br>\n";
-			echo "<input type='hidden' name='match_id' value='$match_id'>\n";
-			echo "<input type='hidden' name='season_id' value='$season_id'>\n";
+			echo "<input type='hidden' name='match_id' value='".$match_id."'>\n";
+			echo "<input type='hidden' name='season_id' value='".$season_id."'>\n";
 		} else {
-			echo "No goals in this Match...";
+			echo "No Goals In This Match...";
 		}
 		mysqli_free_result($get_goal_scorers);
 
@@ -994,46 +992,45 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top' colspan='2'>";
 
-		if (mysqli_num_rows($get_opening) > 0)
+		if (mysqli_num_rows($get_opening) > 0) {
 			mysqli_data_seek($get_opening, 0);
-
-		if (mysqli_num_rows($get_sub_in) > 0)
+		}
+		if (mysqli_num_rows($get_sub_in) > 0) {
 			mysqli_data_seek($get_sub_in, 0);
-
+		}
 		echo "<form method='post' action='match_data.php?session_id=".$session."'>\n";
 		echo "<input name='script_name' type='hidden' value='".$script_name."'>\n";
 		echo "<select name='add_to_yellow_cards'>";
 		while($data = mysqli_fetch_array($get_opening)) {
-			echo "<option value='$data[id]'>$data[name]</option>\n";
+			echo "<option value='".$data['player_id']."'>".$data['player_name']."</option>\n";
 		}
-
 		if (mysqli_num_rows($get_sub_in) > 0) {
 			echo "<option value='-'>----------------------</option>\n";
 			while($data = mysqli_fetch_array($get_sub_in)) {
-				echo"<option value='$data[id]'>$data[name]</option>\n";
+				echo"<option value='".$data['player_id']."'>".$data['player_name']."</option>\n";
 			}
 		}
 		echo "</select>\n";
-		echo "Minute: <input type='text' name='minute' size='2'>\n";
+		echo "Minute: <input type='text' name='yellow_card_minute' size='2'>\n";
 		echo "<input type='submit' name='add_yellow_card_submit' value='Add'><br>\n";
 		echo "<input type='hidden' name='match_id' value='".$match_id."'>\n";
 		echo "<input type='hidden' name='season_id' value='".$season_id."'>";
 		$get_yellow_cards = mysqli_query($db_connect, "SELECT
 			CONCAT(team_players.PlayerFirstName, ' ', team_players.PlayerLastName) AS player_name,
-			team_yellow_cards.YellowCardMinute AS minute,
-			team_yellow_cards.YellowCardID AS id
+			team_yellow_cards.YellowCardMinute AS yellow_card_minute,
+			team_yellow_cards.YellowCardID AS yellow_card_id
 			FROM team_players, team_yellow_cards
 			WHERE team_players.PlayerID = team_yellow_cards.YellowCardPlayerID
 			AND team_yellow_cards.YellowCardMatchID = '$match_id'
 			AND team_yellow_cards.YellowCardSeasonID = '$season_id'
-			ORDER BY minute
+			ORDER BY yellow_card_minute
 		") or die(mysqli_error());
 
 		if (mysqli_num_rows($get_yellow_cards) == 0) {
-			echo "No yellow cards added yet.";
+			echo "No Yellow Cards Added Yet.";
 		} else {
-			while($ycdata = mysqli_fetch_array($get_yellow_cards)) {
-				echo "$ycdata[player_name] ($ycdata[minute]) <a href='match_data.php?session_id=$session&amp;action=remove_from_yellow_cards&amp;id=$ycdata[id]'><img src='../images/remove.png' border='0' alt='Remove'></a><br>\n";
+			while($data = mysqli_fetch_array($get_yellow_cards)) {
+				echo "".$data['player_name']." (".$data['yellow_card_minute'].") <a href='match_data.php?session_id=".$session."&amp;action=remove_from_yellow_cards&amp;id=".$data['yellow_card_id']."'><img src='../images/remove.png' border='0' alt='Remove'></a><br>\n";
 			}
 		}
 		mysqli_free_result($get_yellow_cards);
@@ -1045,50 +1042,48 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top' colspan='2'>";
 
-		if (mysqli_num_rows($get_opening) > 0)
+		if (mysqli_num_rows($get_opening) > 0) {
 			mysqli_data_seek($get_opening, 0);
-
-		if (mysqli_num_rows($get_sub_in) > 0)
+		}
+		if (mysqli_num_rows($get_sub_in) > 0) {
 			mysqli_data_seek($get_sub_in, 0);
-
+		}
 		echo "<form method='post' action='match_data.php?session_id=".$session."'>\n";
 		echo "<input name='script_name' type='hidden' value='".$script_name."'>\n";
 		echo "<select name='add_to_red_cards'>";
 		while($data = mysqli_fetch_array($get_opening)) {
-			echo "<option value='$data[id]'>$data[name]</option>\n";
+			echo "<option value='".$data['player_id']."'>".$data['player_name']."</option>\n";
 		}
-
 		if (mysqli_num_rows($get_sub_in) > 0) {
 			echo "<option value='-'>----------------------</option>\n";
 			while($data = mysqli_fetch_array($get_sub_in)) {
-				echo "<option value='$data[id]'>$data[name]</option>\n";
+				echo "<option value='".$data['player_id']."'>".$data['player_name']."</option>\n";
 			}
 		}
 		mysqli_free_result($get_opening);
-
 		mysqli_free_result($get_sub_in);
 
 		echo "</select>\n";
-		echo "Minute: <input type='text' name='minute' size='2'>\n";
+		echo "Minute: <input type='text' name='red_card_minute' size='2'>\n";
 		echo "<input type='submit' name='add_red_card_submit' value='Add'><br>\n";
 		echo "<input type='hidden' name='match_id' value='".$match_id."'>\n";
 		echo "<input type='hidden' name='season_id' value='".$season_id."'>\n";
 		$get_red_cards = mysqli_query($db_connect, "SELECT
 			CONCAT(team_players.PlayerFirstName, ' ', team_players.PlayerLastName) AS player_name,
-			team_red_cards.RedCardMinute AS minute,
-			team_red_cards.RedCardID as id
+			team_red_cards.RedCardMinute AS red_card_minute,
+			team_red_cards.RedCardID as red_card_id
 			FROM team_players, team_red_cards
 			WHERE team_players.PlayerID = team_red_cards.RedCardPlayerID
 			AND team_red_cards.RedCardMatchID = '$match_id'
 			AND team_red_cards.RedCardSeasonID = '$season_id'
-			ORDER BY minute
+			ORDER BY red_card_minute
 		") or die(mysqli_error());
 
-		if(mysqli_num_rows($get_red_cards) == 0) {
-			echo "No red cards added yet.";
+		if (mysqli_num_rows($get_red_cards) == 0) {
+			echo "No Red Cards Added Yet.";
 		} else {
-			while($rcdata = mysqli_fetch_array($get_red_cards)) {
-				echo "$rcdata[player_name] ($rcdata[minute]) <a href='match_data.php?session_id=$session&amp;action=remove_from_red_cards&amp;id=$rcdata[id]'><img src='../images/remove.png' border='0' alt='Remove'></a><br>\n";
+			while($data = mysqli_fetch_array($get_red_cards)) {
+				echo "".$data['player_name']." (".$data['red_card_minute'].") <a href='match_data.php?session_id=".$session."&amp;action=remove_from_red_cards&amp;id=".$data['red_card_id']."'><img src='../images/remove.png' border='0' alt='Remove'></a><br>\n";
 			}
 		}
 		mysqli_free_result($get_red_cards);
@@ -1101,42 +1096,43 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 	echo "</td>\n";
 	echo "<td align='left' valign='top' width='50%'>";
 	$get_matches = mysqli_query($db_connect, "SELECT
-		DATE_FORMAT(team_matches.MatchDateTime, '%b %D %Y at %H:%i') AS date,
-		team_opponents.OpponentName AS opponent,
-		team_matches.MatchID AS id,
-		team_match_types.MatchTypeName AS type_name,
-		team_matches.MatchStadium AS stadium,
-		team_match_places.MatchPlaceName AS matchplace,
+		DATE_FORMAT(team_matches.MatchDateTime, '%b %D %Y at %H:%i') AS match_date,
+		team_opponents.OpponentName AS opponent_name,
+		team_matches.MatchID AS match_id,
+		team_match_types.MatchTypeName AS match_type_name,
+		team_matches.MatchStadium AS match_stadium,
+		team_match_places.MatchPlaceName AS match_place_name,
 		team_matches.MatchPublish AS publish,
-		team_matches.MatchNeutral AS neutral
+		team_matches.MatchNeutral AS match_neutral
 		FROM team_matches, team_match_types, team_match_places, team_opponents
 		WHERE MatchSeasonID = '$season_id'
 		AND team_matches.MatchTypeID = team_match_types.MatchTypeID
 		AND team_matches.MatchPlaceID = team_match_places.MatchPlaceID
 		AND team_matches.MatchOpponent = team_opponents.OpponentID
-		ORDER BY MatchDateTime
+		ORDER BY match_date
 	") or die(mysqli_error());
 
 	if (mysqli_num_rows($get_matches) <1) {
-		echo "<b>No matches: ".$season_name."</b>";
+		echo "<b>No Matches: ".$season_name."</b>";
 	} else {
 		echo "<b>Matches in ".$season_name.":</b><br><br>";
 		while($data = mysqli_fetch_array($get_matches)) {
-			echo "<a href='$PHP_SELF?session_id=$session&amp;action=modify&amp;match_id=$data[id]'>$data[date], vs. $data[opponent]</a><br>$data[matchplace]";
+			echo "<a href='".$PHP_SELF."?session_id=".$session."&amp;action=modify&amp;match_id=".$data['match_id']."'>".$data['match_date'].", vs. ".$data['opponent_name']."</a><br>".$data['match_place_name']."";
 
-			if ($data['neutral'] == 1)
-				echo "(neutral)";
+			if ($data['match_neutral'] == 1) {
+				echo "(Neutral)";
+			}
+			echo ": ".$data['match_type_name']."";
 
-			echo ": $data[type_name]";
-
-			if ($data['publish'] == 1)
+			if ($data['publish'] == 1) {
 				echo "<br><br>\n";
-			else
+			} else {
 				echo " (NB)<br><br>\n";
+			}
 		}
 	}
 	echo "<br><br>\n";
-	echo "NB = This match is not published yet.\n";
+	echo "NB = This Match Is Not Published Yet.\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
