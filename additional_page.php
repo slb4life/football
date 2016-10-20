@@ -11,7 +11,7 @@ $query = mysqli_query($db_connect, "SELECT
 	page_content,
 	publish
 	FROM team_pages
-	WHERE page_id = '".$id."'
+	WHERE page_id = '$id'
 	AND publish = '1'
 	LIMIT 1
 ") or die(mysqli_error());

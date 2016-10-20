@@ -24,19 +24,19 @@ if ($submit) {
 		exit();
 	}
 	if ($name == '' || $comments == '') {
-		header("Location: ".$HTTP_REFERER."");
+		header("Location: $HTTP_REFERER");
 		exit();
 	} else {
 		$_SESSION['comment_made'] = '1';
 		mysqli_query($db_connect, "INSERT INTO 
 			team_comments SET
-			MatchID = '".$id."',
-			Name = '".$name."',
-			Comments = '".$comments."',
+			MatchID = '$id',
+			Name = '$name',
+			Comments = '$comments',
 			Time = NOW(),
-			IP = '".$IP."'
+			IP = '$IP'
 		") or die(mysqli_error());
-		header("Location: ".$HTTP_REFERER."");
+		header("Location: $HTTP_REFERER");
 	}
 }
 ?>

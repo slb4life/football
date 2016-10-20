@@ -61,7 +61,7 @@ $get_details = mysqli_query($db_connect, "SELECT
 	M.MatchPenalties AS penalties,
 	M.MatchPenaltiesOpponent AS penalties_opponent,
 	DATE_FORMAT(M.MatchDateTime, '$how_to_print_in_report') AS match_date,
-	M.MatchPlaceID AS match_place,
+	M.MatchPlaceID AS match_place_id,
 	M.MatchReport AS match_report,
 	M.MatchReferee AS match_referee,
 	M.MatchAttendance AS match_attendance,
@@ -73,7 +73,7 @@ $get_details = mysqli_query($db_connect, "SELECT
 	P.PreviewText AS preview_text
 	FROM (team_matches M, team_match_types MT, team_opponents O)
 	LEFT OUTER JOIN team_previews P ON M.MatchID = P.PreviewMatchID
-	WHERE M.MatchID = '".$id."'
+	WHERE M.MatchID = '$id'
 	AND M.MatchTypeID = MT.MatchTypeID
 	AND M.MatchOpponent = O.OpponentID
 	LIMIT 1
@@ -86,24 +86,29 @@ $image_url_1 = "images/team_logo.png";
 $image_url_2 = "images/team_logo.jpg";
 $image_url_3 = "images/opponent_logo_".$mdata['opponent_id'].".png";
 $image_url_4 = "images/opponent_logo_".$mdata['opponent_id'].".jpg";
+
 if ((file_exists($image_url_1) && file_exists($image_url_3)) || (file_exists($image_url_2) && file_exists($image_url_4)) || (file_exists($image_url_1) && file_exists($image_url_4)) || (file_exists($image_url_2) && file_exists($image_url_3))) {
 	$logos = 1;
 }
-if ($mdata['goal_scorers_opponent'] == '')
+if ($mdata['goal_scorers_opponent'] == '') {
 	$mdata['goal_scorers_opponent'] = "".$locale_none."";
-if ($mdata['substitutions_opponent'] == '')
+}
+if ($mdata['substitutions_opponent'] == '') {
 	$mdata['substitutions_opponent'] = "".$locale_none."";
-if ($mdata['yellow_cards_opponent'] == '')
+}
+if ($mdata['yellow_cards_opponent'] == '') {
 	$mdata['yellow_cards_opponent'] = "".$locale_none."";
-if ($mdata['red_cards_opponent'] == '')
+}
+if ($mdata['red_cards_opponent'] == '') {
 	$mdata['red_cards_opponent'] = "".$locale_none."";
+}
 echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
 echo "<tr bgcolor='#".(CELLBGCOLORTOP)."'>\n";
 echo "<td align='left' valign='middle' width='50%'><b>".$mdata['match_date']." / ".$locale_stadium.": ".$mdata['match_stadium']."</b></td>\n";
 echo "<td align='right' valign='middle' width='50%'><b>".$locale_attendance.":</b> ".$mdata['match_attendance']."</td>\n";
 echo "</tr>\n";
 echo "</table>\n";
-if ($mdata['match_place'] == 1) { 
+if ($mdata['match_place_id'] == 1) { 
 	echo "<table width='100%' align='center' cellspacing='2' cellpadding='2' border='0'>\n";
 	echo "<tr>\n";
 	echo "<td align='left' valign='middle' width='45%'>\n";
@@ -178,38 +183,38 @@ if ($mdata['match_place'] == 1) {
 	$get_goal_scorers = mysqli_query($db_connect, "SELECT
 		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
 		P.PlayerPublish AS publish,
-		G.GoalMinute AS minute,
-		G.GoalOwn AS own,
-		G.GoalOwnScorer AS own_scorer,
-		G.GoalPlayerID AS id,
-		G.GoalPenalty AS pen
+		G.GoalMinute AS goal_minute,
+		G.GoalOwn AS goal_own,
+		G.GoalOwnScorer AS goal_own_scorer,
+		G.GoalPlayerID AS player_id,
+		G.GoalPenalty AS goal_penalty
 		FROM team_players P, team_goals G
-		WHERE G.GoalMatchID = '".$id."'
+		WHERE G.GoalMatchID = '$id'
 		AND P.PlayerID = G.GoalPlayerID
-		ORDER BY minute
+		ORDER BY goal_minute
 	") or die(mysqli_error());
 	if (mysqli_num_rows($get_goal_scorers) == 0) {
 		echo "".$locale_none."";
 	} else {
 		while ($data = mysqli_fetch_array($get_goal_scorers)) {
-			if ($data['minute'] == 0) {
-				$temp_minute = '';
+			if ($data['goal_minute'] == 0) {
+				$check_minute = '';
 			} else {
-				$temp_minute = " (".$data['minute'].")";
+				$check_minute = " (".$data['goal_minute'].")";
 			}
-			if ($data['own'] == 1) {
-				echo "".$data[own_scorer]." (".$locale_own_goal_short.")".$temp_minute."<br>\n";
-			} else if ($data['pen'] == 1) {
+			if ($data['goal_own'] == 1) {
+				echo "".$data['goal_own_scorer']." (".$locale_own_goal_short.")".$check_minute."<br>\n";
+			} else if ($data['goal_penalty'] == 1) {
 				if ($data['publish'] == 1) {
-					echo "<a href='player.php?id=".$data['id']."'>".$data['player_name']."</a> (".$locale_penalty_short.")".$temp_minute."<br>\n";
+					echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a> (".$locale_penalty_short.")".$check_minute."<br>\n";
 				} else {
-					echo "".$data['player_name']." (".$locale_penalty_short.")".$temp_minute."<br>\n";
+					echo "".$data['player_name']." (".$locale_penalty_short.")".$check_minute."<br>\n";
 				}
 			} else {
 				if ($data['publish'] == 1) {
-					echo "<a href='player.php?id=".$data['id']."'>".$data['player_name']."</a>".$temp_minute."<br>\n";
+					echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>".$check_minute."<br>\n";
 				} else {
-					echo "".$data['player_name']."".$temp_minute."<br>\n";
+					echo "".$data['player_name']."".$check_minute."<br>\n";
 				}
 			}
 		}
@@ -230,18 +235,18 @@ if ($mdata['match_place'] == 1) {
 	echo "<td align='left' valign='top' width='50%'>\n";
 	$get_apps = mysqli_query($db_connect, "SELECT
 		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
+		P.PlayerID AS player_id,
 		P.PlayerPositionID AS player_position_id,
-		P.PlayerPublish AS publish,
-		P.PlayerID AS id,
-		P.PlayerNumber AS player_number
+		P.PlayerNumber AS player_number,
+		P.PlayerPublish AS publish
 		FROM team_players P, team_appearances A
-		WHERE A.AppearanceMatchID = '".$id."'
+		WHERE A.AppearanceMatchID = '$id'
 		AND P.PlayerID = A.AppearancePlayerID
 		ORDER BY player_position_id, player_number
 	") or die(mysqli_error());
 	while ($data = mysqli_fetch_array($get_apps)) {
 		if ($data['publish'] == 1) {
-			echo "<a href='player.php?id=".$data['id']."'>".$data['player_name']."</a><br>\n";
+			echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a><br>\n";
 		} else {
 			echo "".$data['player_name']."<br>\n";
 		}
@@ -262,18 +267,18 @@ if ($mdata['match_place'] == 1) {
 	echo "<td align='left' valign='top' width='50%'>";
 	$get_substitutes = mysqli_query($db_connect, "SELECT
 		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
+		P.PlayerID AS player_id,
 		P.PlayerPositionID AS player_position_id,
-		P.PlayerPublish AS publish,
-		P.PlayerID AS id,
-		P.PlayerNumber AS player_number
+		P.PlayerNumber AS player_number,
+		P.PlayerPublish AS publish
 		FROM team_players P, team_substitutes S
-		WHERE S.SubstituteMatchID = '".$id."'
+		WHERE S.SubstituteMatchID = '$id'
 		AND P.PlayerID = S.SubstitutePlayerID
 		ORDER BY player_position_id, player_number
 	") or die(mysqli_error());
 	while ($data = mysqli_fetch_array($get_substitutes)) {
 		if ($data['publish'] == 1) {
-			echo "<a href='player.php?id=".$data['id']."'>".$data['player_name']."</a><br>\n";
+			echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a><br>\n";
 		} else {
 			echo "".$data['player_name']."<br>\n";
 		}
@@ -295,36 +300,37 @@ if ($mdata['match_place'] == 1) {
 	$get_substitutions = mysqli_query($db_connect, "SELECT
 		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
 		CONCAT(PL.PlayerFirstName, ' ', PL.PlayerLastName) AS player_name2,
+		P.PlayerID AS player_id,
+		PL.PlayerID AS player_id2,
 		P.PlayerPublish AS publish,
 		PL.PlayerPublish AS publish2,
-		P.PlayerID AS id,
-		PL.PlayerID AS id2,
-		S.SubstitutionMinute AS minute
+		S.SubstitutionMinute AS substitution_minute
 		FROM team_players P, team_players PL, team_substitutions S
-		WHERE S.SubstitutionMatchID = '".$id."'
+		WHERE S.SubstitutionMatchID = '$id'
 		AND P.PlayerID = S.SubstitutionPlayerIDIn
 		AND PL.PlayerID = S.SubstitutionPlayerIDOut
-		ORDER BY minute
+		ORDER BY substitution_minute
 	") or die(mysqli_error());
+
 	if (mysqli_num_rows($get_substitutions) == 0) {
 		echo "".$locale_none."";
 	} else {
 		while ($data = mysqli_fetch_array($get_substitutions)) {
-			if ($data['minute'] == 0) {
-				$temp_minute = '';
+			if ($data['substitution_minute'] == 0) {
+				$check_minute = '';
 			} else {
-				$temp_minute = " (".$data['minute'].")";
+				$check_minute = " (".$data['substitution_minute'].")";
 			}
 			if ($data['publish'] == 1) {
-				echo "<a href='player.php?id=".$data['id']."'>".$data['player_name']."</a>";
+				echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>";
 			} else {
 				echo "".$data['player_name']."";
 				echo " -> ";
 			}
 			if ($data['publish2'] == 1) {
-				echo "<a href='player.php?id=".$data['id2']."'>".$data['player_name2']."</a>".$temp_minute."<br>\n";
+				echo "<a href='player.php?id=".$data['player_id2']."'>".$data['player_name2']."</a>".$check_minute."<br>\n";
 			} else {
-				echo "".$data['player_name2']."".$temp_minute."<br>\n";
+				echo "".$data['player_name2']."".$check_minute."<br>\n";
 			}
 		}
 	}
@@ -344,27 +350,28 @@ if ($mdata['match_place'] == 1) {
 	echo "<td align='left' valign='top' width='50%'>";
 	$get_yellows = mysqli_query($db_connect, "SELECT
 		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
+		P.PlayerID AS player_id,
 		P.PlayerPublish AS publish,
-		P.PlayerID AS id,
-		Y.YellowCardMinute AS minute
+		Y.YellowCardMinute AS yellow_card_minute
 		FROM team_players P, team_yellow_cards Y
-		WHERE Y.YellowCardMatchID = '".$id."'
+		WHERE Y.YellowCardMatchID = '$id'
 		AND P.PlayerID = Y.YellowCardPlayerID
-		ORDER BY minute
+		ORDER BY yellow_card_minute
 	") or die(mysqli_error());
+
 	if (mysqli_num_rows($get_yellows) == 0) {
 		echo "".$locale_none."";
 	} else {
 		while ($data = mysqli_fetch_array($get_yellows)) {
-			if ($data['minute'] == 0) {
-				$temp_minute = '';
+			if ($data['yellow_card_minute'] == 0) {
+				$check_minute = '';
 			} else {
-				$temp_minute = " (".$data['minute'].")";
+				$check_minute = " (".$data['yellow_card_minute'].")";
 			}
 			if ($data['publish'] == 1) {
-				echo "<a href='player.php?id=".$data['id']."'>".$data['player_name']."</a>".$temp_minute."<br>\n";
+				echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>".$check_minute."<br>\n";
 			} else {
-				echo "".$data['player_name']."".$temp_minute."<br>\n";
+				echo "".$data['player_name']."".$check_minute."<br>\n";
 			}
 		}
 	}
@@ -384,27 +391,28 @@ if ($mdata['match_place'] == 1) {
 	echo "<td align='left' valign='top' width='50%'>";
 	$get_reds = mysqli_query($db_connect, "SELECT
 		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
+		P.PlayerID AS player_id,
 		P.PlayerPublish AS publish,
-		P.PlayerID AS id,
-		R.RedCardMinute AS minute
+		R.RedCardMinute AS red_card_minute
 		FROM team_players P, team_red_cards R
-		WHERE R.RedCardMatchID = '".$id."'
+		WHERE R.RedCardMatchID = '$id'
 		AND P.PlayerID = R.RedCardPlayerID
-		ORDER BY minute
+		ORDER BY red_card_minute
 	") or die(mysqli_error());
+
 	if (mysqli_num_rows($get_reds) == 0) {
 		echo "".$locale_none."";
 	} else {
 		while ($data = mysqli_fetch_array($get_reds)) {
-			if ($data['minute'] == 0) {
-				$temp_minute = '';
+			if ($data['red_card_minute'] == 0) {
+				$check_minute = '';
 			} else {
-				$temp_minute = " (".$data['minute'].")";
+				$check_minute = " (".$data['red_card_minute'].")";
 			}
 			if ($data['publish'] == 1) {
-				echo "<a href='player.php?id=".$data['id']."'>".$data['player_name']."</a>".$temp_minute."<br>\n";
+				echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>".$check_minute."<br>\n";
 			} else {
-				echo "".$data['player_name']."".$temp_minute."<br>\n";
+				echo "".$data['player_name']."".$check_minute."<br>\n";
 			}
 		}
 	}
@@ -414,6 +422,7 @@ if ($mdata['match_place'] == 1) {
 	echo "<td align='right' valign='top' width='50%'>".$mdata['red_cards_opponent']."</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
+
 	if ($mdata['publish_optional'] == 1) {
 		echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
 		echo "<tr align='left' bgcolor='#".(CELLBGCOLORTOP)."'>\n";
@@ -466,11 +475,13 @@ if ($mdata['match_place'] == 1) {
 } else {
 	echo "<table width='100%' align='center' cellspacing='2' cellpadding='2' border='0'>\n";
 	echo "<tr>\n";
-	echo "<td align='left' valign='middle' width='45%'>\n";
+	echo "<td align='left' valign='middle' width='45%'>";
+
 	if ($logos == 1) {
 		echo "<table width='100%' border='0' cellspacing='2' cellpadding='0'>\n";
 		echo "<tr>\n";
 		echo "<td width='5%' valign='middle' align='center'>";
+
 		if (file_exists($image_url_3)) {
 			echo "<img src='".$image_url_3."' alt=''>";
 		} else {
@@ -484,28 +495,34 @@ if ($mdata['match_place'] == 1) {
 		echo "<font class='bigname'>".$mdata['opponent_name']."</font>\n";
 	}
 	echo "</td>\n";
-	echo "<td align='center' valign='middle' width='10%' bgcolor='".(BGCOLOR1)."'><font class='bigname'>";
+	echo "<td align='center' valign='middle' width='10%' bgcolor='".(BGCOLOR1)."'>";
+	echo "<font class='bigname'>";
+
 	if ($mdata['penalty_goals'] == NULL || $mdata['penalty_goals_opponent'] == NULL) {
 		echo "".$mdata['goals_opponent']." - ".$mdata['goals']."";
+
 		if ($mdata['match_overtime'] == 1) {
 			echo " ".$locale_overtime_short."";
 		}
 	} else {
 		echo "".$mdata['goals_opponent']." - ".$mdata['goals']."<br>(".$mdata['penalty_goals_opponent']." - ".$mdata['penalty_goals']." ".$locale_penalty_shootout_short.")";
 	}
-	echo "</font></td>\n";
-	echo "<td align='right' valign='middle' width='45%'>\n";
+	echo "</font>\n";
+	echo "</td>\n";
+	echo "<td align='right' valign='middle' width='45%'>";
+
 	if ($logos == 1) {
 		echo "<table width='100%' border='0' cellspacing='2' cellpadding='0'>\n";
 		echo "<tr>\n";
 		echo "<td width='95%' valign='middle' align='right'><font class='bigname'>".$team_name."</font></td>\n";
 		echo "<td width='5%' valign='middle' align='center'>";
+
 		if (file_exists($image_url_1)) {
-			echo"<img src='".$image_url_1."' alt=''>";
+			echo "<img src='".$image_url_1."' alt=''>";
 		} else {
-			echo"<img src='".$image_url_2."' alt=''>";
+			echo "<img src='".$image_url_2."' alt=''>";
 		}
-		echo"</td>\n";
+		echo "</td>\n";
 		echo "</tr>\n";
 		echo "</table>";
 	} else {
@@ -518,6 +535,7 @@ if ($mdata['match_place'] == 1) {
 	echo "<tr bgcolor='#".(CELLBGCOLORTOP)."'>\n";
 	echo "<td align='left' valign='middle' width='50%'><b>".$locale_referee.":</b> ".$mdata['match_referee']."</td>\n";
 	echo "<td align='right' valign='middle' width='50%'>\n";
+
 	if ($mdata['match_additional_type'] == '') {
 		echo "".$mdata['match_type_name']."-".$locale_match."";
 	} else {
@@ -535,42 +553,43 @@ if ($mdata['match_place'] == 1) {
 	echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
 	echo "<tr>\n";
 	echo "<td align='left' valign='top' width='50%'>".$mdata['goal_scorers_opponent']."</td>\n";
-	echo "<td align='right' valign='top' width='50%'>\n";
+	echo "<td align='right' valign='top' width='50%'>";
 	$get_goal_scorers = mysqli_query($db_connect, "SELECT
 		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
+		P.PlayerID AS player_id,
 		P.PlayerPublish AS publish,
-		P.PlayerID AS id,
-		G.GoalMinute AS minute,
-		G.GoalOwn AS own,
-		G.GoalOwnScorer AS own_scorer,
-		G.GoalPenalty AS pen
+		G.GoalMinute AS goal_minute,
+		G.GoalOwn AS goal_own,
+		G.GoalOwnScorer AS goal_own_scorer,
+		G.GoalPenalty AS goal_penalty
 		FROM team_players P, team_goals G
-		WHERE G.GoalMatchID = '".$id."'
+		WHERE G.GoalMatchID = '$id'
 		AND P.PlayerID = G.GoalPlayerID
-		ORDER BY minute
+		ORDER BY goal_minute
 	") or die(mysqli_error());
+
 	if (mysqli_num_rows($get_goal_scorers) == 0) {
 		echo "".$locale_none."";
 	} else {
 		while ($data = mysqli_fetch_array($get_goal_scorers)) {
-			if ($data['minute'] == 0) {
-				$temp_minute = '';
+			if ($data['goal_minute'] == 0) {
+				$check_minute = '';
 			} else {
-				$temp_minute = " (".$data['minute'].")";
+				$check_minute = " (".$data['goal_minute'].")";
 			}
-			if ($data['own'] == 1) {
-				echo "".$data['own_scorer']." (".$locale_own_goal_short.")".$temp_minute."<br>\n";
-			} else if ($data['pen'] == 1) {
+			if ($data['goal_own'] == 1) {
+				echo "".$data['goal_own_scorer']." (".$locale_own_goal_short.")".$check_minute."<br>\n";
+			} else if ($data['goal_penalty'] == 1) {
 				if ($data['publish'] == 1) {
-					echo "<a href='player.php?id=".$data['id']."'>".$data['player_name']."</a> (".$locale_penalty_short.")".$temp_minute."<br>\n";
+					echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a> (".$locale_penalty_short.")".$check_minute."<br>\n";
 				} else {
-					echo "".$data['player_name']." (".$locale_penalty_short.")".$temp_minute."<br>\n";
+					echo "".$data['player_name']." (".$locale_penalty_short.")".$check_minute."<br>\n";
 				}
 			} else {
 				if ($data['publish'] == 1) {
-					echo "<a href='player.php?id=".$data['id']."'>".$data['player_name']."</a>".$temp_minute."<br>\n";
+					echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>".$check_minute."<br>\n";
 				} else {
-					echo "".$data['player_name']."".$temp_minute."<br>\n";
+					echo "".$data['player_name']."".$check_minute."<br>\n";
 				}
 			}
 		}
@@ -588,20 +607,21 @@ if ($mdata['match_place'] == 1) {
 	echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
 	echo "<tr>\n";
 	echo "<td align='left' valign='top' width='50%'>".$mdata['opening_opponent']."</td>\n";
-	echo "<td align='right' valign='top' width='50%'>\n";
+	echo "<td align='right' valign='top' width='50%'>";
 	$get_apps = mysqli_query($db_connect, "SELECT
 		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
-		P.PlayerPublish AS publish,
+		P.PlayerID AS player_id,
 		P.PlayerPositionID AS player_position_id,
-		P.PlayerID AS id,
-		P.PlayerNumber AS player_number
+		P.PlayerNumber AS player_number,
+		P.PlayerPublish AS publish
 		FROM team_players P, team_appearances A
-		WHERE A.AppearanceMatchID = '".$id."' AND P.PlayerID = A.AppearancePlayerID
+		WHERE A.AppearanceMatchID = '$id'
+		AND P.PlayerID = A.AppearancePlayerID
 		ORDER BY player_position_id, player_number
 	") or die(mysqli_error());
 	while ($data = mysqli_fetch_array($get_apps)) {
 		if ($data['publish'] == 1) {
-			echo "<a href='player.php?id=".$data['id']."'>".$data['player_name']."</a><br>\n";
+			echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a><br>\n";
 		} else {
 			echo "".$data['player_name']."<br>\n";
 		}
@@ -619,20 +639,21 @@ if ($mdata['match_place'] == 1) {
 	echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
 	echo "<tr>\n";
 	echo "<td align='left' valign='top' width='50%'>".$mdata['substitutes_opponent']."</td>\n";
-	echo "<td align='right' valign='top' width='50%'>\n";
+	echo "<td align='right' valign='top' width='50%'>";
 	$get_substitutes = mysqli_query($db_connect, "SELECT
 		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
+		P.PlayerID AS player_id,
 		P.PlayerPositionID AS player_position_id,
-		P.PlayerPublish AS publish,
-		P.PlayerID AS id,
-		P.PlayerNumber AS player_number
+		P.PlayerNumber AS player_number,
+		P.PlayerPublish AS publish
 		FROM team_players P, team_substitutes S
-		WHERE S.SubstituteMatchID = '".$id."' AND P.PlayerID = S.SubstitutePlayerID
+		WHERE S.SubstituteMatchID = '$id'
+		AND P.PlayerID = S.SubstitutePlayerID
 		ORDER BY player_position_id, player_number
 	") or die(mysqli_error());
 	while ($data = mysqli_fetch_array($get_substitutes)) {
 		if($data['publish'] == 1) {
-			echo "<a href='player.php?id=".$data['id']."'>".$data['player_name']."</a><br>\n";
+			echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a><br>\n";
 		} else {
 			echo "".$data['player_name']."<br>\n";
 		}
@@ -650,38 +671,41 @@ if ($mdata['match_place'] == 1) {
 	echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
 	echo "<tr>\n";
 	echo "<td align='left' valign='top' width='50%'>".$mdata['substitutions_opponent']."</td>\n";
-	echo "<td align='right' valign='top' width='50%'>\n";
+	echo "<td align='right' valign='top' width='50%'>";
 	$get_substitutions = mysqli_query($db_connect, "SELECT
 		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
 		CONCAT(PL.PlayerFirstName, ' ', PL.PlayerLastName) AS player_name2,
+		P.PlayerID AS player_id,
+		PL.PlayerID AS player_id2,
 		P.PlayerPublish AS publish,
 		PL.PlayerPublish AS publish2,
-		P.PlayerID AS id,
-		PL.PlayerID AS id2,
-		S.SubstitutionMinute AS minute
+		S.SubstitutionMinute AS substitution_minute
 		FROM team_players P, team_players PL, team_substitutions S
-		WHERE S.SubstitutionMatchID = '".$id."' AND P.PlayerID = S.SubstitutionPlayerIDIn AND PL.PlayerID = S.SubstitutionPlayerIDOut
-		ORDER BY minute
+		WHERE S.SubstitutionMatchID = '$id'
+		AND P.PlayerID = S.SubstitutionPlayerIDIn
+		AND PL.PlayerID = S.SubstitutionPlayerIDOut
+		ORDER BY substitution_minute
 	") or die(mysqli_error());
+
 	if (mysqli_num_rows($get_substitutions) == 0) {
 		echo "".$locale_none."";
 	} else {
 		while ($data = mysqli_fetch_array($get_substitutions)) {
-			if ($data['minute'] == 0) {
-				$temp_minute = '';
+			if ($data['substitution_minute'] == 0) {
+				$check_minute = '';
 			} else {
-				$temp_minute = " (".$data['minute'].")";
+				$check_minute = " (".$data['substitution_minute'].")";
 			}
 			if ($data['publish'] == 1) {
-				echo "<a href='player.php?id=".$data['id']."'>".$data['player_name']."</a>";
+				echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>";
 			} else {
 				echo "".$data['player_name']."";
 				echo " -> ";
 			}
 			if ($data['publish2'] == 1) {
-				echo "<a href='player.php?id=".$data['id2']."'>".$data['player_name2']."</a>".$temp_minute."<br>\n";
+				echo "<a href='player.php?id=".$data['player_id2']."'>".$data['player_name2']."</a>".$check_minute."<br>\n";
 			} else {
-				echo "".$data[player_name2]."".$temp_minute."<br>\n";
+				echo "".$data[player_name2]."".$check_minute."<br>\n";
 			}
 		}
 	}
@@ -698,29 +722,31 @@ if ($mdata['match_place'] == 1) {
 	echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
 	echo "<tr>\n";
 	echo "<td align='left' valign='top' width='50%'>".$mdata['yellow_cards_opponent']."</td>\n";
-	echo "<td align='right' valign='top' width='50%'>\n";
+	echo "<td align='right' valign='top' width='50%'>";
 	$get_yellows = mysqli_query($db_connect, "SELECT
 		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
+		P.PlayerID AS player_id,
 		P.PlayerPublish AS publish,
-		P.PlayerID AS id,
-		Y.YellowCardMinute AS minute
+		Y.YellowCardMinute AS yellow_card_minute
 		FROM team_players P, team_yellow_cards Y
-		WHERE Y.YellowCardMatchID = '".$id."' AND P.PlayerID = Y.YellowCardPlayerID
-		ORDER BY minute
+		WHERE Y.YellowCardMatchID = '$id'
+		AND P.PlayerID = Y.YellowCardPlayerID
+		ORDER BY yellow_card_minute
 	") or die(mysqli_error());
+
 	if (mysqli_num_rows($get_yellows) == 0) {
 		echo "".$locale_none."";
 	} else {
 		while ($data = mysqli_fetch_array($get_yellows)) {
-			if ($data['minute'] == 0) {
-				$temp_minute = '';
+			if ($data['yellow_card_minute'] == 0) {
+				$check_minute = '';
 			} else {
-				$temp_minute = " (".$data['minute'].")";
+				$check_minute = " (".$data['yellow_card_minute'].")";
 			}
 			if ($data['publish'] == 1) {
-				echo "<a href='player.php?id=".$data['id']."'>".$data['player_name']."</a>".$temp_minute."<br>\n";
+				echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>".$check_minute."<br>\n";
 			} else {
-				echo "".$data['player_name']."".$temp_minute."<br>\n";
+				echo "".$data['player_name']."".$check_minute."<br>\n";
 			}
 		}
 	}
@@ -738,29 +764,31 @@ if ($mdata['match_place'] == 1) {
 	echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
 	echo "<tr>\n";
 	echo "<td align='left' valign='top' width='50%'>".$mdata['red_cards_opponent']."</td>\n";
-	echo "<td align='right' valign='top' width='50%'>\n";
+	echo "<td align='right' valign='top' width='50%'>";
 	$get_reds = mysqli_query($db_connect, "SELECT
 		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
+		P.PlayerID AS player_id,
 		P.PlayerPublish AS publish,
-		P.PlayerID AS id,
-		R.RedCardMinute AS minute
+		R.RedCardMinute AS red_card_minute
 		FROM team_players P, team_red_cards R
-		WHERE R.RedCardMatchID = '".$id."' AND P.PlayerID = R.RedCardPlayerID
-		ORDER BY minute
+		WHERE R.RedCardMatchID = '$id'
+		AND P.PlayerID = R.RedCardPlayerID
+		ORDER BY red_card_minute
 	") or die(mysqli_error());
+
 	if (mysqli_num_rows($get_reds) == 0) {
 		echo "".$locale_none."";
 	} else {
 		while ($data = mysqli_fetch_array($get_reds)) {
-			if ($data['minute'] == 0) {
-				$temp_minute = '';
+			if ($data['red_card_minute'] == 0) {
+				$check_minute = '';
 			} else {
-				$temp_minute = " (".$data['minute'].")";
+				$check_minute = " (".$data['red_card_minute'].")";
 			}
 			if ($data['publish'] == 1) {
-				echo "<a href='player.php?id=".$data['id']."'>".$data['player_name']."</a>".$temp_minute."<br>\n";
+				echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>".$check_minute."<br>\n";
 			} else {
-				echo "".$data['player_name']."".$temp_minute."<br>\n";
+				echo "".$data['player_name']."".$check_minute."<br>\n";
 			}
 		}
 	}
@@ -821,13 +849,14 @@ if ($mdata['match_place'] == 1) {
 }
 $show_pictures = 0;
 $query = mysqli_query($db_connect, "SELECT
-	PictureID AS id,
+	PictureID AS picture_id,
 	PictureName AS picture_name,
 	PictureText AS picture_text
 	FROM team_picture_gallery
-	WHERE PictureMatchID = '".$mdata['match_id']."'
+	WHERE PictureMatchID = '$id'
 	LIMIT 1
 ") or die(mysqli_error());
+
 if (mysqli_num_rows($query) > 0) {
 	$show_pictures = 1;
 	$picture_data = mysqli_fetch_array($query);
@@ -838,6 +867,7 @@ if ($mdata['match_report'] != '') {
 	echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
 	echo "<tr align='left' bgcolor='#".(CELLBGCOLORTOP)."'>\n";
 	echo "<td align='left' valign='middle'><b>".$locale_report."</b>";
+
 	if (SHOW_COMMENTS == 1) {
 		echo " | <a href='comments.php?id=".$id."'>".$locale_fan_comments."</a>";
 	}
@@ -850,12 +880,13 @@ if ($mdata['match_report'] != '') {
 	echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
 	echo "<tr>\n";
 	echo "<td align='left' valign='top'>\n";
+
 	if ($show_pictures == 1) {
 		echo "<table width='10%' align='right' cellspacing='3' cellpadding='0' border='0'>\n";
 		echo "<tr>\n";
-		echo "<td align='center' valign='top'>\n";
-		echo "<img src='images/".$picture_data['picture_name']."' alt=''><br>\n";
-		echo "<small>".$picture_data['picture_text']."<br><a href='picture_gallery.php?id=".$mdata['match_id']."'>".$locale_match_pictures."</a></small>\n";
+		echo "<td align='center' valign='top'>";
+		echo "<img src='images/".$picture_data['picture_name']."' alt=''><br>";
+		echo "<small>".$picture_data['picture_text']."<br><a href='picture_gallery.php?id=".$mdata['match_id']."'>".$locale_match_pictures."</a></small>";
 		echo "</td>\n";
 		echo "</tr>\n";
 		echo "</table>\n";

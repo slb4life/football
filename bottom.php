@@ -16,8 +16,8 @@ if (SHOW_NEXT_MATCH == 1) {
 	$get_matches = mysqli_query($db_connect, "SELECT
 		O.OpponentName AS opponent_name,
 		O.OpponentID AS opponent_id,
-		M.MatchPlaceID AS match_place_id,
 		M.MatchID AS match_id,
+		M.MatchPlaceID AS match_place_id,
 		MT.MatchTypeName AS match_type_name,
 		M.MatchAdditionalType AS match_additional_type,
 		DATE_FORMAT(M.MatchDateTime, '$how_to_print_in_report') AS match_date
@@ -29,6 +29,7 @@ if (SHOW_NEXT_MATCH == 1) {
 		LIMIT 1
 	") or die(mysqli_error());		
 	$team_name = TEAM_NAME;
+
 	if (mysqli_num_rows($get_matches) == 0) {
 		echo "<b>".$locale_season_ended."</b>";
 	} else {
@@ -43,6 +44,7 @@ if (SHOW_NEXT_MATCH == 1) {
 				$logos = 1;
 			}
 			echo "".$data['match_date']."<br>".$data['match_type_name']."";
+
 			if ($data['match_additional_type'] != '') {
 				echo " / ".$data['match_additional_type']."";
 			}
@@ -50,11 +52,12 @@ if (SHOW_NEXT_MATCH == 1) {
 			$query = mysqli_query($db_connect, "SELECT							
 				P.PreviewText AS preview_text
 				FROM team_previews P
-				WHERE P.PreviewMatchID = $data[match_id]
+				WHERE P.PreviewMatchID = '$id'
 				LIMIT 1
 			") or die(mysqli_error());
-			$pr_data = mysqli_fetch_array($query);
-			if ($pr_data['preview_text'] != '') {
+			$data = mysqli_fetch_array($query);
+
+			if ($data['preview_text'] != '') {
 				echo "<a href='preview.php?id=".$data['match_id']."'>".$locale_preview."</a><br><br>\n";
 			} else {
 				echo "<br>";
@@ -66,6 +69,7 @@ if (SHOW_NEXT_MATCH == 1) {
 					echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
 					echo "<tr>\n";
 					echo "<td align='center' align ='left' valign='middle' width='45%'>";
+
 					if (file_exists($image_url_1)) {
 						echo "<img src='".$image_url_1."'><br>".$team_name."</td>\n";
 					} else {
@@ -73,6 +77,7 @@ if (SHOW_NEXT_MATCH == 1) {
 					}
 					echo "<td align='center' valign='middle' width='10%'>Vs.</td>\n";
 					echo "<td align='center' align ='right' valign='middle' width='45%'>";
+
 					if (file_exists($image_url_3)) {
 						echo "<img src='".$image_url_3."'><br>".$data['opponent_name']."</td>\n";
 					} else {
@@ -94,13 +99,15 @@ if (SHOW_NEXT_MATCH == 1) {
 					echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
 					echo "<tr>\n";
 					echo "<td align='center' align ='left' valign='middle' width='45%'>";
+
 					if (file_exists($image_url_3)) {
 						echo "<img src='".$image_url_3."'><br>".$data['opponent_name']."</td>\n";
 					} else {
-						echo"<img src='".$image_url_4."'><br>".$data['opponent_name']."</td>\n";
+						echo "<img src='".$image_url_4."'><br>".$data['opponent_name']."</td>\n";
 					}
 					echo "<td align='center' valign='middle' width='10%'>Vs.</td>\n";
 					echo "<td align='center' align ='right' valign='middle' width='45%'>";
+
 					if (file_exists($image_url_1)) {
 						echo "<img src='".$image_url_1."'><br>".$team_name."</td>\n";
 					} else {
@@ -142,6 +149,7 @@ if (SHOW_TOP_SCORERS == 1) {
 	echo "<tr>\n";
 	echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORBOTTOM)."'>\n";
 	echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
+
 	if ($default_match_type_id == 0) {
 		$tdefault_match_type_id = '%';
 	} else {
@@ -255,6 +263,7 @@ if (SHOW_TOP_BOOKINGS == 1) {
 	echo "<tr>\n";
 	echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORBOTTOM)."'>\n";
 	echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
+
 	if ($default_match_type_id == 0) {
 		$tdefault_match_type_id = '%';
 	} else {

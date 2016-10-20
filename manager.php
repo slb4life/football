@@ -19,11 +19,9 @@ switch(PRINT_DATE) {
 	}
 	break;
 }
-
 if (isset($_REQUEST['sort'])) {
 	$sort = $_REQUEST['sort'];
 }
-
 if (!isset($sort)) {
 	$sort = 'season_name';
 }
@@ -34,7 +32,7 @@ if ($id == '' || !is_numeric($id)) {
 }
 $get_manager_info = mysqli_query($db_connect, "SELECT
 	CONCAT(M.ManagerFirstName, ' ', M.ManagerLastName) AS manager_name,
-	M.ManagerID AS id,
+	M.ManagerID AS manager_id,
 	M.ManagerProfile AS manager_description,
 	M.ManagerPC AS manager_pc,
 	DATE_FORMAT(M.ManagerDOB, '".$how_to_print_in_manager."') AS manager_dob,
@@ -44,7 +42,6 @@ $get_manager_info = mysqli_query($db_connect, "SELECT
 	WHERE M.ManagerID = '$id'
 	LIMIT 1
 ") or die(mysqli_error());
-
 $manager_data = mysqli_fetch_array($get_manager_info);
 mysqli_free_result($get_manager_info);
 
@@ -74,7 +71,6 @@ $image_url6 = "images/manager".$id."_2.png";
 if (isset($_REQUEST["show_all"])) {
 	$show_all = $_REQUEST["show_all"];
 }
-
 if (!isset($show_all)) {
 	if (strlen($manager_data['manager_description']) > 2000) {
 		$manager_data['manager_description'] = substr($manager_data['manager_description'], 0, 2000);
@@ -116,7 +112,6 @@ echo "<p><b>".$locale_dob."</b><br>".$manager_data['manager_dob']."</p>";
 if ($manager_data['manager_pc'] == 1) {
 	echo "<p><b>".$locale_playing_career."</b><br>".$manager_data['manager_pc']."</p>";
 }
-
 if ($manager_data['manager_player_id'] != 0) {
 	$get_player_info = mysqli_query($db_connect, "SELECT
 		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
@@ -125,7 +120,6 @@ if ($manager_data['manager_player_id'] != 0) {
 		WHERE P.PlayerID = '$id'
 		LIMIT 1
 	") or die(mysqli_error());
-	
 	$player_data = mysqli_fetch_array($get_player_info);
 	mysqli_free_result($get_player_info);
 
@@ -154,7 +148,7 @@ mysqli_free_result($get_types);
 echo "</select>\n";
 echo "<input type='submit' name='submit3' value='".$locale_change."'>";
 $sql = "SELECT
-	M.ManagerID AS id,
+	M.ManagerID AS manager_id,
 	CONCAT(M.ManagerFirstName, ' ', M.ManagerLastName) AS manager_name,
 	M.ManagerPublish AS publish
 	FROM (team_seasons_managers S)
@@ -164,14 +158,14 @@ $sql = "SELECT
 if ($default_season_id == 0) {
 	$sql .= "WHERE M.ManagerID != ''
 		AND M.ManagerPublish = '1'
-		GROUP BY id
+		GROUP BY manager_id
 		ORDER BY manager_name
 	";
 } else {
-	$sql .= "AND S.SeasonID = '".$default_season_id."'
+	$sql .= "AND S.SeasonID = '$default_season_id'
 		WHERE M.ManagerID != ''
 		AND M.ManagerPublish = '1'
-		GROUP BY id
+		GROUP BY manager_id
 		ORDER BY manager_name
 	";
 }
@@ -179,10 +173,10 @@ $query = mysqli_query($db_connect, $sql) or die(mysqli_error());
 echo "<br>".$locale_change_manager.": \n";
 echo "<select name='manager_id'>\n";
 while ($data = mysqli_fetch_array($query)) {
-	if ($data['id'] == $id) {
-		echo "<option value='".$data['id']."' SELECTED>".$data['manager_name']."</option>\n";
+	if ($data['manager_id'] == $id) {
+		echo "<option value='".$data['manager_id']."' SELECTED>".$data['manager_name']."</option>\n";
 	} else {
-		echo "<option value='".$data['id']."'>".$data['manager_name']."</option>\n";
+		echo "<option value='".$data['manager_id']."'>".$data['manager_name']."</option>\n";
 	}
 }
 echo "</select>\n";
@@ -216,7 +210,6 @@ if ($default_season_id == 0) {
 } else {
 	$tdefault_season_id = $default_season_id;
 }
-
 if ($default_match_type_id == 0) {
 	$tdefault_match_type_id = '%';
 } else {
@@ -253,7 +246,6 @@ while ($data = mysqli_fetch_array($query)) {
 		AND M.ManagerID = '$id'
 		ORDER BY start_date
 	") or die(mysqli_error());
-
 	$y = mysqli_num_rows($get_timeline);
 
 	if ($y > 0) {
@@ -321,6 +313,7 @@ while ($data = mysqli_fetch_array($query)) {
 	mysqli_free_result($get_matches);
 
 	$all = $wins + $loses + $draws;
+
 	if ($all == 0) {
 		$win_pros = round(0, 2);
 		$draw_pros = round(0, 2);

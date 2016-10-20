@@ -21,26 +21,23 @@ switch (PRINT_DATE) {
 	}
 	break;
 }
-
 if (isset($_REQUEST['sort'])){ $sort = $_REQUEST['sort']; }
 
 if (!isset($sort)) {
 	$sort = 'season_name';
 }
-
 if (isset($_REQUEST['season_id_page']) || (isset($_REQUEST['season_name_page']))) {
 	$season_id_page = $_REQUEST['season_id_page'];
 	$season_name_page = $_REQUEST['season_name_page'];
 }
-
 $id = $_REQUEST['id'];
+
 if ($id == '' || !is_numeric($id)) {
 	$id = 1;
 }
-
 $get_player_info = mysqli_query($db_connect, "SELECT
 	CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
-	P.PlayerID AS id,
+	P.PlayerID AS player_id,
 	P.PlayerNumber AS player_nember,
 	P.PlayerDescription AS player_description,
 	DATE_FORMAT(P.PlayerDOB, '".$how_to_print_in_player."') AS player_dob,
@@ -68,6 +65,7 @@ echo "<td align='center' bgcolor='#".(CELLBGCOLORBOTTOM)."'>\n";
 echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
 echo "<tr align='left' bgcolor='#".(CELLBGCOLORTOP)."'>\n";
 echo "<td><b>".$locale_player_profile.": ".$player_data['player_name']."";
+
 if ($player_data['player_position'] != 5) {
 	echo ", #".$player_data['player_nember']."";
 }
@@ -96,12 +94,13 @@ echo "</table>\n";
 echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
 echo "<tr>\n";
 echo "<td align='left' valign='top'>";
-$image_url = "images/".$player_data['id'].".jpg";
-$image_url2 = "images/".$player_data['id'].".png";
-$image_url3 = "images/".$player_data['id']."_1.jpg";
-$image_url4 = "images/".$player_data['id']."_1.png";
-$image_url5 = "images/".$player_data['id']."_2.jpg";
-$image_url6 = "images/".$player_data['id']."_2.png";
+$image_url = "images/".$player_data['player_id'].".jpg";
+$image_url2 = "images/".$player_data['player_id'].".png";
+$image_url3 = "images/".$player_data['player_id']."_1.jpg";
+$image_url4 = "images/".$player_data['player_id']."_1.png";
+$image_url5 = "images/".$player_data['player_id']."_2.jpg";
+$image_url6 = "images/".$player_data['player_id']."_2.png";
+
 if (isset($_REQUEST['show_all'])) {
 	$show_all = $_REQUEST['show_all'];
 }
@@ -114,6 +113,7 @@ if (!isset($show_all)) {
 echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
 echo "<tr>\n";
 echo "<td align='center' valign='top' width='20%'>";
+
 if (file_exists($image_url) || file_exists($image_url2)) {
 	if (file_exists($image_url))
 		echo "<img src='".$image_url."'>";
@@ -137,6 +137,7 @@ echo "<p><b>".$locale_pob."</b><br>".$player_data['player_pob']."</p>\n";
 echo "<p><b>".$locale_dob."</b><br>".$player_data['player_dob']."</p>\n";
 echo "<p><b>".$locale_height."</b><br>".$player_data['player_height']."</p>\n";
 echo "<p><b>".$locale_weight."</b><br>".$player_data['player_weight']."</p>\n";
+
 if ($player_data['player_pc'] == 1) {
 	echo "<p><b>".$locale_previous_clubs."</b><br>".$player_data['player_pc']."</p>\n";
 }
@@ -189,7 +190,7 @@ while ($data = mysqli_fetch_array($get_transfers)) {
 	echo "</tr>\n";
 	$j++;
 }
-if ($j==1) {
+if ($j == 1) {
 	echo "<tr align='left'>\n";
 	echo "<td colspan='4'>".$locale_no_transfers."</td>\n";
 	echo "</tr>";
@@ -197,11 +198,13 @@ if ($j==1) {
 mysqli_free_result($get_transfers);
 
 echo "</table>\n";
+
 if (!isset($season_id_page)) {
 	echo "<hr width='100%'>\n";
 	echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
 	echo "<tr>\n";
 	echo "<td align='left' valign='top'>";
+
 	if ($player_data['show_stats'] == 1 && $player_data['player_position'] != 5) {
 		echo "".$locale_match_type_filter.": \n";
 		echo "<select name='match_type_player'>\n";
@@ -219,23 +222,24 @@ if (!isset($season_id_page)) {
 		echo "<input type='submit' name='submit2' value='".$locale_change."'>\n";
 	}
 	$sql = "SELECT
-		P.PlayerID AS id,
+		P.PlayerID AS player_id,
 		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
 		P.PlayerPublish AS publish
 		FROM (team_seasons S)
 		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID
 	";
+
 	if ($default_season_id == 0) {
 		$sql .= "WHERE P.PlayerID != ''
 			AND P.PlayerPublish = '1'
-			GROUP BY id
+			GROUP BY player_id
 			ORDER BY player_name
 		";
 	} else {
 		$sql .= "AND S.SeasonID = '$default_season_id'
 			WHERE P.PlayerID != ''
 			AND P.PlayerPublish = '1'
-			GROUP BY id
+			GROUP BY player_id
 			ORDER BY player_name
 		";
 	}
@@ -243,10 +247,10 @@ if (!isset($season_id_page)) {
 	echo "<br>".$locale_change_player.": \n";
 	echo "<select name='player_id'>\n";
 	while ($data = mysqli_fetch_array($query)) {
-		if ($data['id'] == $id) {
-			echo "<option value='".$data['id']."' SELECTED>".$data['player_name']."</option>\n";
+		if ($data['player_id'] == $id) {
+			echo "<option value='".$data['player_id']."' SELECTED>".$data['player_name']."</option>\n";
 		} else {
-			echo "<option value='".$data['id']."'>".$data['player_name']."</option>\n";
+			echo "<option value='".$data['player_id']."'>".$data['player_name']."</option>\n";
 		}
 	}
 	echo "</select>\n";
@@ -256,6 +260,7 @@ if (!isset($season_id_page)) {
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
+
 	if ($player_data['show_stats'] == 1 && $player_data['player_position'] != 5) {
 		echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
 		echo "<tr>\n";
@@ -267,10 +272,11 @@ if (!isset($season_id_page)) {
 		echo "<td align='center' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><a href='?sort=yellows&amp;id=".$id."'>".$locale_yellow_cards_short."</a></td>\n";
 		echo "<td align='center' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><a href='?sort=reds&amp;id=".$id."'>".$locale_red_cards_short."</a></td>\n";
 		echo "</tr>\n";
+
 		if ($default_match_type_id != 0) {
 			$get_seasons = mysqli_query($db_connect, "SELECT
 				SE.SeasonName AS season_name,
-				S.SeasonID AS id,
+				S.SeasonID AS season_id,
 				COUNT( A.AppearancePlayerID ) AS apps
 				FROM (team_seasons S, team_season_names SE)
 				LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID
@@ -280,12 +286,12 @@ if (!isset($season_id_page)) {
 				AND A.AppearanceMatchID = M.MatchID
 				WHERE SE.SeasonID = S.SeasonID
 				AND S.SeasonPlayerID = '$id'
-				GROUP BY id
+				GROUP BY season_id
 				ORDER BY season_name
 			") or die(mysqli_error());
 			$get_goals = mysqli_query($db_connect, "SELECT
 				SE.SeasonName AS season_name,
-				S.SeasonID AS id,
+				S.SeasonID AS season_id,
 				COUNT( G.GoalPlayerID ) AS goals
 				FROM (team_seasons S, team_season_names SE)
 				LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID
@@ -296,12 +302,12 @@ if (!isset($season_id_page)) {
 				AND G.GoalMatchID = M.MatchID
 				WHERE SE.SeasonID = S.SeasonID
 				AND S.SeasonPlayerID = '$id'
-				GROUP BY id
+				GROUP BY season_id
 				ORDER BY season_name
 			") or die(mysqli_error());
 			$get_ins = mysqli_query($db_connect, "SELECT
 				SE.SeasonName AS season_name,
-				S.SeasonID AS id,
+				S.SeasonID AS season_id,
 				COUNT( SU.SubstitutionPlayerIDIn ) AS ins
 				FROM (team_seasons S, team_season_names SE)
 				LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID
@@ -311,12 +317,12 @@ if (!isset($season_id_page)) {
 				AND SU.SubstitutionMatchID = M.MatchID
 				WHERE SE.SeasonID = S.SeasonID
 				AND S.SeasonPlayerID = '$id'
-				GROUP BY id
+				GROUP BY season_id
 				ORDER BY season_name
 			") or die(mysqli_error());
 			$get_yellows = mysqli_query($db_connect, "SELECT
 				SE.SeasonName AS season_name,
-				S.SeasonID AS id,
+				S.SeasonID AS season_id,
 				COUNT( Y.YellowCardPlayerID ) AS yellows
 				FROM (team_seasons S, team_season_names SE)
 				LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID
@@ -326,12 +332,12 @@ if (!isset($season_id_page)) {
 				AND Y.YellowCardMatchID = M.MatchID
 				WHERE SE.SeasonID = S.SeasonID
 				AND S.SeasonPlayerID = '$id'
-				GROUP BY id
+				GROUP BY season_id
 				ORDER BY season_name
 			") or die(mysqli_error());
 			$get_reds = mysqli_query($db_connect, "SELECT
 				SE.SeasonName AS season_name,
-				S.SeasonID AS id,
+				S.SeasonID AS season_id,
 				COUNT( R.RedCardPlayerID ) AS reds
 				FROM (team_seasons S, team_season_names SE)
 				LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID
@@ -341,25 +347,25 @@ if (!isset($season_id_page)) {
 				AND R.RedCardMatchID = M.MatchID
 				WHERE SE.SeasonID = S.SeasonID
 				AND S.SeasonPlayerID = '$id'
-				GROUP BY id
+				GROUP BY season_id
 				ORDER BY season_name
 			") or die(mysqli_error());
 		} else {
 			$get_seasons = mysqli_query($db_connect, "SELECT
 				SE.SeasonName AS season_name,
-				S.SeasonID AS id,
+				S.SeasonID AS season_id,
 				COUNT( A.AppearancePlayerID ) AS apps
 				FROM (team_seasons S, team_season_names SE)
 				LEFT OUTER JOIN team_appearances A ON A.AppearancePlayerID = '$id'
 				AND A.AppearanceSeasonID = S.SeasonID
 				WHERE SE.SeasonID = S.SeasonID
 				AND S.SeasonPlayerID = '$id'
-				GROUP BY id
+				GROUP BY season_id
 				ORDER BY season_name
 			") or die(mysqli_error());
 			$get_goals = mysqli_query($db_connect, "SELECT
 				SE.SeasonName AS season_name,
-				S.SeasonID AS id,
+				S.SeasonID AS season_id,
 				COUNT( G.GoalPlayerID ) AS goals
 				FROM (team_seasons S, team_season_names SE)
 				LEFT OUTER JOIN team_goals G ON G.GoalPlayerID = '$id'
@@ -367,58 +373,59 @@ if (!isset($season_id_page)) {
 				AND G.GoalSeasonID = S.SeasonID
 				WHERE SE.SeasonID = S.SeasonID
 				AND S.SeasonPlayerID = '$id'
-				GROUP BY id
+				GROUP BY season_id
 				ORDER BY season_name
 			") or die(mysqli_error());
 			$get_ins = mysqli_query($db_connect, "SELECT
 				SE.SeasonName AS season_name,
-				S.SeasonID AS id,
+				S.SeasonID AS season_id,
 				COUNT( SU.SubstitutionPlayerIDIn ) AS ins
 				FROM (team_seasons S, team_season_names SE)
 				LEFT OUTER JOIN team_substitutions SU ON SU.SubstitutionPlayerIDIn = '$id'
 				AND SU.SubstitutionSeasonID = S.SeasonID
 				WHERE SE.SeasonID = S.SeasonID
 				AND S.SeasonPlayerID = '$id'
-				GROUP BY id
+				GROUP BY season_id
 				ORDER BY season_name
 			") or die(mysqli_error());
 			$get_yellows = mysqli_query($db_connect, "SELECT
 				SE.SeasonName AS season_name,
-				S.SeasonID AS id,
+				S.SeasonID AS season_id,
 				COUNT( Y.YellowCardPlayerID ) AS yellows
 				FROM (team_seasons S, team_season_names SE)
 				LEFT OUTER JOIN team_yellow_cards Y ON Y.YellowCardPlayerID = '$id'
 				AND Y.YellowCardSeasonID = S.SeasonID
 				WHERE SE.SeasonID = S.SeasonID
 				AND S.SeasonPlayerID = '$id'
-				GROUP BY id
+				GROUP BY season_id
 				ORDER BY season_name
 			") or die(mysqli_error());
 			$get_reds = mysqli_query($db_connect, "SELECT
 				SE.SeasonName AS season_name,
-				S.SeasonID AS id,
+				S.SeasonID AS season_id,
 				COUNT( R.RedCardPlayerID ) AS reds
 				FROM (team_seasons S, team_season_names SE)
 				LEFT OUTER JOIN team_red_cards R ON R.RedCardPlayerID = '$id'
 				AND R.RedCardSeasonID = S.SeasonID
 				WHERE SE.SeasonID = S.SeasonID
 				AND S.SeasonPlayerID = '$id'
-				GROUP BY id
+				GROUP BY season_id
 				ORDER BY season_name
 			") or die(mysqli_error());
 		}
 		$i = 0;
 		while ($data = mysqli_fetch_array($get_seasons)) {
-			$season_names[$i] = $data['season_name'];
-			$season_id[$i] = $data['id'];
+			$season_name[$i] = $data['season_name'];
+			$season_id[$i] = $data['season_id'];
 			$apps[$i] = $data['apps'];
 			$minutes[$i] = 0;
+
 			if ($default_match_type_id == 0) {
 				$tdefault_match_type_id = '%';
 			} else {
 				$tdefault_match_type_id = $default_match_type_id;
 			}
-			$temp = mysqli_query($db_connect, "SELECT
+			$query = mysqli_query($db_connect, "SELECT
 				S.SubstitutionMinute AS minute,
 				M.MatchOvertime AS match_overtime
 				FROM team_substitutions S, team_matches M
@@ -427,7 +434,7 @@ if (!isset($season_id_page)) {
 				AND M.MatchID = S.SubstitutionMatchID
 				AND M.MatchTypeID LIKE '$tdefault_match_type_id'
 			") or die(mysqli_error());
-			while ($tdata = mysqli_fetch_array($temp)) {
+			while ($tdata = mysqli_fetch_array($query)) {
 				if ($tdata['match_overtime'] == 0) {
 					$match_minutes = 90;
 				} else {
@@ -435,16 +442,16 @@ if (!isset($season_id_page)) {
 				}
 				$minutes[$i] = $minutes[$i] + ($match_minutes-$tdata['minute']);
 			}
-			mysqli_free_result($temp);
+			mysqli_free_result($query);
 
-			$temp = mysqli_query($db_connect, "SELECT *
+			$query = mysqli_query($db_connect, "SELECT *
 				FROM team_appearances A, team_matches M
 				WHERE A.AppearancePlayerID = '$id'
 				AND A.AppearanceSeasonID LIKE '$season_id[$i]'
 				AND M.MatchID = A.AppearanceMatchID
 				AND M.MatchTypeID LIKE '$tdefault_match_type_id'
 			") or die(mysqli_error());
-			while ($tdata = mysqli_fetch_array($temp)) {
+			while ($tdata = mysqli_fetch_array($query)) {
 				if (isset($tdata['team_matches.MatchOvertime']) == 0) {
 					$match_minutes = 90;
 				} else {
@@ -452,9 +459,9 @@ if (!isset($season_id_page)) {
 				}
 				$minutes[$i] = $minutes[$i] + $match_minutes;
 			}
-			mysqli_free_result($temp);
+			mysqli_free_result($query);
 
-			$temp = mysqli_query($db_connect, "SELECT
+			$query = mysqli_query($db_connect, "SELECT
 				S.SubstitutionMinute AS minute,
 				M.MatchOvertime AS match_overtime
 				FROM team_substitutions S, team_matches M
@@ -463,7 +470,7 @@ if (!isset($season_id_page)) {
 				AND M.MatchID = S.SubstitutionMatchID
 				AND M.MatchTypeID LIKE '$tdefault_match_type_id'
 			") or die(mysqli_error());
-			while ($tdata = mysqli_fetch_array($temp)) {
+			while ($tdata = mysqli_fetch_array($query)) {
 				if ($tdata['match_overtime'] == 0) {
 					$match_minutes = 90;
 				} else {
@@ -471,9 +478,9 @@ if (!isset($season_id_page)) {
 				}
 				$minutes[$i] = $minutes[$i] - ($match_minutes-$tdata['minute']);
 			}
-			mysqli_free_result($temp);
+			mysqli_free_result($query);
 
-			$temp = mysqli_query($db_connect, "SELECT
+			$query = mysqli_query($db_connect, "SELECT
 				R.RedCardMinute AS minute,
 				M.MatchOvertime AS match_overtime
 				FROM team_red_cards R, team_matches M
@@ -482,7 +489,7 @@ if (!isset($season_id_page)) {
 				AND M.MatchID = R.RedCardMatchID
 				AND M.MatchTypeID LIKE '$tdefault_match_type_id'
 			") or die(mysqli_error());
-			while ($tdata = mysqli_fetch_array($temp)) {
+			while ($tdata = mysqli_fetch_array($query)) {
 				if ($tdata['match_overtime'] == 0) {
 					$match_minutes = 90;
 				} else {
@@ -490,7 +497,7 @@ if (!isset($season_id_page)) {
 				}
 				$minutes[$i] = $minutes[$i] - ($match_minutes-$tdata['minute']);
 			}
-			mysqli_free_result($temp);
+			mysqli_free_result($query);
 			$i++;
 		}
 		$i = 0;
@@ -521,25 +528,25 @@ if (!isset($season_id_page)) {
 		mysqli_free_result($get_ins);
 		switch ($sort) {
 			case 'season_name':
-			array_multisort($season_names, SORT_ASC, SORT_STRING, $goals, $apps, $yellows, $reds, $ins, $minutes, $season_id);
+			array_multisort($season_name, SORT_ASC, SORT_STRING, $goals, $apps, $yellows, $reds, $ins, $minutes, $season_id);
 			break;
 			case 'minutes':
-			array_multisort($minutes, SORT_DESC, SORT_NUMERIC, $apps, SORT_DESC, SORT_NUMERIC, $season_names, SORT_ASC, SORT_STRING, $goals, $yellows, $reds, $ins, $season_id);
+			array_multisort($minutes, SORT_DESC, SORT_NUMERIC, $apps, SORT_DESC, SORT_NUMERIC, $season_name, SORT_ASC, SORT_STRING, $goals, $yellows, $reds, $ins, $season_id);
 			break;
 			case 'apps':
-			array_multisort($apps, SORT_DESC, SORT_NUMERIC, $season_names, SORT_ASC, SORT_STRING, $goals, $yellows, $reds, $ins, $minutes, $season_id);
+			array_multisort($apps, SORT_DESC, SORT_NUMERIC, $season_name, SORT_ASC, SORT_STRING, $goals, $yellows, $reds, $ins, $minutes, $season_id);
 			break;
 			case 'ins':
-			array_multisort($ins, SORT_DESC, SORT_NUMERIC, $season_names, SORT_ASC, SORT_STRING, $apps, $goals, $yellows, $reds, $minutes, $season_id);
+			array_multisort($ins, SORT_DESC, SORT_NUMERIC, $season_name, SORT_ASC, SORT_STRING, $apps, $goals, $yellows, $reds, $minutes, $season_id);
 			break;
 			case 'goals':
-			array_multisort($goals, SORT_DESC, SORT_NUMERIC, $season_names, SORT_ASC, SORT_STRING, $apps, $yellows, $reds, $ins, $minutes, $season_id);
+			array_multisort($goals, SORT_DESC, SORT_NUMERIC, $season_name, SORT_ASC, SORT_STRING, $apps, $yellows, $reds, $ins, $minutes, $season_id);
 			break;
 			case 'yellows':
-			array_multisort($yellows, SORT_DESC, SORT_NUMERIC, $season_names, SORT_ASC, SORT_STRING, $goals, $apps, $reds, $ins, $minutes, $season_id);
+			array_multisort($yellows, SORT_DESC, SORT_NUMERIC, $season_name, SORT_ASC, SORT_STRING, $goals, $apps, $reds, $ins, $minutes, $season_id);
 			break;
 			case 'reds':
-			array_multisort($reds, SORT_DESC, SORT_NUMERIC, $season_names, SORT_ASC, SORT_STRING, $goals, $apps, $yellows, $ins, $minutes, $season_id);
+			array_multisort($reds, SORT_DESC, SORT_NUMERIC, $season_name, SORT_ASC, SORT_STRING, $goals, $apps, $yellows, $ins, $minutes, $season_id);
 			break;
 		}
 		$total_apps = 0;
@@ -557,50 +564,63 @@ if (!isset($season_id_page)) {
 				$bg_color = '#'.BGCOLOR2;
 			}
 			echo "<tr>\n";
-			echo "<td align='left' valign='middle' bgcolor='".$bg_color."'><a href='player.php?id=".$id."&season_id_page=".$season_id[$i]."&season_name_page=".$season_names[$i]."'>".$season_names[$i]."</a></td>\n";
+			echo "<td align='left' valign='middle' bgcolor='".$bg_color."'><a href='player.php?id=".$id."&season_id_page=".$season_id[$i]."&season_name_page=".$season_name[$i]."'>".$season_name[$i]."</a></td>\n";
 			echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
+			
 			if ($sort == 'minutes')
 				echo "<b>";
 				echo "".$minutes[$i]."";
+			
 			if ($sort == 'minutes')
 				echo "</b>";
 				echo "</td>\n";
 				echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
+			
 			if ($sort == 'apps')
 				echo "<b>";
 				echo "".$apps[$i]."";
-			if ($sort == 'apps')
+			
+			if ($sort == 'apps') 
 				echo "</b>";
 				echo "</td>\n";
 				echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
-			if ($sort == 'ins')
+			
+			if ($sort == 'ins') 
 				echo "<b>";
 				echo "".$ins[$i]."";
-			if ($sort == 'ins')
+			
+			if ($sort == 'ins') 
 				echo "</b>";
 				echo "</td>\n";
 				echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
-			if ($sort == 'goals')
+			
+			if ($sort == 'goals') 
 				echo "<b>";
 				echo "".$goals[$i]."";
-			if ($sort == 'goals')
+			
+			if ($sort == 'goals') 
 				echo "</b>";
 				echo "</td>\n";
 				echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
-			if ($sort == 'yellows')
+			
+			if ($sort == 'yellows') 
 				echo "<b>";
 				echo "".$yellows[$i]."";
-			if ($sort == 'yellows')
+			
+			if ($sort == 'yellows') 
 				echo "</b>";
 				echo "</td>\n";
 				echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
-			if ($sort == 'reds')
+			
+			if ($sort == 'reds') 
 				echo "<b>";
 				echo "".$reds[$i]."";
-			if ($sort == 'reds')
+			
+			if ($sort == 'reds') 
 				echo "</b>";
 				echo "</td>\n";
 				echo "</tr>\n";
+			
 			$total_apps = $total_apps + $apps[$i];
 			$total_minutes = $total_minutes + $minutes[$i];
 			$total_goals = $total_goals + $goals[$i];
@@ -651,7 +671,7 @@ if (!isset($season_id_page)) {
 			break;
 		}
 		$query = mysqli_query($db_connect, "SELECT
-			M.MatchID AS id,
+			M.MatchID AS match_id,
 			M.MatchGoals AS goals,
 			M.MatchGoalsOpponent AS goals_opponent,
 			M.MatchPublish AS publish,
@@ -670,6 +690,7 @@ if (!isset($season_id_page)) {
 			ORDER BY match_date DESC
 			LIMIT 10
 		") or die(mysqli_error());
+
 		if (mysqli_num_rows($query) == 0) {
 			$bg_color = BGCOLOR2;
 			echo "<td align='left' valign='middle' bgcolor='".$bg_color."' colspan='5'>".$locale_none."</td>\n";
@@ -684,6 +705,7 @@ if (!isset($season_id_page)) {
 				echo "<tr>\n";
 				echo "<td align='left' valign='middle' bgcolor='".$bg_color."'>".$data['match_date']."</td>\n";
 				echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
+
 				if($data['match_additional_type'] == '') {
 					echo "".$data['match_type_name']."";
 				} else {
@@ -703,11 +725,12 @@ if (!isset($season_id_page)) {
 				echo "</td>\n";
 				echo "<td align='center' valign='middle' bgcolor='".$bg_color."'><a href='opponent.php?id=".$data['opponent_id']."'>".$data['opponent_name']."</a></td>\n";
 				echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
+
 				if ($data['goals'] == NULL || $data['goals_opponent'] == NULL) {
 					echo "&nbsp;";
 				} else {
 					if ($data['publish'] == 1) {
-						echo "<a href='match_details.php?id=".$data['id']."'>".$data['goals']." - ".$data['goals_opponent']."</a>";
+						echo "<a href='match_details.php?id=".$data['match_id']."'>".$data['goals']." - ".$data['goals_opponent']."</a>";
 					} else {
 						echo "".$data['goals']." - ".$data['goals_opponent']."";
 					}
@@ -723,7 +746,7 @@ if (!isset($season_id_page)) {
 		echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."' colspan='5'><b>".$locale_latest_goals."</b></td>\n";
 		echo "</tr>\n";
 		$query = mysqli_query($db_connect, "SELECT
-			DISTINCT M.MatchID AS id,
+			DISTINCT M.MatchID AS match_id,
 			M.MatchGoals AS goals,
 			M.MatchPublish AS publish,
 			M.MatchGoalsOpponent AS goals_opponent,
@@ -757,6 +780,7 @@ if (!isset($season_id_page)) {
 				echo "<tr>\n";
 				echo "<td align='left' valign='middle' bgcolor='".$bg_color."'>".$data['match_date']."</td>\n";
 				echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
+
 				if ($data['match_additional_type'] == '') {
 					echo "".$data['match_type_name']."";
 				} else {
@@ -764,6 +788,7 @@ if (!isset($season_id_page)) {
 				}
 				echo "</td>\n";
 				echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
+
 				if ($data['neutral'] == 1) {
 					echo "".$locale_neutral_short."";
 				} else {
@@ -776,11 +801,12 @@ if (!isset($season_id_page)) {
 				echo "</td>\n";
 				echo "<td align='center' valign='middle' bgcolor='".$bg_color."'><a href='opponent.php?id=".$data['opponent_id']."'>".$data['opponent_name']."</a></td>\n";
 				echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
+
 				if ($data['goals'] == NULL || $data['goals_opponent'] == NULL) {
 					echo "&nbsp;";
 				} else {
 					if ($data['publish'] == 1) {
-						echo "<a href='match_details.php?id=".$data['id']."'>".$data['goals']." - ".$data['goals_opponent']."</a>";
+						echo "<a href='match_details.php?id=".$data['match_id']."'>".$data['goals']." - ".$data['goals_opponent']."</a>";
 					} else {
 						echo "".$data['goals']." - ".$data['goals_opponent']."";
 					}
@@ -796,7 +822,7 @@ if (!isset($season_id_page)) {
 		echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."' colspan='5'><b>".$locale_latest_yellow_cards."</b></td>\n";
 		echo "</tr>\n";
 		$query = mysqli_query($db_connect, "SELECT
-			DISTINCT M.MatchID AS id,
+			DISTINCT M.MatchID AS match_id,
 			M.MatchGoals AS goals,
 			M.MatchPublish AS publish,
 			M.MatchGoalsOpponent AS goals_opponent,
@@ -815,6 +841,7 @@ if (!isset($season_id_page)) {
 			ORDER BY match_date DESC
 			LIMIT 10
 		") or die(mysqli_error());
+
 		if (mysqli_num_rows($query) == 0) {
 			$bg_color = '#'.BGCOLOR2;
 			echo "<td align='left' valign='middle' bgcolor='".$bg_color."' colspan='5'>".$locale_none."</td>\n";
@@ -829,6 +856,7 @@ if (!isset($season_id_page)) {
 				echo "<tr>\n";
 				echo "<td align='left' valign='middle' bgcolor='".$bg_color."'>".$data['match_date']."</td>\n";
 				echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
+
 				if ($data['match_additional_type'] == '') {
 					echo "".$data['match_type_name']."";
 				} else {
@@ -836,6 +864,7 @@ if (!isset($season_id_page)) {
 				}
 				echo "</td>\n";
 				echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
+
 				if ($data['neutral'] == 1) {
 					echo "".$locale_neutral_short."";
 				} else {
@@ -848,11 +877,12 @@ if (!isset($season_id_page)) {
 				echo "</td>\n";
 				echo "<td align='center' valign='middle' bgcolor='".$bg_color."'><a href='opponent.php?id=".$data['opponent_id']."'>".$data['opponent_name']."</a></td>\n";
 				echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
+
 				if ($data['goals'] == NULL || $data['goals_opponent'] == NULL) {
 					echo "&nbsp;";
 				} else {
 					if ($data['publish'] == 1) {
-						echo "<a href='match_details.php?id=".$data['id']."'>".$data['goals']." - ".$data['goals_opponent']."</a>";
+						echo "<a href='match_details.php?id=".$data['match_id']."'>".$data['goals']." - ".$data['goals_opponent']."</a>";
 					} else {
 						echo "".$data['goals']." - ".$data['goals_opponent']."";
 					}
@@ -868,7 +898,7 @@ if (!isset($season_id_page)) {
 		echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."' colspan='5'><b>".$locale_latest_red_cards."</b></td>\n";
 		echo "</tr>\n";
 		$query = mysqli_query($db_connect, "SELECT
-			DISTINCT M.MatchID AS id,
+			DISTINCT M.MatchID AS match_id,
 			M.MatchGoals AS goals,
 			M.MatchPublish AS publish,
 			M.MatchGoalsOpponent AS goals_opponent,
@@ -887,6 +917,7 @@ if (!isset($season_id_page)) {
 			ORDER BY match_date DESC
 			LIMIT 10
 		") or die(mysqli_error());
+
 		if (mysqli_num_rows($query) == 0) {
 			$bg_color = '#'.BGCOLOR2;
 			echo "<td align='left' valign='middle' bgcolor='".$bg_color."' colspan='5'>".$locale_none."</td>\n";
@@ -901,6 +932,7 @@ if (!isset($season_id_page)) {
 				echo "<tr>\n";
 				echo "<td align='left' valign='middle' bgcolor='".$bg_color."'>".$data['match_date']."</td>\n";
 				echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
+
 				if ($data['match_additional_type'] == '') {
 					echo "".$data['match_type_name']."";
 				} else {
@@ -908,6 +940,7 @@ if (!isset($season_id_page)) {
 				}
 				echo "</td>\n";
 				echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
+
 				if ($data['neutral'] == 1) {
 					echo "".$locale_neutral_short."";
 				} else {
@@ -920,13 +953,15 @@ if (!isset($season_id_page)) {
 				echo "</td>\n";
 				echo "<td align='center' valign='middle' bgcolor='".$bg_color."'><a href='opponent.php?id=".$data['opponent_id']."'>".$data['opponent_name']."</a></td>\n";
 				echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
+
 				if ($data['goals'] == NULL || $data['goals_opponent'] == NULL) {
 					echo "&nbsp;";
 				} else {
-					if ($data['publish'] == 1)
-						echo "<a href='match_details.php?id=".$data['id']."'>".$data['goals']." - ".$data['goals_opponent']."</a>";
-					else
+					if ($data['publish'] == 1) {
+						echo "<a href='match_details.php?id=".$data['match_id']."'>".$data['goals']." - ".$data['goals_opponent']."</a>";
+					} else {
 						echo "".$data['goals']." - ".$data['goals_opponent']."";
+					}
 				}
 				echo "</td>\n";
 				echo "</tr>\n";
@@ -940,6 +975,7 @@ if (!isset($season_id_page)) {
 } else {
 	$season_id_page = mysqli_real_escape_string($db_connect, $_REQUEST['season_id_page']);
 	$season_name_page = mysqli_real_escape_string($db_connect, $_REQUEST['season_name_page']);
+
 	if ($season_id_page == '' || !is_numeric($season_id_page)) {
 		$season_id_page = 1;
 	}
@@ -947,7 +983,7 @@ if (!isset($season_id_page)) {
 		exit();
 	}
 	$query = mysqli_query($db_connect, "(SELECT
-		DISTINCT M.MatchID AS id,
+		DISTINCT M.MatchID AS match_id,
 		M.MatchGoals AS goals,
 		M.MatchGoalsOpponent AS goals_opponent,
 		M.MatchPublish AS publish,
@@ -963,7 +999,7 @@ if (!isset($season_id_page)) {
 		AND (M.MatchID = A.AppearanceMatchID
 		AND A.AppearancePlayerID = '$id')
 		AND M.MatchOpponent = O.OpponentID)
-	    UNION (SELECT DISTINCT M.MatchID AS id,
+	    UNION (SELECT DISTINCT M.MatchID AS match_id,
 		M.MatchGoals AS goals,
 		M.MatchGoalsOpponent AS goals_opponent,
 		M.MatchPublish AS publish,
@@ -1001,7 +1037,7 @@ if (!isset($season_id_page)) {
 			$bg_color = '#'.BGCOLOR2;
 		}
 		if ($data['publish'] == 1) {
-			$temppi = "<a href='match_details.php?id=".$data['id']."'>".$data['goals']." - ".$data['goals_opponent']."</a>";
+			$temppi = "<a href='match_details.php?id=".$data['match_id']."'>".$data['goals']." - ".$data['goals_opponent']."</a>";
 		} else {
 			$temppi = "".$data['goals']." - ".$data['goals_opponent']."";
 		}
@@ -1014,7 +1050,7 @@ if (!isset($season_id_page)) {
 			COUNT( G.GoalPlayerID ) AS goals
 			FROM team_goals G
 			WHERE G.GoalOwn = '0'
-			AND G.GoalMatchID = '$data[id]'
+			AND G.GoalMatchID = '$data[match_id]'
 			AND G.GoalPlayerID = '$id';
 		") or die(mysqli_error());
 		$goals_temp = mysqli_fetch_array($get_goals);
@@ -1023,7 +1059,7 @@ if (!isset($season_id_page)) {
 		$get_yellows = mysqli_query($db_connect, "SELECT
 			COUNT( Y.YellowCardPlayerID ) AS yellows
 			FROM team_yellow_cards Y
-			WHERE Y.YellowCardMatchID = '".$data['id']."'
+			WHERE Y.YellowCardMatchID = '$data[match_id]'
 			AND Y.YellowCardPlayerID = '$id';
 		") or die(mysqli_error());
 		$yellows_temp = mysqli_fetch_array($get_yellows);
@@ -1032,7 +1068,7 @@ if (!isset($season_id_page)) {
 		$get_reds = mysqli_query($db_connect, "SELECT
 			COUNT( R.RedCardPlayerID ) AS reds
 			FROM team_red_cards R
-			WHERE R.RedCardMatchID = '".$data['id']."'
+			WHERE R.RedCardMatchID = '$data[match_id]'
 			AND R.RedCardPlayerID = '$id';
 		") or die(mysqli_error());
 		$reds_temp = mysqli_fetch_array($get_reds);

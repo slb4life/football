@@ -17,6 +17,7 @@ if (!isset($news_id)) {
 		O.OpponentName AS opponent_name,
 		O.OpponentID AS opponent_id,
 		M.MatchID AS match_id,
+		M.MatchDateTime AS match_date,
 		M.MatchGoals AS goals,
 		M.MatchGoalsOpponent AS goals_opponent,
 		M.MatchPenaltyGoals AS penalty_goals,
@@ -31,7 +32,7 @@ if (!isset($news_id)) {
 		AND M.MatchGoalsOpponent IS NOT NULL
 		AND M.MatchTypeID = MT.MatchTypeID
 		AND M.MatchOpponent = O.OpponentID
-		ORDER BY M.MatchDateTime DESC
+		ORDER BY match_date DESC
 		LIMIT 1
 	") or die(mysqli_error());
 	$data = mysqli_fetch_array($get_details);
@@ -46,16 +47,16 @@ if (!isset($news_id)) {
 	if ((file_exists($image_url_1) && file_exists($image_url_3)) || (file_exists($image_url_2) && file_exists($image_url_4)) || (file_exists($image_url_1) && file_exists($image_url_4)) || (file_exists($image_url_2) && file_exists($image_url_3))) {
 		$logos = 1;
 	}
-
 	if ($data['match_place_id'] == 1) {
 		echo "<a href='match_details.php?id=".$data['match_id']."'>\n";
 		echo "<table width='100%' align='center' cellspacing='2' cellpadding='2' border='0'>\n";
 		echo "<tr>\n";
-		echo "<td align='left' valign='middle' width='45%'>\n";
+		echo "<td align='left' valign='middle' width='45%'>";
 		if ($logos == 1) {
 			echo "<table width='100%' border='0' cellspacing='2' cellpadding='0'>\n";
 			echo "<tr>\n";
-			echo "<td width='5%' valign='middle' align='center'>\n";
+			echo "<td width='5%' valign='middle' align='center'>";
+
 			if (file_exists($image_url_1)) {
 				echo "<img src='".$image_url_1."' alt='' border='0'>";
 			} else {
@@ -69,28 +70,34 @@ if (!isset($news_id)) {
 			echo "<font class='bigname'>".(TEAM_NAME)."</font>\n";
 		}
 		echo "</td>\n";
-		echo "<td align='center' valign='middle' width='10%'><font class='bigname'>";
+		echo "<td align='center' valign='middle' width='10%'>";
+		echo "<font class='bigname'>";
+
 		if ($data['penalty_goals'] == NULL || $data['penalty_goals_opponent'] == NULL) {
 			echo "".$data['goals']." - ".$data['goals_opponent']."";
+
 			if ($data['match_overtime'] == 1) {
 				echo "".$locale_overtime_short."";
 			}
 		} else {
 			echo "".$data['goals']." - ".$data['goals_opponent']."<br>(".$data['penalty_goals']." - ".$data['penalty_goals_opponent']." ".$locale_penalty_shootout_short.")";
 		}
-		echo "</font></td>\n";
+		echo "</font>";
+		echo "</td>\n";
 		echo "<td align='right' valign='middle' width='45%'>\n";
+
 		if ($logos == 1) {
 			echo "<table width='100%' border='0' cellspacing='2' cellpadding='0'>\n";
 			echo "<tr>\n";
 			echo "<td width='95%' valign='middle' align='right'><font class='bigname'>".$data['opponent_name']."</font></td>\n";
-			echo "<td width='5%' valign='middle' align='center'>\n";
+			echo "<td width='5%' valign='middle' align='center'>";
+
 			if (file_exists($image_url_3)) {
 				echo "<img src='".$image_url_3."' alt='' border='0'>";
 			} else {
 				echo "<img src='".$image_url_4."' alt='' border='0'>";
 			}
-			echo"</td>\n";
+			echo "</td>\n";
 			echo "</tr>\n";
 			echo "</table>\n";
 		} else {
@@ -105,10 +112,12 @@ if (!isset($news_id)) {
 		echo "<table width='100%' align='center' cellspacing='2' cellpadding='2' border='0'>\n";
 		echo "<tr>\n";
 		echo "<td align='left' valign='middle' width='45%'>\n";
+
 		if ($logos == 1) {
 			echo "<table width='100%' border='0' cellspacing='2' cellpadding='0'>\n";
 			echo "<tr>\n";
-			echo "<td width='5%' valign='middle' align='center'>\n";
+			echo "<td width='5%' valign='middle' align='center'>";
+
 			if (file_exists($image_url_3)) {
 				echo "<img src='".$image_url_3."' alt='' border='0'>";
 			} else {
@@ -122,10 +131,12 @@ if (!isset($news_id)) {
 			echo "<font class='bigname'>".$data['opponent_name']."</font>";
 		}
 		echo "</td>\n";
-		echo "<td align='center' valign='middle' width='10%'>\n";
-		echo "<font class='bigname'>\n";
+		echo "<td align='center' valign='middle' width='10%'>";
+		echo "<font class='bigname'>";
+
 		if ($data['penalty_goals'] == NULL || $data['penalty_goals_opponent'] == NULL) {
 			echo "".$data['goals_opponent']." - ".$data['goals']."";
+
 			if ($data['match_overtime'] == 1) {
 				echo "".$locale_overtime_short."";
 			}
@@ -174,7 +185,7 @@ if (!isset($news_id)) {
 		N.news_id AS news_id,
 		N.news_subject AS news_subject,
 		N.news_content AS news_content,
-		DATE_FORMAT(N.news_date, '".$how_to_print."') AS news_date
+		DATE_FORMAT(N.news_date, '$how_to_print') AS news_date
 		FROM team_news N
 		ORDER BY news_date DESC, news_id DESC
 		LIMIT 5
@@ -184,7 +195,8 @@ if (!isset($news_id)) {
 		echo "<tr>\n";
 		echo "<td align='right' valign='top'><i>".$data['news_date']."</i></td>\n";
 		echo "<td align='left' valign='top' width='85%'><b><a href='index.php?news_id=".$data['news_id']."'>".$data['news_subject']."</a></b>";
-		if ($i<1) {
+
+		if ($i < 1) {
 			$data['news_content'] = str_replace('\r\n', '<br>', $data['news_content']);
 			echo "<br>\n".$data['news_content']."\n";
 		}
@@ -234,6 +246,7 @@ if (!isset($news_id)) {
 	echo "<td align='left' valign='top'>\n";
 	$image_url = "images/news_picture".$data['news_id'].".jpg";
 	$image_url2 = "images/news_picture".$data['news_id'].".png";
+
 	if (file_exists($image_url) || file_exists($image_url2)) {
 		if (file_exists($image_url)) {
 			$temp_picture = $image_url;

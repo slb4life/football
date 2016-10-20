@@ -37,9 +37,9 @@ $record2 = 0;
 $get_matches = mysqli_query($db_connect, "SELECT
 	M.MatchDateTime AS match_date,
 	M.MatchGoals AS goals,
-	M.MatchGoalsOpponent AS goals_o
+	M.MatchGoalsOpponent AS goals_opponent
 	FROM team_matches M
-	WHERE M.MatchSeasonID  = '".$default_season_id."'
+	WHERE M.MatchSeasonID  = '$default_season_id'
 	AND M.MatchGoals IS NOT NULL
 	AND M.MatchGoalsOpponent IS NOT NULL
 	ORDER BY match_date
@@ -58,7 +58,7 @@ while ($data_m = mysqli_fetch_array($get_matches)) {
 			}
 		}
 	}
-	if ($data_m['goals'] > $data_m['goals_o']) {
+	if ($data_m['goals'] > $data_m['goals_opponent']) {
 		$wins = $wins + 1;
 		$streak++;
 		$streak2++;
@@ -66,22 +66,22 @@ while ($data_m = mysqli_fetch_array($get_matches)) {
 		$track = 1;
 		$track2 = 1;
 	}
-	if ($data_m['goals'] == $data_m['goals_o']) {
+	if ($data_m['goals'] == $data_m['goals_opponent']) {
 		$draws = $draws + 1;
-		$streak=0;
+		$streak =0;
 		$track = 0;
 		$track2 = 1;
 		$streak2++;
 	}
-	if ($data_m['goals'] < $data_m['goals_o']) {
+	if ($data_m['goals'] < $data_m['goals_opponent']) {
 		$loses = $loses + 1;
-		$streak=0;
-		$streak2=0;
+		$streak = 0;
+		$streak2 = 0;
 		$track = 0;
 		$track2 = 0;
 	}
 	$goals_for = $goals_for + $data_m['goals'];
-	$goals_against = $goals_against + $data_m['goals_o'];
+	$goals_against = $goals_against + $data_m['goals_opponent'];
 	$k = $k +1;
 }
 $all = $wins + $loses + $draws;
@@ -102,9 +102,9 @@ echo "</tr>\n";
 $query = mysqli_query($db_connect, "SELECT
 	CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
 	P.PlayerID AS player_id,
+	P.PlayerPositionID AS player_position_id,
 	P.PlayerNumber AS player_number,
 	P.PlayerPublish AS publish,
-	P.PlayerPositionID AS player_position_id,
 	DATE_FORMAT(P.PlayerDOB, '$how_to_print_in_report') AS player_dob
 	FROM (team_players P, team_seasons S)
 	WHERE P.PlayerID = S.SeasonPlayerID
@@ -137,9 +137,11 @@ $query = mysqli_query($db_connect, "SELECT
 	WHERE P.PlayerID = S.SeasonPlayerID
 	AND S.SeasonID = '$default_season_id'
 	AND P.PlayerDOB NOT LIKE '1900-01-01'
-	ORDER BY player_dob DESC LIMIT 1
+	ORDER BY player_dob DESC
+	LIMIT 1
 ") or die(mysqli_error());
 $data = mysqli_fetch_array($query);
+
 if ($data['publish'] == 1) {
 	$youngest = "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a> (".$locale_dob.": ".$data['player_dob'].")";
 } else {
@@ -156,9 +158,11 @@ $query = mysqli_query($db_connect, "SELECT
 	WHERE P.PlayerID = S.SeasonPlayerID
 	AND S.SeasonID = '$default_season_id'
 	AND P.PlayerDOB NOT LIKE '1900-01-01'
-	ORDER BY player_dob ASC LIMIT 1
+	ORDER BY player_dob ASC
+	LIMIT 1
 ") or die(mysqli_error());
 $data = mysqli_fetch_array($query);
+
 if ($data['publish'] == 1) {
 	$oldest = "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a> (".$locale_dob.": ".$data['player_dob'].")";
 } else {
@@ -243,7 +247,8 @@ $query = mysqli_query($db_connect, "SELECT
 	AND S.SeasonID LIKE '$default_season_id'
 	LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID
 	LEFT OUTER JOIN team_goals G ON G.GoalPlayerID = S.SeasonPlayerID
-	AND G.GoalMatchID = M.MatchID AND G.GoalOwn = '0'
+	AND G.GoalMatchID = M.MatchID
+	AND G.GoalOwn = '0'
 	WHERE P.PlayerID != ''
 	GROUP BY player_id
 	ORDER BY goals DESC, player_name
@@ -253,7 +258,7 @@ $check = 92892892892;
 while ($data = mysqli_fetch_array($query)) {
 	if ($i == 0) {
 		echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>";
-		$best_goal_amount = $data['goals'];
+		$most_goals = $data['goals'];
 	}
 	if ($i > 0) {
 		if ($data['goals'] == $check) {
@@ -266,9 +271,9 @@ while ($data = mysqli_fetch_array($query)) {
 	$i++;
 }
 if ($data['goals'] == 1) {
-	echo " (".$best_goal_amount.")";
+	echo " (".$most_goals.")";
 } else {
-	echo "0";
+	echo " (0)";
 }
 mysqli_free_result($query);
 
@@ -294,7 +299,7 @@ $query = mysqli_query($db_connect, "SELECT
 $i = 0;
 $check = 92892892892;
 while ($data = mysqli_fetch_array($query)) {
-	if ($i==0) {
+	if ($i == 0) {
 		echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>";
 		$most_yellows = $data['yellows'];
 	}
@@ -311,7 +316,7 @@ while ($data = mysqli_fetch_array($query)) {
 if ($data['yellows'] == 1) {
 	echo " (".$most_yellows.")";
 } else {
-	echo "0";
+	echo " (0)";
 }
 mysqli_free_result($query);
 
@@ -355,7 +360,7 @@ while ($data = mysqli_fetch_array($query)) {
 if ($data['appearance'] == 1) {
 	echo " (".$most_appearances.")";
 } else {
-	echo "0";
+	echo " (0)";
 }
 mysqli_free_result($query);
 

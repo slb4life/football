@@ -13,12 +13,11 @@ echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
 $query = mysqli_query($db_connect, "SELECT
 	N.news_id AS news_id,
 	N.news_subject AS news_subject,
-	DATE_FORMAT(N.news_date, '".$how_to_print."') AS news_date
+	DATE_FORMAT(N.news_date, '$how_to_print') AS news_date
 	FROM team_news N
 	ORDER BY N.news_date DESC, N.news_id DESC
 	LIMIT 5
 ") or die(mysqli_error());
-
 while ($data = mysqli_fetch_array($query)) {
 	echo "<tr>\n";
 	echo "<td align='right' valign='top'><i>".$data['news_date']."</i></td>\n";

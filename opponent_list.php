@@ -29,14 +29,13 @@ $query = mysqli_query($db_connect, "SELECT
 	WHERE OpponentName REGEXP '^[0-C]'
 	ORDER BY opponent_name
 ") or die(mysqli_error());
-
 while ($data = mysqli_fetch_array($query)) {
 	if ($data['opponent_id'] = 1) {
 		echo "<a href='opponent.php?id=".$data['opponent_id']."'>".$data['opponent_name']."</a><br>\n";
 	}
 }
 mysqli_free_result($query);
-	
+
 echo "</td>\n";
 echo "<td align='center' valign='top'>";
 $query = mysqli_query($db_connect, "SELECT
@@ -46,7 +45,6 @@ $query = mysqli_query($db_connect, "SELECT
 	WHERE OpponentName REGEXP '^[D-L]'
 	ORDER BY opponent_name
 ") or die(mysqli_error());
-
 while($data = mysqli_fetch_array($query)) {
 	if ($data['opponent_id'] = 1) {
 		echo "<a href='opponent.php?id=".$data['opponent_id']."'>".$data['opponent_name']."</a><br>\n";
@@ -63,7 +61,6 @@ $query = mysqli_query($db_connect, "SELECT
 	WHERE OpponentName REGEXP '^[M-R]'
 	ORDER BY opponent_name
 ") or die(mysqli_error());
-
 while ($data = mysqli_fetch_array($query)) {
 	if ($data['opponent_id'] = 1) {
 		echo "<a href='opponent.php?id=".$data['opponent_id']."'>".$data['opponent_name']."</a><br>\n";
@@ -80,7 +77,6 @@ $query = mysqli_query($db_connect, "SELECT
 	WHERE OpponentName REGEXP '^[S-Z]'
 	ORDER BY opponent_name
 ") or die(mysqli_error());
-
 while ($data = mysqli_fetch_array($query)) {
 	if ($data['opponent_id'] = 1) {
 		echo "<a href='opponent.php?id=".$data['opponent_id']."'>".$data['opponent_name']."</a><br>\n";

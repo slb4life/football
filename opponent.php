@@ -7,7 +7,6 @@ $id = $_REQUEST['id'];
 if ($id == '' || !is_numeric($id)) {
 	$id = 1;
 }
-
 if (isset($id)) {
 	$get_opponent = mysqli_query($db_connect, "SELECT
 		OpponentName,
@@ -15,11 +14,12 @@ if (isset($id)) {
 		OpponentInfo,
 		OpponentAllData
 		FROM team_opponents
-		WHERE OpponentID = '".$id."'
+		WHERE OpponentID = '$id'
 		LIMIT 1
 	") or die(mysqli_error());
 	$data = mysqli_fetch_array($get_opponent);
 	mysqli_free_result($get_opponent);
+
 } else {
 	header("Location: matches.php");
 	exit();
@@ -37,6 +37,7 @@ echo "<tr align='left'>\n";
 echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'>";
 $team_name = TEAM_NAME;
 echo "<font class='bigname'><b>".$locale_history.": ".$team_name." - ".$data['OpponentName']."</b></font>";
+
 if ($data['OpponentAllData'] == 0) {
 	echo "<br><small><i>".$locale_opponent_stats_not_complete."</i></small>";
 }
@@ -44,6 +45,7 @@ echo "</td>\n";
 echo "</tr>\n";
 echo "<tr>\n";
 echo "<td align='left' valign='middle'><br>";
+
 if ($data['OpponentInfo'] != '') {
 	echo "".$data['OpponentInfo']."<br><br>";
 }
@@ -56,22 +58,22 @@ echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><b>".$loc
 echo "</tr>\n";
 echo "<tr>\n";
 echo "<td align='left' valign='middle'>";
-$query = mysqli_query($db_connect, "
-	SELECT P.PlayerID AS player_id,
-	P.PlayerFirstName AS first_name,
-	P.PlayerLastName AS last_name
+$query = mysqli_query($db_connect, "SELECT
+	P.PlayerID AS player_id,
+	CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name
 	FROM team_players AS P, team_players_opponent AS PO
 	WHERE P.PlayerID = PO.PlayerID
-	AND PO.OpponentID = '".$id."'
+	AND PO.OpponentID = '$id'
 	AND P.PlayerPublish = '1'
-	ORDER BY last_name, first_name
+	ORDER BY player_name
 ") or die(mysqli_error());
 $i = 1;
+
 if (mysqli_num_rows($query) == 0) {
 	echo "".$locale_no_players_have_played_for_this_team."";
 } else {
 	while ($data = mysqli_fetch_array($query)) {
-		echo "<a href='player.php?id=".$data['player_id']."'>".$data['first_name']." ".$data['last_name']."</a>";
+		echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>";
 		if ($i < mysqli_num_rows($query)) {
 			echo ", ";
 		}
@@ -105,7 +107,7 @@ $get_transfers = mysqli_query($db_connect, "SELECT
 	FROM (team_players P, team_season_names S, team_opponents O, team_transfers T)
 	WHERE O.OpponentID = T.ClubID
 	AND T.SeasonID = S.SeasonID
-	AND O.OpponentID = '".$id."'
+	AND O.OpponentID = '$id'
 	AND P.PlayerID = T.PlayerID
 	ORDER BY season_name
 ") or die(mysqli_error());
@@ -117,17 +119,17 @@ while ($data = mysqli_fetch_array($get_transfers)) {
 		$bg_color = BGCOLOR2;
 	}
 	if ($data['in_or_out'] == 0) {
-		$team_name_homeome = "<a href='opponent.php?id=".$data['opponent_id']."'>".$data['opponent_name']."";
-		$team_name_awayway = TEAM_NAME;
+		$team_name_home = "<a href='opponent.php?id=".$data['opponent_id']."'>".$data['opponent_name']."";
+		$team_name_away = TEAM_NAME;
 	} else {
-		$team_name_awayway = "<a href='opponent.php?id=".$data['opponent_id']."'>".$data['opponent_name']."";
-		$team_name_homeome = TEAM_NAME;
+		$team_name_away = "<a href='opponent.php?id=".$data['opponent_id']."'>".$data['opponent_name']."";
+		$team_name_home = TEAM_NAME;
 	}
 	echo "<tr>\n";
 	echo "<td align='left' valign='middle' bgcolor='".$bg_color."'>".$data['season_name']."</td>\n";
 	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'><a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a></td>\n";
-	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>".$team_name_homeome."</td>\n";
-	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>".$team_name_awayway."</td>\n";
+	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>".$team_name_home."</td>\n";
+	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>".$team_name_away."</td>\n";
 	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>".$data['value']."</td>\n";
 	echo "</tr>\n";
 	$j++;
@@ -180,17 +182,17 @@ echo "</td>\n";
 echo "</tr>\n";
 echo "</table>\n";
 $get_matches = mysqli_query($db_connect, "SELECT
-	M.MatchID AS id,
+	M.MatchID AS match_id,
 	M.MatchPlaceID AS match_place_id,
 	M.MatchPublish AS publish,
 	M.MatchNeutral AS neutral,
 	DATE_FORMAT(M.MatchDateTime, '$how_to_print_in_report') AS match_date,
-	MT.MatchTypeName AS type_name,
-	M.MatchAdditionalType AS add_typename,
+	MT.MatchTypeName AS match_type_name,
+	M.MatchAdditionalType AS match_additional_type,
 	M.MatchGoals AS goals,
 	M.MatchGoalsOpponent AS goals_opponent,
-	M.MatchStadium AS stadium,
-	M.MatchAttendance AS attendance
+	M.MatchStadium AS match_stadium,
+	M.MatchAttendance AS match_attendance
 	FROM team_matches M, team_match_types MT
 	WHERE MatchOpponent = '$id'
 	AND MatchGoals IS NOT NULL
@@ -225,12 +227,12 @@ $total_goals = 0;
 $total_goals_against = 0;
 $i = 0;
 while ($data = mysqli_fetch_array($get_matches)) {
-	$id[$i] = $data['id'];
-	$date[$i] = $data['match_date'];
-	$stadium[$i] = $data['stadium'];
-	$attendance[$i] = $data['attendance'];
-	$type[$i] = $data['type_name'];
-	$add_type[$i] = $data['add_typename'];
+	$match_id[$i] = $data['match_id'];
+	$match_date[$i] = $data['match_date'];
+	$match_stadium[$i] = $data['match_stadium'];
+	$match_attendance[$i] = $data['match_attendance'];
+	$match_type_name[$i] = $data['match_type_name'];
+	$match_additional_type[$i] = $data['match_additional_type'];
 	$match_place_id[$i] = $data['match_place_id'];
 	$publish[$i] = $data['publish'];
 	$neutral[$i] = $data['neutral'];
@@ -314,6 +316,7 @@ echo "<td align='center' valign='middle' bgcolor='#".(BGCOLOR1)."'>".$home_loses
 echo "<td align='center' valign='middle' bgcolor='#".(BGCOLOR1)."'>".$home_goals." - ".$home_goals_against."</td>\n";
 echo "<td align='center' valign='middle' bgcolor='#".(BGCOLOR1)."'>";
 $diff = $home_goals - $home_goals_against;
+
 if ($diff >= 0) {
 	echo "+".$diff."";
 } else {
@@ -329,6 +332,7 @@ echo "<td align='center' valign='middle' bgcolor='#".(BGCOLOR1)."'>".$away_loses
 echo "<td align='center' valign='middle' bgcolor='#".(BGCOLOR1)."'>".$away_goals." - ".$away_goals_against."</td>\n";
 echo "<td align='center' valign='middle' bgcolor='#".(BGCOLOR1)."'>";
 $diff = $away_goals - $away_goals_against;
+
 if ($diff >= 0) {
 	echo "+".$diff."";
 } else {
@@ -344,6 +348,7 @@ echo "<td align='center' valign='middle' bgcolor='#".(BGCOLOR1)."'>".$neutral_lo
 echo "<td align='center' valign='middle' bgcolor='#".(BGCOLOR1)."'>".$neutral_goals." - ".$neutral_goals_against."</td>\n";
 echo "<td align='center' valign='middle' bgcolor='#".(BGCOLOR1)."'>";
 $diff = $neutral_goals - $neutral_goals_against;
+
 if ($diff >= 0) {
 	echo "+".$diff."";
 } else {
@@ -365,6 +370,7 @@ echo "<td align='center' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><b>".$t
 echo "<td align='center' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><b>".$total_loses."</b></td>\n";
 echo "<td align='center' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><b>".$total_goals." - ".$total_goals_against."</b></td>\n";
 echo "<td align='center' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><b>";
+
 if ($diff >= 0) {
 	echo "+".$diff."";
 } else {
@@ -373,6 +379,7 @@ if ($diff >= 0) {
 echo "</b></td>\n";
 echo "</tr>\n";
 echo "</table>\n";
+
 if ($total_matches > 0) {
 	echo "<br>\n";
 	echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
@@ -392,33 +399,35 @@ if ($total_matches > 0) {
 			$bg_color = BGCOLOR2;
 		}
 		if ($neutral[$j] == 1) {
-			$p = "".$locale_neutral_short."";
+			$match_place_name = "".$locale_neutral_short."";
 		} else {
 			if ($match_place_id[$j] == 1) {
-				$p = "".$locale_home_short."";
+				$match_place_name = "".$locale_home_short."";
 			} else if ($match_place_id[$j] == 2) {
-				$p = "".$locale_away_short."";
+				$match_place_name = "".$locale_away_short."";
 			}
 		}
 		echo "<tr>\n";
-		echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>".$date[$j]."</td>\n";
+		echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>".$match_date[$j]."</td>\n";
 		echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
-		if ($add_type[$j] == '') {
-			echo "".$type[$j]."";
+
+		if ($match_additional_type[$j] == '') {
+			echo "".$match_type_name[$j]."";
 		} else {
-			echo "".$type[$j]." / ".$add_type[$j]."";
+			echo "".$match_type_name[$j]." / ".$match_additional_type[$j]."";
 		}
 		echo "</td>\n";
-		echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>".$p."</td>\n";
+		echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>".$match_place_name."</td>\n";
 		echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
+
 		if ($publish[$j] == 1) {
-			echo "<a href='match_details.php?id=".$id[$j]."'>".$goals[$j]." - ".$goals_against[$j]."</a>";
+			echo "<a href='match_details.php?id=".$match_id[$j]."'>".$goals[$j]." - ".$goals_against[$j]."</a>";
 		} else {
 			echo "".$goals[$j]." - ".$goals_against[$j]."";
 		}
 		echo "</td>\n";
-		echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>".$stadium[$j]."</td>\n";
-		echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>".$attendance[$j]."</td>\n";
+		echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>".$match_stadium[$j]."</td>\n";
+		echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>".$match_attendance[$j]."</td>\n";
 		echo "</tr>";
 		$j++;
 	}

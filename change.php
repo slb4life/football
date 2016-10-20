@@ -27,31 +27,31 @@ if (isset($submit)) {
 	$_SESSION['default_language_team'] = $language;
 	$_SESSION['default_season_id_team'] = $season;
 	$_SESSION['default_match_type_id_team'] = $match_type;
-	header("Location: ".$HTTP_REFERER."");
+	header("Location: $HTTP_REFERER");
 
 } else if (isset($submit2)) {
 	$match_type_player = $_POST['match_type_player'];
 	$_SESSION['default_match_type_id_team'] = $match_type_player;
-	header("Location: ".$HTTP_REFERER."");
+	header("Location: $HTTP_REFERER");
 
 } else if (isset($submit3)) {
 	$match_type_manager = $_POST['match_type_manager'];
 	$_SESSION['default_match_type_id_team'] = $match_type_manager;
-	header("Location: ".$HTTP_REFERER."");
+	header("Location: $HTTP_REFERER");
 
 } else if (isset($change_opponent)) {
 	$id = $_POST['opponent_id'];
-	header("Location: opponent.php?id=".$id."");
+	header("Location: opponent.php?id=$id");
 
 } else if (isset($change_player)) {
 	$id = $_POST['player_id'];
-	header("Location: player.php?id=".$id."");
+	header("Location: player.php?id=$id");
 
 } else if (isset($change_manager)) {
 	$id = $_POST['manager_id'];
-	header("Location: manager.php?id=".$id."");
+	header("Location: manager.php?id=$id");
 
 } else {
-	header("Location: ".$HTTP_REFERER."");
+	header("Location: $HTTP_REFERER");
 }
 ?>

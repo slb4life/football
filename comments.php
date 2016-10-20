@@ -92,14 +92,15 @@ if ($mdata['match_place_id'] == 1) {
 	echo "<table width='100%' align='center' cellspacing='2' cellpadding='2' border='0'>\n";
 	echo "<tr>\n";
 	echo "<td align='left' valign='middle' width='45%'>";
+
 	if ($logos == 1) {
 		echo "<table width='100%' border='0' cellspacing='2' cellpadding='0'>\n";
 		echo "<tr>\n";
 		echo "<td width='5%' valign='middle' align='center'>";
+
 		if (file_exists($image_url_1)) {
 			echo "<img src='".$image_url_1."' alt=''>";
-		}
-		else {
+		} else {
 			echo "<img src='".$image_url_2."' alt=''>";
 		}
 		echo "</td>\n";
@@ -112,8 +113,10 @@ if ($mdata['match_place_id'] == 1) {
 	echo "</td>\n";
 	echo "<td align='center' valign='middle' width='10%' bgcolor='".(BGCOLOR1)."'>";
 	echo "<font class='bigname'>";
+
 	if ($mdata['penalty_goals'] == NULL || $mdata['penalty_goals_opponent'] == NULL) {
 		echo "".$mdata['goals']." - ".$mdata['goals_opponent']."";
+
 		if ($mdata['match_overtime'] == 1) {
 			echo " ".$locale_overtime_short."";
 		}
@@ -123,11 +126,13 @@ if ($mdata['match_place_id'] == 1) {
 	echo "</font>";
 	echo "</td>\n";
 	echo "<td align='right' valign='middle' width='45%'>";
+
 	if ($logos == 1) {
 		echo "<table width='100%' border='0' cellspacing='2' cellpadding='0'>\n";
 		echo "<tr>\n";
 		echo "<td width='95%' valign='middle' align='right'><font class='bigname'>".$mdata['opponent_name']."</font></td>\n";
 		echo "<td width='5%' valign='middle' align='center'>";
+
 		if (file_exists($image_url_3)) {
 			echo "<img src='".$image_url_3."' alt=''>";
 		} else {
@@ -146,6 +151,7 @@ if ($mdata['match_place_id'] == 1) {
 	echo "<tr bgcolor='".(CELLBGCOLORTOP)."'>\n";
 	echo "<td align='left' valign='middle' width='50%'><b>".$locale_referee.":</b> ".$mdata['match_referee']."</td>\n";
 	echo "<td align='right' valign='middle' width='50%'>";
+
 	if ($mdata['match_additional_type'] == '') {
 		echo "".$mdata['match_type_name']."-".$locale_match."";
 	} else {
@@ -156,7 +162,7 @@ if ($mdata['match_place_id'] == 1) {
 	echo "</table>\n";
 	echo "</form>\n";
 	echo "<br>\n";
-	} else {
+} else {
 	echo "<table width='100%' align='center' cellspacing='2' cellpadding='2' border='0'>\n";
 	echo "<tr>\n";
 	echo "<td align='left' valign='middle' width='45%'>";
@@ -179,6 +185,7 @@ if ($mdata['match_place_id'] == 1) {
 	echo "</td>\n";
 	echo "<td align='center' valign='middle' width='10%' bgcolor='".(BGCOLOR1)."'>";
 	echo "<font class='bigname'>";
+
 	if ($mdata['penalty_goals'] == NULL || $mdata['penalty_goals_opponent'] == NULL) {
 		echo "".$mdata['goals_opponent']." - ".$mdata['goals']."";
 
@@ -191,12 +198,14 @@ if ($mdata['match_place_id'] == 1) {
 	echo "</font>";
 	echo "</td>\n";
 	echo "<td align='right' valign='middle' width='45%'>";
+
 	if ($logos == 1) {
 		echo "<table width='100%' border='0' cellspacing='2' cellpadding='0'>\n";
 		echo "<tr>\n";
 		echo "<td width='95%' valign='middle' align='right'><font class='bigname'>".$team_name."</font></td>\n";
 		echo "<td width='5%' valign='middle' align='center'>";
-		if(file_exists($image_url_1)) {
+
+		if (file_exists($image_url_1)) {
 			echo "<img src='".$image_url_1."' alt=''>";
 		} else {
 			echo "<img src='".$image_url_2."' alt=''>";
@@ -214,6 +223,7 @@ if ($mdata['match_place_id'] == 1) {
 	echo "<tr bgcolor='".(CELLBGCOLORTOP)."'>\n";
 	echo "<td align='left' valign='middle' width='50%'><b>".$locale_referee.":</b> ".$mdata['match_referee']."</td>\n";
 	echo "<td align='right' valign='middle' width='50%'>";
+
 	if ($mdata['match_additional_type'] == '') {
 		echo "".$mdata['match_type_name']."-".$locale_match."";
 	} else {
@@ -244,8 +254,9 @@ mysqli_free_result($query);
 echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
 echo "<tr align='left' bgcolor='".(CELLBGCOLORTOP)."'>\n";
 echo "<td align='left' valign='middle'><a href='match_details.php?id=".$id."'>".$locale_report."</a> | <b>".$locale_fan_comments."</b>";
+
 if ($show_pictures == 1) {
-	echo" | <a href='picture_gallery.php?id=".$picture_id."'>".$locale_match_pictures."</a>";
+	echo" | <a href='picture_gallery.php?id=".$id."'>".$locale_match_pictures."</a>";
 }
 if ($mdata['preview_text'] != '') {
 	echo " | <a href='preview.php?id=".$id."'>".$locale_preview."</a>";
