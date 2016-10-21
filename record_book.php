@@ -122,7 +122,7 @@ $min_away_atts = $data['min_atts'];
 mysqli_free_result($query);
 
 $query = mysqli_query($db_connect, "SELECT
-	M.MatchID AS id,
+	M.MatchID AS match_id,
 	M.MatchGoals AS goals,
 	M.MatchGoalsOpponent AS goals_opponent,
 	M.MatchPublish AS publish,
@@ -174,7 +174,7 @@ while ($data = mysqli_fetch_array($query)) {
 		echo "&nbsp;";
 	} else {
 		if ($data['publish'] == 1) {
-			echo "<a href='match_details.php?id=".$data['id']."'>".$data['goals']." - ".$data['goals_opponent']."</a>";
+			echo "<a href='match_details.php?id=".$data['match_id']."'>".$data['goals']." - ".$data['goals_opponent']."</a>";
 		} else {
 			echo "".$data['goals'] - $data['goals_opponent']."";
 		}
@@ -194,7 +194,7 @@ echo "<tr>\n";
 echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."' colspan='5'><b>".$locale_biggest_defeat."</b></td>\n";
 echo "</tr>\n";
 $query = mysqli_query($db_connect, "SELECT
-	M.MatchID AS id,
+	M.MatchID AS match_id,
 	M.MatchGoals AS goals,
 	M.MatchGoalsOpponent AS goals_opponent,
 	M.MatchPublish AS publish,
@@ -246,7 +246,7 @@ while ($data = mysqli_fetch_array($query)) {
 		echo "&nbsp;";
 	} else {
 		if ($data['publish'] == 1) {
-			echo "<a href='match_details.php?id=".$data['id']."'>".$data['goals']." - ".$data['goals_opponent']."</a>";
+			echo "<a href='match_details.php?id=".$data['match_id']."'>".$data['goals']." - ".$data['goals_opponent']."</a>";
 		} else {
 			echo "".$data['goals']." - ".$data['goals_opponent']."";
 		}
@@ -266,7 +266,7 @@ echo "<tr>\n";
 echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."' colspan='5'><b>".$locale_most_goals_in_one_game."</b></td>\n";
 echo "</tr>\n";
 $query = mysqli_query($db_connect, "SELECT
-	M.MatchID AS id,
+	M.MatchID AS match_id,
 	M.MatchGoals AS goals,
 	M.MatchGoalsOpponent AS goals_opponent,
 	M.MatchPublish AS publish,
@@ -317,7 +317,7 @@ while ($data = mysqli_fetch_array($query)) {
 		echo "&nbsp;";
 	} else {
 		if ($data['publish'] == 1) {
-			echo "<a href='match_details.php?id=".$data['id']."'>".$data['goals']." - ".$data['goals_opponent']."</a>";
+			echo "<a href='match_details.php?id=".$data['match_id']."'>".$data['goals']." - ".$data['goals_opponent']."</a>";
 		} else {
 			echo "".$data['goals']." - ".$data['goals_opponent']."";
 		}
@@ -337,7 +337,7 @@ echo "<tr>\n";
 echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."' colspan='5'><b>".$locale_biggest_home_win."</b></td>\n";
 echo "</tr>\n";
 $query = mysqli_query($db_connect, "SELECT
-	M.MatchID AS id,
+	M.MatchID AS match_id,
 	M.MatchGoals AS goals,
 	M.MatchGoalsOpponent AS goals_opponent,
 	M.MatchPublish AS publish,
@@ -390,7 +390,7 @@ while ($data = mysqli_fetch_array($query)) {
 		echo "&nbsp;";
 	} else {
 		if ($data['publish'] == 1) {
-			echo "<a href='match_details.php?id=".$data['id']."'>".$data['goals']." - ".$data['goals_opponent']."</a>";
+			echo "<a href='match_details.php?id=".$data['match_id']."'>".$data['goals']." - ".$data['goals_opponent']."</a>";
 		} else {
 			echo "".$data['goals']." - ".$data['goals_opponent']."";
 		}
@@ -410,7 +410,7 @@ echo "<tr>\n";
 echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."' colspan='5'><b>".$locale_biggest_home_defeat."</b></td>\n";
 echo "</tr>\n";
 $query = mysqli_query($db_connect, "SELECT
-	M.MatchID AS id,
+	M.MatchID AS match_id,
 	M.MatchGoals AS goals,
 	M.MatchGoalsOpponent AS goals_opponent,
 	M.MatchPublish AS publish,
@@ -463,7 +463,7 @@ while ($data = mysqli_fetch_array($query)) {
 		echo "&nbsp;";
 	} else {
 		if ($data['publish'] == 1) {
-			echo "<a href='match_details.php?id=".$data['id']."'>".$data['goals']." - ".$data['goals_opponent']."</a>";
+			echo "<a href='match_details.php?id=".$data['match_id']."'>".$data['goals']." - ".$data['goals_opponent']."</a>";
 		} else {
 			echo "".$data['goals']." - ".$data['goals_opponent']."";
 		}
@@ -483,7 +483,7 @@ echo "<tr>\n";
 echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."' colspan='5'><b>".$locale_biggest_away_win."</b></td>\n";
 echo "</tr>\n";
 $query = mysqli_query($db_connect, "SELECT
-	M.MatchID AS id,
+	M.MatchID AS match_id,
 	M.MatchGoals AS goals,
 	M.MatchGoalsOpponent AS goals_opponent,
 	M.MatchPublish AS publish,
@@ -536,7 +536,7 @@ while ($data = mysqli_fetch_array($query)) {
 		echo "&nbsp;";
 	} else {
 		if ($data['publish'] == 1) {
-			echo "<a href='match_details.php?id=".$data['id']."'>".$data['goals']." - ".$data['goals_opponent']."</a>";
+			echo "<a href='match_details.php?id=".$data['match_id']."'>".$data['goals']." - ".$data['goals_opponent']."</a>";
 		} else {
 			echo "".$data['goals']." - ".$data['goals_opponent']."";
 		}
@@ -556,7 +556,7 @@ echo "<tr>\n";
 echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."' colspan='5'><b>".$locale_biggest_away_defeat."</b></td>\n";
 echo "</tr>\n";
 $query = mysqli_query($db_connect, "SELECT
-	M.MatchID AS id,
+	M.MatchID AS match_id,
 	M.MatchGoals AS goals,
 	M.MatchGoalsOpponent AS goals_opponent,
 	M.MatchPublish AS publish,
@@ -609,7 +609,7 @@ while ($data = mysqli_fetch_array($query)) {
 		echo "&nbsp;";
 	} else {
 		if ($data['publish'] == 1) {
-			echo "<a href='match_details.php?id=".$data['id']."'>".$data['goals']." - ".$data['goals_opponent']."</a>";
+			echo "<a href='match_details.php?id=".$data['match_id']."'>".$data['goals']." - ".$data['goals_opponent']."</a>";
 		} else {
 			echo "".$data['goals']." - ".$data['goals_opponent']."";
 		}
@@ -629,7 +629,7 @@ echo "<tr>\n";
 echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."' colspan='5'><b>".$locale_most_goals_in_tie."</b></td>\n";
 echo "</tr>\n";
 $query = mysqli_query($db_connect, "SELECT
-	M.MatchID AS id,
+	M.MatchID AS match_id,
 	M.MatchGoals AS goals,
 	M.MatchGoalsOpponent AS goals_opponent,
 	M.MatchPublish AS publish,
@@ -682,7 +682,7 @@ while ($data = mysqli_fetch_array($query)) {
 		echo "&nbsp;";
 	} else {
 		if ($data['publish'] == 1) {
-			echo "<a href='match_details.php?id=".$data['id']."'>".$data['goals']." - ".$data['goals_opponent']."</a>";
+			echo "<a href='match_details.php?id=".$data['match_id']."'>".$data['goals']." - ".$data['goals_opponent']."</a>";
 		} else {
 			echo "".$data['goals']." - ".$data['goals_opponent']."";
 		}
@@ -702,7 +702,7 @@ echo "<tr>\n";
 echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."' colspan='5'><b>".$locale_biggest_crowd_in_home."</b></td>\n";
 echo "</tr>\n";
 $query = mysqli_query($db_connect, "SELECT
-	M.MatchID AS id,
+	M.MatchID AS match_id,
 	M.MatchGoals AS goals,
 	M.MatchGoalsOpponent AS goals_opponent,
 	M.MatchAttendance AS match_attendance,
@@ -757,7 +757,7 @@ while ($data = mysqli_fetch_array($query)) {
 		echo "&nbsp;";
 	} else {
 		if ($data['publish'] == 1) {
-			echo "<a href='match_details.php?id=".$data['id']."'>".$data['match_attendance']."</a>";
+			echo "<a href='match_details.php?id=".$data['match_id']."'>".$data['match_attendance']."</a>";
 		} else {
 			echo "".$data['match_attendance']."";
 		}
@@ -777,7 +777,7 @@ echo "<tr>\n";
 echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."' colspan='5'><b>".$locale_biggest_crowd_in_away."</b></td>\n";
 echo "</tr>\n";
 $query = mysqli_query($db_connect, "SELECT
-	M.MatchID AS id,
+	M.MatchID AS match_id,
 	M.MatchAttendance AS match_attendance,
 	M.MatchGoals AS goals,
 	M.MatchGoalsOpponent AS goals_opponent,
@@ -832,7 +832,7 @@ while ($data = mysqli_fetch_array($query)) {
 		echo "&nbsp;";
 	} else {
 		if ($data['publish'] == 1) {
-			echo "<a href='match_details.php?id=".$data['id']."'>".$data['match_attendance']."</a>";
+			echo "<a href='match_details.php?id=".$data['match_id']."'>".$data['match_attendance']."</a>";
 		} else {
 			echo "".$data['match_attendance']."";
 		}
@@ -852,7 +852,7 @@ echo "<tr>\n";
 echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."' colspan='5'><b>".$locale_lowest_crowd_in_home."</b></td>\n";
 echo "</tr>\n";
 $query = mysqli_query($db_connect, "SELECT
-	M.MatchID AS id,
+	M.MatchID AS match_id,
 	M.MatchAttendance AS match_attendance,
 	M.MatchGoals AS goals,
 	M.MatchGoalsOpponent AS goals_opponent,
@@ -907,7 +907,7 @@ while ($data = mysqli_fetch_array($query)) {
 		echo "&nbsp;";
 	} else {
 		if ($data['publish'] == 1) {
-			echo "<a href='match_details.php?id=".$data['id']."'>".$data['match_attendance']."</a>";
+			echo "<a href='match_details.php?id=".$data['match_id']."'>".$data['match_attendance']."</a>";
 		} else {
 			echo "".$data['match_attendance']."";
 		}
@@ -927,7 +927,7 @@ echo "<tr>\n";
 echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."' colspan='5'><b>".$locale_lowest_crowd_in_away."</b></td>\n";
 echo "</tr>\n";
 $query = mysqli_query($db_connect, "SELECT
-	M.MatchID AS id,
+	M.MatchID AS match_id,
 	M.MatchAttendance AS match_attendance,
 	M.MatchGoals AS goals,
 	M.MatchGoalsOpponent AS goals_opponent,
@@ -983,7 +983,7 @@ while ($data = mysqli_fetch_array($query)) {
 		echo "&nbsp;";
 	} else {
 		if ($data['publish'] == 1) {
-			echo "<a href='match_details.php?id=".$data['id']."'>".$data['match_attendance']."</a>";
+			echo "<a href='match_details.php?id=".$data['match_id']."'>".$data['match_attendance']."</a>";
 		} else {
 			echo "".$data['match_attendance']."";
 		}

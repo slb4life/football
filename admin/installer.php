@@ -17,21 +17,17 @@ if (isset($submit)) {
 		echo "Fill All Fields.";
 		exit();
 	}
-
 	if (!get_magic_quotes_gpc()) {
 		$team_name = addslashes($team_name);
 	}
-
 	if ($db_password != "$db_password2") {
 		echo "You didn't retype correctly.";
 		exit();
 	}
-
 	if (strlen($db_password) < 6) {
 		echo "Your password must be at least six characters long.";
 		exit();
 	}
-
 	mysqli_query($db_connect, "CREATE TABLE `team_appearances` (
 		`AppearanceID` int(10) unsigned NOT NULL auto_increment,
 		`AppearancePlayerID` int(10) unsigned NOT NULL default '0',
@@ -418,13 +414,13 @@ if (isset($submit)) {
 } else {
 	echo "<html>\n";
 	echo "<head>\n";
-	echo "<title>Install SoccerStats</title>\n";
+	echo "<title>Install FootballStats</title>\n";
 	echo "<link rel='stylesheet' type='text/css' href='../css/admin.css'>\n";
 	echo "</head>\n";
 	echo "<body>\n";
 	echo "<form action='".$PHP_SELF."' method='post'>\n";
 	echo "<table align='center' width='600'><tr>\n";
-	echo "<td align='left' valign='middle' colspan='2'><h1>Install SoccerStats</h1></td>\n";
+	echo "<td align='left' valign='middle' colspan='2'><h1>Install FootballStats</h1></td>\n";
 	echo "</tr><tr>\n";
 	echo "<td align='left' valign='middle' colspan='2'>Before entering data into the form, please check that user.php is correctly modified.</td>\n";
 	echo "</tr><tr>\n";

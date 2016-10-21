@@ -17,28 +17,28 @@ echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'>\n";
 $query = mysqli_query($db_connect, "SELECT
 	P.PreviewText AS preview_text,
 	P.PreviewTextUnder AS preview_text_under,
-	P.PreviewTickets AS tickets,
+	P.PreviewTickets AS preview_tickets,
 	P.PreviewTV AS preview_tv,
 	O.OpponentName AS opponent_name,
 	O.OpponentID AS opponent_id,
 	MT.MatchTypeName AS match_type_name,
-	DATE_FORMAT(M.MatchDateTime, '".$how_to_print_in_report."') AS match_date,
-	UNIX_TIMESTAMP(M.MatchDateTime) AS unix_date,
-	M.MatchStadium AS stadium,
-	M.MatchPlaceID AS match_place,
+	DATE_FORMAT(M.MatchDateTime, '$how_to_print_in_report') AS match_date,
+	UNIX_TIMESTAMP(M.MatchDateTime) AS match_time_unix,
+	M.MatchStadium AS match_stadium,
+	M.MatchPlaceID AS match_place_id,
 	M.MatchSeasonID AS match_season_id
 	FROM team_matches M, team_opponents O, team_previews P, team_match_types MT
 	WHERE O.OpponentID = M.MatchOpponent
 	AND MT.MatchTypeID = M.MatchTypeID
 	AND M.MatchID = P.PreviewMatchID
-	AND P.PreviewMatchID = '".$id."'
+	AND P.PreviewMatchID = '$id'
 	LIMIT 1
 ") or die(mysqli_error());
 //$opponent_id_record = $opponent_id;
-$preview_data = mysqli_fetch_array($query);
-$match_season_id = $preview_data['match_season_id'];
-$match_time_unix = $preview_data['unix_date'];
-$opponent_id = $preview_data['opponent_id'];
+$data = mysqli_fetch_array($query);
+$match_season_id = $data['match_season_id'];
+$match_time_unix = $data['match_time_unix'];
+$opponent_id = $data['opponent_id'];
 mysqli_free_result($query);
 
 $today = getdate();
@@ -51,33 +51,33 @@ $current_seconds = $today['seconds'];
 $current_time_unix = mktime($current_hours, $current_minutes, $current_seconds, $current_month, $current_mday, $current_year);
 $match_time_unix = $match_time_unix + 6600;
 
-if ($preview_data['match_place'] == 1) {
-	echo "<font class='bigname'>".$locale_preview.": ".$team_name." - ".$preview_data['opponent_name']."</font>";
+if ($data['match_place_id'] == 1) {
+	echo "<font class='bigname'>".$locale_preview.": ".$team_name." - ".$data['opponent_name']."</font>";
 } else {
-	echo "<font class='bigname'>".$locale_preview.": ".$preview_data['opponent_name']." - ".$team_name."</font>";
+	echo "<font class='bigname'>".$locale_preview.": ".$data['opponent_name']." - ".$team_name."</font>";
 }
 echo "</td>\n";
 echo "</tr>\n";
 echo "<tr>\n";
-echo "<td align='left' valign='top'>".$preview_data['match_type_name']."<br>".$preview_data['match_date']." - ".$preview_data['stadium']."<br>";
+echo "<td align='left' valign='top'>".$data['match_type_name']."<br>".$data['match_date']." - ".$data['match_stadium']."<br>";
 
 if ($current_time_unix < $match_time_unix) {
-	if ($preview_data['tickets'] != '') {
-		echo "<br><b>".$locale_ticket_info.":</b> ".$preview_data['tickets']."<br>";
+	if ($data['preview_tickets'] != '') {
+		echo "<br><b>".$locale_ticket_info.":</b> ".$data['preview_tickets']."<br>";
 	} else {
 		echo "<br>";
 	}
-	if ($preview_data['preview_tv'] != '') {
-		echo "<b>".$locale_tv_info.":</b> ".$preview_data['preview_tv']."<br><br>";
+	if ($data['preview_tv'] != '') {
+		echo "<b>".$locale_tv_info.":</b> ".$data['preview_tv']."<br><br>";
 	} else {
-		if ($preview_data['tickets']) {
+		if ($data['preview_tickets']) {
 			echo "<br>";
 		}
 	}
 } else {
 	echo '<br>';
 }
-echo "".$preview_data['preview_text']."<br><br>";
+echo "".$data['preview_text']."<br><br>";
 $get_squad = mysqli_query($db_connect, "SELECT
 	CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
 	P.PlayerID AS player_id,
@@ -85,7 +85,7 @@ $get_squad = mysqli_query($db_connect, "SELECT
 	P.PlayerPositionID AS player_position
 	FROM team_players P, team_seasons S
 	WHERE P.PlayerID = S.SeasonPlayerID
-	AND S.SeasonID = '".$match_season_id."'
+	AND S.SeasonID = '$id'
 	AND P.PlayerPositionID != '5'
 	AND P.PlayerInSquadList = '1'
 	ORDER BY player_position
@@ -98,7 +98,7 @@ $injured_query = mysqli_query($db_connect, "SELECT
 	I.InjuredReason AS injured_reason
 	FROM team_players P, team_injured I
 	WHERE P.PlayerID = I.InjuredPlayerID
-	AND I.InjuredMatchID = '".$id."'
+	AND I.InjuredMatchID = '$id'
 ") or die(mysqli_error());
 
 while ($data = mysqli_fetch_array($injured_query)) {
@@ -113,7 +113,7 @@ if ($current_time_unix < $match_time_unix) {
 		S.SuspendedReason AS suspended_reason
 		FROM team_players P, team_suspended S
 		WHERE P.PlayerID = S.SuspendedPlayerID
-		AND S.SuspendedMatchID = '".$id."'
+		AND S.SuspendedMatchID = '$id'
 	") or die(mysqli_error());
 
 	while ($data = mysqli_fetch_array($suspended_query)) {
@@ -204,7 +204,7 @@ echo "</td>\n";
 echo "</tr>\n";
 echo "</table>\n";
 echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
-echo "<td align='left' valign='middle'>".$preview_data['preview_text_under']."<br><br></td>\n";
+echo "<td align='left' valign='middle'>".$data['preview_text_under']."<br><br></td>\n";
 echo "</tr>\n";
 echo "</table>\n";
 echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
@@ -219,15 +219,15 @@ echo "</tr>\n";
 echo "</table>\n";
 $get_matches = mysqli_query($db_connect, "SELECT
 	M.MatchID AS id,
-	M.MatchPlaceID AS match_place,
+	M.MatchPlaceID AS match_place_id,
 	M.MatchPublish AS publish,
 	M.MatchNeutral AS neutral,
-	DATE_FORMAT(M.MatchDateTime, '".$how_to_print_in_report."') AS match_date,
+	DATE_FORMAT(M.MatchDateTime, '$how_to_print_in_report') AS match_date,
 	MT.MatchTypeName AS match_type_name,
 	M.MatchGoals AS goals,
 	M.MatchGoalsOpponent AS goals_opponent
 	FROM team_matches M, team_match_types MT
-	WHERE MatchOpponent = '".$opponent_id."'
+	WHERE MatchOpponent = '$opponent_id'
 	AND MatchGoals IS NOT NULL
 	AND MatchGoalsOpponent IS NOT NULL
 	AND M.MatchTypeID = MT.MatchTypeID
@@ -263,7 +263,7 @@ while ($data = mysqli_fetch_array($get_matches)) {
 	$id[$i] = $data['id'];
 	$match_date[$i] = $data['match_date'];
 	$match_type_name[$i] = $data['match_type_name'];
-	$match_place[$i] = $data['match_place'];
+	$match_place_id[$i] = $data['match_place_id'];
 	$publish[$i] = $data['publish'];
 	$neutral[$i] = $data['neutral'];
 	$goals[$i] = $data['goals'];
@@ -275,12 +275,12 @@ while ($data = mysqli_fetch_array($get_matches)) {
 			$neutral_goals = $neutral_goals + $goals[$i];
 			$neutral_goals_against = $neutral_goals_against + $goals_against[$i];
 		} else {
-			if ($match_place[$i] == 1) {
+			if ($match_place_id[$i] == 1) {
 				$home_matches++;
 				$home_wins++;
 				$home_goals = $home_goals + $goals[$i];
 				$home_goals_against = $home_goals_against + $goals_against[$i];
-			} else if ($match_place[$i] == 2) {
+			} else if ($match_place_id[$i] == 2) {
 				$away_matches++;
 				$away_wins++;
 				$away_goals = $away_goals + $goals[$i];
@@ -294,12 +294,12 @@ while ($data = mysqli_fetch_array($get_matches)) {
 			$neutral_goals = $neutral_goals + $goals[$i];
 			$neutral_goals_against = $neutral_goals_against + $goals_against[$i];
 		} else {
-			if ($match_place[$i] == 1) {
+			if ($match_place_id[$i] == 1) {
 				$home_matches++;
 				$home_loses++;
 				$home_goals = $home_goals + $goals[$i];
 				$home_goals_against = $home_goals_against + $goals_against[$i];
-			} else if ($match_place[$i] == 2) {
+			} else if ($match_place_id[$i] == 2) {
 				$away_matches++;
 				$away_loses++;
 				$away_goals = $away_goals + $goals[$i];
@@ -313,12 +313,12 @@ while ($data = mysqli_fetch_array($get_matches)) {
 			$neutral_goals = $neutral_goals + $goals[$i];
 			$neutral_goals_against = $neutral_goals_against + $goals_against[$i];
 		} else {
-			if ($match_place[$i] == 1) {
+			if ($match_place_id[$i] == 1) {
 				$home_matches++;
 				$home_draws++;
 				$home_goals = $home_goals + $goals[$i];
 				$home_goals_against = $home_goals_against + $goals_against[$i];
-			} else if ($match_place[$i] == 2) {
+			} else if ($match_place_id[$i] == 2) {
 				$away_matches++;
 				$away_draws++;
 				$away_goals = $away_goals + $goals[$i];
@@ -430,9 +430,9 @@ while ($j < $i) {
 	if ($neutral[$j] == 1) {
 		$home_away_netral = "".$locale_neutral_short."";
 	} else {
-		if ($match_place[$j] == 1) {
+		if ($match_place_id[$j] == 1) {
 			$home_away_netral = "".$locale_home_short."";
-		} else if ($match_place[$j] == 2) {
+		} else if ($match_place_id[$j] == 2) {
 			$home_away_netral = "".$locale_away_short."";
 		}
 	}

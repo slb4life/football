@@ -28,43 +28,53 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		$player_first_name = trim($_POST['player_first_name']);
 		$player_last_name = trim($_POST['player_last_name']);
 		$player_number = trim($_POST['player_number']);
-		$player_position = trim($_POST['player_position']);
+		$player_position_id = trim($_POST['player_position_id']);
 		$player_dob_date = $_POST['dob_year']."-".$_POST['dob_month']."-".$_POST['dob_day'];
-		$player_dob = trim($_POST['player_dob']);
+		$player_pob = trim($_POST['player_pob']);
 		$player_height = trim($_POST['player_height']);
 		$player_weight = trim($_POST['player_weight']);
 		$player_description = str_replace("\r\n","<br>", trim($_POST['player_description']));
 		$player_pc = str_replace("\r\n","<br>", trim($_POST['player_pc']));
-		$show_stats = 1;
+		if (isset($_POST['publish'])){ $publish = $_POST['publish']; }
 		$all_data = 1;
+		$in_squad = 1;
+		$show_stats = 1;
 
 		if (!get_magic_quotes_gpc()) {
 			$player_first_name = addslashes($player_first_name);
 			$player_last_name = addslashes($player_last_name);
 			$player_number = addslashes($player_number);
-			$player_dob = addslashes($player_dob);
+			$player_pob = addslashes($player_pob);
 			$player_height = addslashes($player_height);
 			$player_weight = addslashes($player_weight);
 			$player_description = addslashes($player_description);
 			$player_pc = addslashes($player_pc);
 		}
+		if (!isset($publish)){ $publish = 0; }
 
 		if ($player_first_name != '') {
-			mysqli_query($db_connect, "INSERT INTO team_players SET
+			$add = "INSERT INTO team_players SET
 				PlayerFirstName = '$player_first_name',
 				PlayerLastName = '$player_last_name',
-				PlayerNumber = '$player_number',
+			";
+			if ($player_number == '') {
+				$add .= "PlayerNumber = '0',";
+			} else {
+				$add .= "PlayerNumber = '$player_number',";
+			}
+			$add .= "PlayerPositionID = '$player_position_id',
 				PlayerDOB = '$player_dob_date',
-				PlayerPOB = '$player_dob',
+				PlayerPOB = '$player_pob',
 				PlayerHeight = '$player_height',
 				PlayerWeight = '$player_weight',
 				PlayerDescription = '$player_description',
 				PlayerPC = '$player_pc',
-				PlayerPositionID = '$player_position',
-				PlayerShowStats = '$show_stats',
+				PlayerPublish = '$publish',
 				PlayerAllData = '$all_data',
-				PlayerInSquadList = '1'
-			") or die(mysqli_error());
+				PlayerInSquadList = '$in_squad',
+				PlayerShowStats = '$show_stats'
+			";
+			mysqli_query($db_connect, "$add") or die(mysqli_error());
 			$player_id = mysqli_insert_id($db_connect);
 			mysqli_query($db_connect, "INSERT INTO team_seasons SET SeasonID = '$season_id', SeasonPlayerID = '$player_id'") or die(mysqli_error());
 		}
@@ -72,53 +82,58 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		$player_first_name = trim($_POST['player_first_name']);
 		$player_last_name = trim($_POST['player_last_name']);
 		$player_number = trim($_POST['player_number']);
-		$player_position = trim($_POST['player_position']);
-		$player_dob = trim($_POST['player_dob']);
+		$player_position_id = trim($_POST['player_position_id']);
+		$player_pob = trim($_POST['player_pob']);
 		$player_height = trim($_POST['player_height']);
 		$player_weight = trim($_POST['player_weight']);
 		$player_dob_date = $_POST['dob_year']."-".$_POST['dob_month']."-".$_POST['dob_day'];
 		$player_description = str_replace("\r\n","<br>", trim($_POST['player_description']));
 		$player_pc = str_replace("\r\n","<br>", trim($_POST['player_pc']));
-		$player_id = $_POST['player_id'];
 		$publish = $_POST['publish'];
 		$all_data = $_POST['all_data'];
 		$in_squad = $_POST['in_squad'];
 		$show_stats = $_POST['show_stats'];
+		$player_id = $_POST['player_id'];
 
 		if (!get_magic_quotes_gpc()) {
 			$player_first_name = addslashes($player_first_name);
 			$player_last_name = addslashes($player_last_name);
 			$player_number = addslashes($player_number);
-			$player_dob = addslashes($player_dob);
+			$player_pob = addslashes($player_pob);
 			$player_height = addslashes($player_height);
 			$player_weight = addslashes($player_weight);
 			$player_description = addslashes($player_description);
 			$player_pc = addslashes($player_pc);
 		}
-
 		if (!isset($publish)){ $publish = 0; }
 		if (!isset($all_data)){ $all_data = 0; }
 		if (!isset($in_squad)){ $in_squad = 0; }
 		if (!isset($show_stats)){ $show_stats = 0; }
 
 		if ($player_first_name != '') {
-			mysqli_query($db_connect, "UPDATE team_players SET
+			$update = "UPDATE team_players SET
 				PlayerFirstName = '$player_first_name',
 				PlayerLastName = '$player_last_name',
-				PlayerNumber = '$player_number',
+			";
+			if ($player_number == '') {
+				$update .= "PlayerNumber = '0',";
+			} else {
+				$update .= "PlayerNumber = '$player_number',";
+			}
+			$update .= "PlayerPositionID = '$player_position_id',
+				PlayerDOB = '$player_dob_date',
+				PlayerPOB = '$player_pob',
+				PlayerHeight = '$player_height',
+				PlayerWeight = '$player_weight',
 				PlayerDescription = '$player_description',
 				PlayerPC = '$player_pc',
 				PlayerPublish = '$publish',
-				PlayerPositionID = '$player_position',
-				PlayerShowStats = '$show_stats',
 				PlayerAllData = '$all_data',
-				PlayerPOB = '$player_dob',
-				PlayerDOB = '$player_dob_date',
-				PlayerHeight = '$player_height',
-				PlayerWeight = '$player_weight',
-				PlayerInSquadList = '$in_squad'
+				PlayerInSquadList = '$in_squad',
+				PlayerShowStats = '$show_stats'
 				WHERE PlayerID = '$player_id'
-			") or die(mysqli_error());
+			";
+			mysqli_query($db_connect, "$update") or die(mysqli_error());
 		}
 		header("Location: $HTTP_REFERER");
 
@@ -128,14 +143,14 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			G.GoalID AS goal_id,
 			S.SubstituteID AS substitute_id
 			FROM team_goals AS G, team_substitutes AS S
-			WHERE G.GoalPlayerID = '".$player_id."' OR S.SubstitutePlayerID = '".$player_id."'
+			WHERE G.GoalPlayerID = '$player_id' OR S.SubstitutePlayerID = '$player_id'
 		") or die(mysqli_error());
 
 		if (mysqli_num_rows($query) == 0) {
-			mysqli_query($db_connect, "DELETE FROM team_players WHERE PlayerID = '".$player_id."' LIMIT 1") or die(mysqli_error());
-			mysqli_query($db_connect, "DELETE FROM team_seasons WHERE SeasonPlayerID = '".$player_id."' LIMIT 1") or die(mysqli_error());
+			mysqli_query($db_connect, "DELETE FROM team_players WHERE PlayerID = '$player_id' LIMIT 1") or die(mysqli_error());
+			mysqli_query($db_connect, "DELETE FROM team_seasons WHERE SeasonPlayerID = '$player_id' LIMIT 1") or die(mysqli_error());
 		} else {
-			echo "PERMISSON DENIED! This player has already been added to opening squads or substitutes. Press back-button.";
+			echo "PERMISSON DENIED! This Player has already been added to Opening Squads or Substitutes. Press Back Button.";
 			exit();
 		}
 	} else if (isset($copy_season_submit)) {
@@ -184,7 +199,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top'>Position:</td>\n";
 		echo "<td align='left' valign='top'>";
-		echo "<select name='player_position'>";
+		echo "<select name='player_position_id'>";
 		$get_positions = mysqli_query($db_connect, "SELECT * FROM team_player_positions ORDER BY PlayerPositionID") or die(mysqli_error());
 		while($pdata = mysqli_fetch_array($get_positions)) {
 			echo "<option value='".$pdata['PlayerPositionID']."'>".$pdata['PlayerPositionName']."</option>\n";
@@ -235,7 +250,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "</td>\n";
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top'>Place of Birth:</td>\n";
-		echo "<td align='left' valign='top'><input type='text' name='player_dob'></td>\n";
+		echo "<td align='left' valign='top'><input type='text' name='player_pob'></td>\n";
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top'>Height:</td>\n";
 		echo "<td align='left' valign='top'><input type='text' name='player_height'></td>\n";
@@ -262,10 +277,10 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			P.PlayerPublish AS publish,
 			P.PlayerAllData AS all_data,
 			P.PlayerShowStats AS show_stats,
-			P.PlayerPOB AS player_dob,
+			P.PlayerPOB AS player_pob,
 			P.PlayerNumber AS player_number,
-			P.PlayerPositionID AS position_id,
-			DAYOFMONTH(PlayerDOB) AS day_of_month,
+			P.PlayerPositionID AS player_position_id,
+			DAYOFMONTH(PlayerDOB) AS day,
 			MONTH(PlayerDOB) AS month,
 			YEAR(PlayerDOB) AS year,
 			P.PlayerHeight AS player_height,
@@ -299,15 +314,15 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top'>Position:</td>\n";
 		echo "<td align='left' valign='top'>";
-		echo "<select name='player_position'>";
+		echo "<select name='player_position_id'>";
 		$get_positions = mysqli_query($db_connect, "SELECT * FROM team_player_positions ORDER BY PlayerPositionID") or die(mysqli_error());
 		while($data = mysqli_fetch_array($get_positions)) {
-			$player_position = "$data[PlayerPositionID]";
+			$player_position_id = "".$data['PlayerPositionID']."";
 
-			if ($pdata['position_id'] == "".$player_position."") {
-				echo "<option value='$data[PlayerPositionID]' SELECTED>$data[PlayerPositionName]</option>\n";
+			if ($pdata['player_position_id'] == $player_position_id) {
+				echo "<option value='".$data['PlayerPositionID']."' SELECTED>".$data['PlayerPositionName']."</option>\n";
 			} else  {
-				echo "<option value='$data[PlayerPositionID]'>$data[PlayerPositionName]</option>\n";
+				echo "<option value='".$data['PlayerPositionID']."'>".$data['PlayerPositionName']."</option>\n";
 			}
 		}
 		mysqli_free_result($get_positions);
@@ -322,7 +337,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			if ($i<10) {
 				$i = "0".$i;
 			}
-			if ($i == $pdata['day_of_month']) {
+			if ($i == $pdata['day']) {
 				echo "<option value='$i' SELECTED>$i</option>\n";
 			} else {
 				echo "<option value='$i'>$i</option>\n";
@@ -356,7 +371,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "</td>\n";
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top'>Place of Birth:</td>\n";
-		echo "<td align='left' valign='top'><input type='text' name='player_dob' value='".$pdata['player_dob']."'></td>\n";
+		echo "<td align='left' valign='top'><input type='text' name='player_pob' value='".$pdata['player_pob']."'></td>\n";
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top'>Height:</td>\n";
 		echo "<td align='left' valign='top'><input type='text' name='player_height' value='".$pdata['player_height']."'></td>\n";
@@ -437,7 +452,6 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			$check_season[] = $data['season_id'];
 			$check_seasons .= "<option value='".$data['season_id']."'>".$data['season_name']."</option>\n";
 		}
-
 		if ($check_player != $check_players) {
 			$i = 0;
 			echo "<br>Copy this Player to Season: <select name='copy_season'>";
@@ -522,7 +536,6 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		} else {
 			echo "<img src='../images/no_image.png' alt='' width='100' height='100'>";
 		}
-
 		if (file_exists($image_url) || file_exists($image_url)) {
 			echo "<br><br>\n";
 			echo "<form enctype='multipart/form-data' method='post' action='image_upload.php?'session_id=".$session."'>\n";
@@ -562,7 +575,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 				echo "<br><a href='delete_picture.php?session_id=".$session."&amp;player_id=".$player_id."&amp;action=3&amp;type=jpg'>Delete this Picture</a>";
 			} else if(file_exists($image_url6)) {
 				echo "<img src='".$image_url6."' alt=''>";
-				echo"<br><a href='delete_picture.php?session_id=".$session."&amp;player_id=".$player_id."&amp;action=3&amp;type=png'>Delete this Picture</a>";
+				echo "<br><a href='delete_picture.php?session_id=".$session."&amp;player_id=".$player_id."&amp;action=3&amp;type=png'>Delete this Picture</a>";
 			} else {
 				echo "<img src='../images/no_image.png' alt='' width='100' height='100'>";
 			}
@@ -576,7 +589,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 	$get_players = mysqli_query($db_connect, "SELECT
 		team_players.PlayerID AS player_id,
 		CONCAT(team_players.PlayerFirstName, ' ', team_players.PlayerLastName) AS player_name,
-		team_players.PlayerPublish AS player_publish,
+		team_players.PlayerPublish AS publish,
 		team_players.PlayerNumber AS player_number
 		FROM team_players, team_seasons
 		WHERE team_players.PlayerID = team_seasons.SeasonPlayerID
@@ -591,7 +604,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<b>Player Squad: ".$season_name."</b><br><br>Number of Players: ".$get_total."<br><br>";
 		while($data = mysqli_fetch_array($get_players)) {
 		echo "<a href='".$PHP_SELF."?session_id=".$session."&amp;action=modify&amp;player_id=".$data['player_id']."'>#".$data['player_number']." ".$data['player_name']."</a>";
-			if ($data['player_publish'] == 0) {
+			if ($data['publish'] == 0) {
 				echo " (NB)<br>\n";
 			} else {
 				echo "<br>\n";

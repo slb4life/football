@@ -41,7 +41,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		$goals = trim($_POST['goals']);
 		$goals_opponent = trim($_POST['goals_opponent']);
 		if (isset($_POST['match_overtime'])){ $match_overtime = $_POST['match_overtime']; }
-		if (isset($_POST['penalty_shootout'])){ $penalty_shootout = $_POST['penalty_shootout']; }
+		if (isset($_POST['match_penalty_shootout'])){ $match_penalty_shootout = $_POST['match_penalty_shootout']; }
 		$penalty_goals = trim($_POST['penalty_goals']);
 		$penalty_goals_opponent = trim($_POST['penalty_goals_opponent']);
 		$match_report = str_replace("\r\n",'<br>', trim($_POST['match_report']));
@@ -54,16 +54,10 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		    $match_report = addslashes($match_report);
 		    $match_stadium = addslashes($match_stadium);
 		}
-
 		if (!isset($match_neutral)){ $match_neutral = 0; }
 		if (!isset($match_overtime)){ $match_overtime = 0; }
-		if (!isset($penalty_shootout)){ $penalty_shootout = 0; }
-
-		if (!isset($publish)){
-			$publish = 0;
-		} else {
-			$publish = 1;
-		}
+		if (!isset($match_penalty_shootout)){ $match_penalty_shootout = 0; }
+		if (!isset($publish)){ $publish = 0; }
 
 		if ($match_opponent != '') {
 			$add = "INSERT INTO team_matches SET
@@ -98,10 +92,10 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			$add .= "MatchReferee = '$match_referee',
 				MatchReport = '$match_report',
 				MatchOvertime = '$match_overtime',
-				MatchPenaltyShootout  = '$penalty_shootout',
+				MatchPenaltyShootout  = '$match_penalty_shootout',
 				MatchPublish = '$publish'
 			";
-			mysqli_query($db_connect, "$add") or die(mysqli_error($db_connect));
+			mysqli_query($db_connect, "$add") or die(mysqli_error());
 		}
 		header("Location: $HTTP_REFERER");
 
@@ -123,7 +117,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		$goals = trim($_POST['goals']);
 		$goals_opponent = trim($_POST['goals_opponent']);
 		if (isset($_POST['match_overtime'])){ $match_overtime = $_POST['match_overtime']; }
-		if (isset($_POST['penalty_shootout'])){ $penalty_shootout = $_POST['penalty_shootout']; }
+		if (isset($_POST['match_penalty_shootout'])){ $match_penalty_shootout = $_POST['match_penalty_shootout']; }
 		$penalty_goals = trim($_POST['penalty_goals']);
 		$penalty_goals_opponent = trim($_POST['penalty_goals_opponent']);
 		$shots = trim($_POST['shots']);
@@ -161,22 +155,11 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			$yellow_cards_opponent = addslashes($yellow_cards_opponent);
 			$red_cards_opponent = addslashes($red_cards_opponent);
 		}
-
 		if (!isset($match_neutral)){ $match_neutral = 0; }
 		if (!isset($match_overtime)){ $match_overtime = 0; }
-		if (!isset($penalty_shootout)){ $penalty_shootout = 0; }
-		
-		if (!isset($publish)){ 
-			$publish = 0;
-		} else {
-			$publish = 1;
-		}
-
-		if (!isset($publish_optional)){
-			$publish_optional = 0;
-		} else {
-			$publish_optional = 1;
-		}
+		if (!isset($match_penalty_shootout)){ $match_penalty_shootout = 0; }
+		if (!isset($publish)){ $publish = 0; }
+		if (!isset($publish_optional)){ $publish_optional = 0; }
 
 		if ($match_opponent != '') {
 			$modify = "UPDATE team_matches SET
@@ -208,7 +191,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 				$modify .= "MatchAttendance = '$match_attendance',";
 			}
 			$modify .= "MatchOvertime = '$match_overtime',
-				MatchPenaltyShootout = '$penalty_shootout',
+				MatchPenaltyShootout = '$match_penalty_shootout',
 				MatchShots = '$shots',
 				MatchShotsOpponent = '$shots_opponent',
 				MatchShotsOnGoal = '$shots_on_goal',
@@ -378,7 +361,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<td align='left' valign='top'><input type='checkbox' name='match_overtime' value='1'></td>\n";
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top'>Penalty Shootout?</td>\n";
-		echo "<td align='left' valign='top'><input type='checkbox' name='penalty_shootout' value='1'></td>\n";
+		echo "<td align='left' valign='top'><input type='checkbox' name='match_penalty_shootout' value='1'></td>\n";
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top'>Penalty Goals:</td>\n";
 		echo "<td align='left' valign='top'><input type='text' name='penalty_goals' size='3'></td>\n";
@@ -422,7 +405,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			MatchPenaltyGoals AS penalty_goals,
 			MatchPenaltyGoalsOpponent AS penalty_goals_opponent,
 			MatchOvertime AS match_overtime,
-			MatchPenaltyShootout AS penalty_shootout,
+			MatchPenaltyShootout AS match_penalty_shootout,
 			MatchShots AS shots,
 			MatchShotsOpponent AS shots_opponent,
 			MatchShotsOnGoal AS shots_on_goal,
@@ -447,7 +430,8 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			MatchYellowCardsOpponent AS yellow_cards_opponent,
 			MatchRedCardsOpponent AS red_cards_opponent
 			FROM team_matches
-			WHERE MatchID = '$match_id' LIMIT 1
+			WHERE MatchID = '$match_id'
+			LIMIT 1
 		") or die(mysqli_error());
 		$match_data = mysqli_fetch_array($get_match);
 		mysqli_free_result($get_match);
@@ -599,10 +583,10 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top'>Penalty Shootout?</td>\n";
 		echo "<td align='left' valign='top'>";
-		if ($match_data['penalty_shootout'] == 1) {
-			echo "<input type='checkbox' name='penalty_shootout' value='1' CHECKED>";
+		if ($match_data['match_penalty_shootout'] == 1) {
+			echo "<input type='checkbox' name='match_penalty_shootout' value='1' CHECKED>";
 		} else {
-			echo "<input type='checkbox' name='penalty_shootout' value='1'>";
+			echo "<input type='checkbox' name='match_penalty_shootout' value='1'>";
 		}
 		echo "</td>\n";
 		echo "</tr><tr>\n";
@@ -797,8 +781,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			CONCAT(team_players.PlayerFirstName, ' ', team_players.PlayerLastName) AS player_name,
 			team_players.PlayerID AS player_id
 			FROM team_players, team_appearances
-			WHERE
-			team_players.PlayerID = team_appearances.AppearancePlayerID
+			WHERE team_players.PlayerID = team_appearances.AppearancePlayerID
 			AND team_appearances.AppearanceMatchID = '$match_id'
 			AND team_appearances.AppearanceSeasonID = '$season_id'
 			ORDER BY player_name

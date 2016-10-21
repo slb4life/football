@@ -42,12 +42,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			$manager_profile = addslashes($manager_profile);
 			$manager_pc = addslashes($manager_pc);
 		}
-
-		if (!isset($publish)) {
-			$publish = 0;
-		} else {
-			$publish = 1;
-		}
+		if (!isset($publish)) { $publish = 0; }
 
 		if ($manager_first_name != '') {
 			mysqli_query($db_connect, "INSERT INTO team_managers SET
@@ -83,6 +78,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			$manager_profile = addslashes($manager_profile);
 			$manager_pc = addslashes($manager_pc);
 		}
+		if (!isset($publish)) { $publish = 0; }
 
 		if ($manager_first_name != '') {
 			mysqli_query($db_connect, "UPDATE team_managers SET
