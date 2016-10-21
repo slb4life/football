@@ -35,15 +35,15 @@ $get_matches = mysqli_query($db_connect, "SELECT
 	M.MatchPenaltyGoalsOpponent AS penalty_goals_opponent,
 	M.MatchOvertime AS match_overtime,
 	M.MatchPenaltyShootout AS penalty_shootout,
-	DATE_FORMAT(M.MatchDateTime, '".$how_to_print_in_report."') AS match_date,
-	M.MatchPlaceID AS match_place,
+	DATE_FORMAT(M.MatchDateTime, '$how_to_print_in_report') AS match_date,
+	M.MatchPlaceID AS match_place_id,
 	M.MatchPublish AS publish,
 	MT.MatchTypeName AS match_type_name
 	FROM team_matches M, team_match_types MT, team_opponents O
 	WHERE M.MatchTypeID = MT.MatchTypeID
 	AND M.MatchOpponent = O.OpponentID
-	AND MONTH(M.MatchDateTime) = ".$month_number."
-	AND DAYOFMONTH(M.MatchDateTime) = ".$day_of_month."
+	AND MONTH(M.MatchDateTime) = '$month_number'
+	AND DAYOFMONTH(M.MatchDateTime) = '$day_of_month'
 	ORDER BY match_date
 ") or die(mysqli_error());
 $i = 1;
@@ -53,16 +53,18 @@ while ($data = mysqli_fetch_array($get_matches)) {
 	} else {
 		$bg_color = BGCOLOR2;
 	}
-	if ($data['match_place'] == 1) {
+	if ($data['match_place_id'] == 1) {
 		echo "<tr>\n";
 		echo "<td align='left' valign='middle' bgcolor='".$bg_color."'>".$data['match_date']."</td>\n";
 		echo "<td align='left' valign='middle' bgcolor='".$bg_color."'>".$data['match_type_name']."";
+
 		if ($data['match_additional_type'] != '') {
 			echo " / ".$data['match_additional_type']."";
 		}
 		echo "</td>\n";
 		echo "<td align='left' valign='middle' bgcolor='".$bg_color."'>".$team_name."</td>\n";
 		echo "<td align='left' valign='middle' bgcolor='".$bg_color."'>";
+
 		if ($data['opponent_id'] == 1) {
 			echo "".$data['opponent_name']."";
 		} else {
@@ -70,8 +72,9 @@ while ($data = mysqli_fetch_array($get_matches)) {
 		}
 		echo "</td>\n";
 		echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
+
 		if ($data['goals'] == NULL || $data['goals_opponent'] == NULL) {
-			if ($data['prewtext'] == '') {
+			if ($data['preview_text'] == '') {
 				echo "&nbsp;";
 			} else {
 				echo "<a href='preview.php?id=".$data['match_id']."'>".$locale_preview."</a>";
@@ -80,6 +83,7 @@ while ($data = mysqli_fetch_array($get_matches)) {
 			if ($data['publish'] == 1) {
 				if ($data['penalty_goals'] == NULL || $data['penalty_goals_opponent'] == NULL) {
 					echo "<a href='match_details.php?id=".$data['match_id']."'>".$data['goals']." - ".$data['goals_opponent']."</a>";
+
 					if ($data['match_overtime'] == 1) {
 						echo " ".$locale_overtime_short."";
 					}
@@ -89,6 +93,7 @@ while ($data = mysqli_fetch_array($get_matches)) {
 			} else {
 				if ($data['penalty_goals'] == NULL || $data['penalty_goals_opponent'] == NULL) {
 					echo "".$data['goals']." - ".$data['goals_opponent']."";
+
 					if ($data['match_overtime'] == 1) {
 						echo " ".$locale_overtime_short."";
 					}
@@ -103,11 +108,13 @@ while ($data = mysqli_fetch_array($get_matches)) {
 		echo "<tr>\n";
 		echo "<td align='left' valign='middle' bgcolor='".$bg_color."'>".$data['match_date']."</td>\n";
 		echo "<td align='left' valign='middle' bgcolor='".$bg_color."'>".$data['match_type_name']."";
+
 		if ($data['match_additional_type'] != '') {
-			echo " / $data[match_additional_type]";
+			echo " / ".$data['match_additional_type']."";
 		}
 		echo "</td>\n";
 		echo "<td align='left' valign='middle' bgcolor='".$bg_color."'>";
+
 		if ($data['opponent_id'] == 1) {
 			echo "".$data['opponent_name']."";
 		} else {
@@ -116,8 +123,9 @@ while ($data = mysqli_fetch_array($get_matches)) {
 		echo "</td>\n";
 		echo "<td align='left' valign='middle' bgcolor='".$bg_color."'>".$team_name."</td>\n";
 		echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
+
 		if ($data['goals'] == NULL || $data['goals_opponent'] == NULL) {
-			if ($data['prewtext'] == '') {
+			if ($data['preview_text'] == '') {
 				echo "&nbsp;";
 			} else {
 				echo "<a href='preview.php?id=".$data['match_id']."'>".$locale_preview."</a>";
@@ -126,6 +134,7 @@ while ($data = mysqli_fetch_array($get_matches)) {
 			if ($data['publish'] == 1) {
 				if ($data['penalty_goals'] == NULL || $data['penalty_goals_opponent'] == NULL) {
 					echo "<a href='match_details.php?id=".$data['match_id']."'>".$data['goals_opponent']." - ".$data['goals']."</a>";
+
 					if ($data['match_overtime'] == 1) {
 						echo " ".$locale_overtime_short."";
 					}
@@ -135,6 +144,7 @@ while ($data = mysqli_fetch_array($get_matches)) {
 			} else {
 				if ($data['penalty_goals'] == NULL || $data['penalty_goals_opponent'] == NULL) {
 					echo "".$data['goals_opponent']." - ".$data['goals']."";
+
 					if ($data['match_overtime'] == 1) {
 						echo " ".$locale_overtime_short."";
 					}

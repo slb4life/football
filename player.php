@@ -40,7 +40,7 @@ $get_player_info = mysqli_query($db_connect, "SELECT
 	P.PlayerID AS player_id,
 	P.PlayerNumber AS player_nember,
 	P.PlayerDescription AS player_description,
-	DATE_FORMAT(P.PlayerDOB, '".$how_to_print_in_player."') AS player_dob,
+	DATE_FORMAT(P.PlayerDOB, '$how_to_print_in_player') AS player_dob,
 	P.PlayerPOB AS player_pob,
 	P.PlayerHeight AS player_height,
 	P.PlayerWeight AS player_weight,

@@ -275,6 +275,7 @@ $i = 0;
 while ($data = mysqli_fetch_array($get_players)) {
 	$players[$i] = $data['player_id'];
 	$minutes[$i] = 0;
+
 	if ($data['player_last_name'] == '') {
 		$names[$i] = $data['player_first_name'];
 	} else {

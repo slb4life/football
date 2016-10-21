@@ -5,7 +5,6 @@ $script_name = "timeline.php?".$_SERVER['QUERY_STRING'];
 if (isset($_POST['get_stats'])) {
 	$get_stats = $_POST['get_stats'];
 }
-
 if (isset($_POST['start_day']) || isset($_POST['start_month']) || isset($_POST['start_year'])) {
 	$start_day = $_POST['start_day'];
 	$start_month = $_POST['start_month'];
@@ -17,13 +16,13 @@ if (isset($_POST['end_day']) || isset($_POST['end_month']) || isset($_POST['end_
 	$end_year = $_POST['end_year'];
 }
 if (isset($start_year) || isset($start_month)  || isset($start_day)) {
-	$start_date = $start_year."-".$start_month."-".$start_day."00:00:00";
+	$match_start_date = $start_year."-".$start_month."-".$start_day."00:00:00";
 }
 if (isset($end_year) || isset($end_month)  || isset($end_day)) {
-	$end_date = $end_year."-".$end_month."-".$end_day."00:00:00";
+	$match_end_date = $end_year."-".$end_month."-".$end_day."00:00:00";
 }
-if (isset($_POST['place_id'])) {
-	$place_id = $_POST['place_id'];
+if (isset($_POST['match_place_id'])) {
+	$match_place_id = $_POST['match_place_id'];
 }
 
 echo "<form method='post' action='".$script_name."'>\n";
@@ -62,7 +61,7 @@ for ($i = 1 ; $i < 32 ; $i++) {
 echo "</select>\n";
 echo "<select name='start_month'>\n";
 for ($i = 1 ; $i < 13 ; $i++) {
-	if ($i<10) {
+	if ($i < 10) {
 		$i = "0".$i;
 	}
 	if (isset($get_stats)) {
@@ -82,7 +81,7 @@ for ($i = 1 ; $i < 13 ; $i++) {
 echo "</select>\n";
 echo "<select name='start_year'>\n";
 for ($i = 2000 ; $i < 2016 ; $i++) {
-	if ($i<10) {
+	if ($i < 10) {
 		$i = "0".$i;
 	}
 	if (isset($get_stats)) {
@@ -107,7 +106,7 @@ echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."' colspan='
 echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."' colspan='2' width='50%'>\n";
 echo "<select name='end_day'>\n";
 for ($i = 1 ; $i < 32 ; $i++) {
-	if ($i<10) {
+	if ($i < 10) {
 		$i = "0".$i;
 	}
 	if (isset($get_stats)) {
@@ -127,7 +126,7 @@ for ($i = 1 ; $i < 32 ; $i++) {
 echo "</select>\n";
 echo "<select name='end_month'>\n";
 for ($i = 1 ; $i < 13 ; $i++) {
-	if ($i<10) {
+	if ($i < 10) {
 		$i = "0".$i;
 	}
 	if (isset($get_stats)) {
@@ -147,7 +146,7 @@ for ($i = 1 ; $i < 13 ; $i++) {
 echo "</select>\n";
 echo "<select name='end_year'>\n";
 for ($i = 2000 ; $i < 2016 ; $i++) {
-	if ($i<10) {
+	if ($i < 10) {
 		$i = "0".$i;
 	}
 	if (isset($get_stats)) {
@@ -170,19 +169,19 @@ echo "</tr>\n";
 echo "<tr>\n";
 echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."' colspan='2' width='50%'><b>".$locale_place."</b></td>\n";
 echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."' colspan='2' width='50%'>\n";
-echo "<select name='place_id'>\n";
+echo "<select name='match_place_id'>\n";
 if (isset($get_stats)) {
-	if ($place_id == "%") {
+	if ($match_place_id == "%") {
 		echo "<option value='%' selected>".$locale_all."</option>\n";
 	} else {
 		echo "<option value='%'>".$locale_all."</option>\n";
 	}
-	if ($place_id == "1") {
+	if ($match_place_id == "1") {
 		echo "<option value='1' selected>".$locale_home."</option>\n";
 	} else {
 		echo "<option value='1'>".$locale_home."</option>\n";
 	}
-	if ($place_id == "2") {
+	if ($match_place_id == "2") {
 		echo "<option value='2' selected>".$locale_away."</option>\n";
 	} else {
 		echo "<option value='2'>".$locale_away."</option>\n";
@@ -209,9 +208,9 @@ if (!isset($get_stats)) {
 	$end_day = mysqli_real_escape_string($db_connect, $_POST['end_day']);
 	$end_month = mysqli_real_escape_string($db_connect, $_POST['end_month']);
 	$end_year = mysqli_real_escape_string($db_connect, $_POST['end_year']);
-	$place_id = mysqli_real_escape_string($db_connect, $_POST['place_id']);
-	$start_date = mysqli_real_escape_string($db_connect, $start_date);
-	$end_date = mysqli_real_escape_string($db_connect, $end_date);
+	$match_place_id = mysqli_real_escape_string($db_connect, $_POST['match_place_id']);
+	$match_start_date = mysqli_real_escape_string($db_connect, $match_start_date);
+	$match_end_date = mysqli_real_escape_string($db_connect, $match_end_date);
 	$wins = 0;
 	$draws = 0;
 	$loses = 0;
@@ -233,19 +232,19 @@ if (!isset($get_stats)) {
 	}
 	$get_matches = mysqli_query($db_connect, "SELECT
 		M.MatchGoals AS goals,
-		M.MatchGoalsOpponent AS goals_o
+		M.MatchGoalsOpponent AS goals_opponent
 		FROM team_matches M
-		WHERE M.MatchTypeID LIKE '".$tdefault_match_type_id."' AND
-		M.MatchDateTime <= '".$end_date."' AND
-		M.MatchDateTime >= '".$start_date."' AND
-		M.MatchPlaceID LIKE '".$place_id."' AND
-		M.MatchGoals IS NOT NULL AND
-		M.MatchGoalsOpponent IS NOT NULL
+		WHERE M.MatchTypeID LIKE '$tdefault_match_type_id'
+		AND M.MatchDateTime <= '$match_end_date'
+		AND M.MatchDateTime >= '$match_start_date'
+		AND M.MatchPlaceID LIKE '$match_place_id'
+		AND M.MatchGoals IS NOT NULL
+		AND M.MatchGoalsOpponent IS NOT NULL
 		ORDER BY M.MatchDateTime
 	") or die(mysqli_error());
 	$k = 0;
 	while ($data_m = mysqli_fetch_array($get_matches)) {
-		if ($data_m['goals'] > $data_m['goals_o']) {
+		if ($data_m['goals'] > $data_m['goals_opponent']) {
 			$wins = $wins + 1;
 			$streak++;
 			$streak2++;
@@ -253,14 +252,14 @@ if (!isset($get_stats)) {
 			$track = 1;
 			$track2 = 1;
 		}
-		if ($data_m['goals'] == $data_m['goals_o']) {
+		if ($data_m['goals'] == $data_m['goals_opponent']) {
 			$draws = $draws + 1;
 			$streak = 0;
 			$track = 0;
 			$track2 = 1;
 			$streak2++;
 		}
-		if ($data_m['goals'] < $data_m['goals_o']) {
+		if ($data_m['goals'] < $data_m['goals_opponent']) {
 			$loses = $loses + 1;
 			$streak = 0;
 			$streak2 = 0;
@@ -268,7 +267,7 @@ if (!isset($get_stats)) {
 			$track2 = 0;
 		}
 		$goals_for = $goals_for + $data_m['goals'];
-		$goals_against = $goals_against + $data_m['goals_o'];
+		$goals_against = $goals_against + $data_m['goals_opponent'];
 		if ($k > 0) {
 			if ($track == 1) {
 				if ($streak >= $record) {
@@ -352,38 +351,41 @@ if (!isset($get_stats)) {
 	echo "<td align='left' valign='middle' colspan='2'>".$locale_most_goals."</td>\n";
 	echo "<td align='left' valign='middle' colspan='2'>";
 	$query = mysqli_query($db_connect, "SELECT
-		P.PlayerID AS id,
-		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS name,
-		COUNT( G.GoalPlayerID ) AS goals
+		P.PlayerID AS player_id,
+		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
+		COUNT( G.GoalPlayerID ) AS goal_player_id
 		FROM team_seasons S
-		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID LIKE '%'
-		LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID LIKE '".$tdefault_match_type_id."' AND
-		M.MatchDateTime <= '".$end_date."' AND
-		M.MatchDateTime >= '".$start_date."' AND
-		M.MatchPlaceID LIKE '".$place_id."'
-		LEFT OUTER JOIN team_goals G ON G.GoalPlayerID = S.SeasonPlayerID AND G.GoalMatchID = M.MatchID AND G.GoalOwn = '0'
+		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID
+		AND S.SeasonID LIKE '%'
+		LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID
+		AND M.MatchTypeID LIKE '$tdefault_match_type_id'
+		AND M.MatchDateTime <= '$match_end_date'
+		AND M.MatchDateTime >= '$match_start_date'
+		AND M.MatchPlaceID LIKE '$match_place_id'
+		LEFT OUTER JOIN team_goals G ON G.GoalPlayerID = S.SeasonPlayerID
+		AND G.GoalMatchID = M.MatchID AND G.GoalOwn = '0'
 		WHERE P.PlayerID != ''
-		GROUP BY id
-		ORDER BY goals DESC, name
+		GROUP BY player_id
+		ORDER BY goal_player_id DESC, player_name
 	") or die(mysqli_error());
 	$i = 0;
 	$check = 92892892892;
 	while ($data = mysqli_fetch_array($query)) {
 		if ($i==0) {
-			echo "<a href='player.php?id=".$data['id']."'>".$data['name']."</a>";
-			$best_goal_amount = $data['goals'];
+			echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>";
+			$most_goals = $data['goal_player_id'];
 		}
 		if ($i > 0) {
-			if ($data['goals'] == $check) {
-				echo ", <a href='player.php?id=".$data['id']."'>".$data['name']."</a>";
+			if ($data['goal_player_id'] == $check) {
+				echo ", <a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>";
 			} else {
 				break;
 			}
 		}
-		$check = $data['goals'];
+		$check = $data['goal_player_id'];
 		$i++;
 	}
-	echo " (".$best_goal_amount.")";
+	echo " (".$most_goals.")";
 	mysqli_free_result($query);
 
 	echo "</td>\n";
@@ -392,35 +394,38 @@ if (!isset($get_stats)) {
 	echo "<td align='left' valign='middle' colspan='2'>".$locale_most_booked."</td>\n";
 	echo "<td align='left' valign='middle' colspan='2'>";
 	$query = mysqli_query($db_connect, "SELECT
-		P.PlayerID AS id,
-		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS name,
-		COUNT( Y.YellowCardPlayerID ) AS yellows
+		P.PlayerID AS player_id,
+		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
+		COUNT( Y.YellowCardPlayerID ) AS yellow_player_id
 		FROM team_seasons S
-		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID LIKE '%'
-		LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID LIKE '".$tdefault_match_type_id."' AND
-		M.MatchDateTime <= '".$end_date."' AND
-		M.MatchDateTime >= '".$start_date."' AND
-		M.MatchPlaceID LIKE '".$place_id."'
-		LEFT OUTER JOIN team_yellow_cards Y ON Y.YellowCardPlayerID = S.SeasonPlayerID AND Y.YellowCardMatchID = M.MatchID
+		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID
+		AND S.SeasonID LIKE '%'
+		LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID
+		AND M.MatchTypeID LIKE '$tdefault_match_type_id'
+		AND M.MatchDateTime <= '$match_end_date'
+		AND M.MatchDateTime >= '$match_start_date'
+		AND M.MatchPlaceID LIKE '$match_place_id'
+		LEFT OUTER JOIN team_yellow_cards Y ON Y.YellowCardPlayerID = S.SeasonPlayerID
+		AND Y.YellowCardMatchID = M.MatchID
 		WHERE P.PlayerID != ''
-		GROUP BY id
-		ORDER BY yellows DESC, name
+		GROUP BY player_id
+		ORDER BY yellow_player_id DESC, player_name
 	") or die(mysqli_error());
 	$i = 0;
 	$check = 92892892892;
 	while ($data = mysqli_fetch_array($query)) {
 		if ($i==0) {
-			echo "<a href='player.php?id=".$data['id']."'>".$data['name']."</a>";
-			$most_yellows = $data['yellows'];
+			echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>";
+			$most_yellows = $data['yellow_player_id'];
 		}
 		if ($i > 0) {
-			if ($data['yellows'] == $check) {
-				echo ", <a href='player.php?id=".$data['id']."'>".$data['name']."</a>";
+			if ($data['yellow_player_id'] == $check) {
+				echo ", <a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>";
 			} else {
 				break;
 			}
 		}
-		$check = $data['yellows'];
+		$check = $data['yellow_player_id'];
 		$i++;
 	}
 	echo " (".$most_yellows.")";
@@ -432,35 +437,38 @@ if (!isset($get_stats)) {
 	echo "<td align='left' valign='middle' colspan='2'>".$locale_most_appearances."</td>\n";
 	echo "<td align='left' valign='middle' colspan='2'>";
 	$query = mysqli_query($db_connect, "SELECT
-		P.PlayerID AS id,
-		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS name,
-		COUNT( A.AppearancePlayerID ) AS apps
+		P.PlayerID AS player_id,
+		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
+		COUNT( A.AppearancePlayerID ) AS appearance_player_id
 		FROM team_seasons S
-		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID LIKE '%'
-		LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID LIKE '".$tdefault_match_type_id."' AND
-		M.MatchDateTime <= '".$end_date."' AND
-		M.MatchDateTime >= '".$start_date."' AND
-		M.MatchPlaceID LIKE '".$place_id."'
-		LEFT OUTER JOIN team_appearances A ON A.AppearancePlayerID = S.SeasonPlayerID AND A.AppearanceMatchID = M.MatchID
+		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID
+		AND S.SeasonID LIKE '%'
+		LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID
+		AND M.MatchTypeID LIKE '$tdefault_match_type_id'
+		AND M.MatchDateTime <= '$match_end_date'
+		AND M.MatchDateTime >= '$match_start_date'
+		AND M.MatchPlaceID LIKE '$match_place_id'
+		LEFT OUTER JOIN team_appearances A ON A.AppearancePlayerID = S.SeasonPlayerID
+		AND A.AppearanceMatchID = M.MatchID
 		WHERE P.PlayerID != ''
-		GROUP BY id
-		ORDER BY apps DESC, name
+		GROUP BY player_id
+		ORDER BY appearance_player_id DESC, player_name
 	") or die(mysqli_error());
 	$i = 0;
 	$check = 92892892892;
 	while ($data = mysqli_fetch_array($query)) {
 		if ($i==0) {
-			echo "<a href='player.php?id=".$data['id']."'>".$data['name']."</a>";
-			$most_apps = $data['apps'];
+			echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>";
+			$most_apps = $data['appearance_player_id'];
 		}
 		if ($i > 0) {
-			if ($data['apps'] == $check) {
-				echo ", <a href='player.php?id=".$data['id']."'>".$data['name']."</a>";
+			if ($data['appearance_player_id'] == $check) {
+				echo ", <a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>";
 			} else {
 				break;
 			}
 		}
-		$check = $data['apps'];
+		$check = $data['appearance_player_id'];
 		$i++;
 	}
 	echo " (".$most_apps.")";

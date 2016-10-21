@@ -17,7 +17,6 @@ echo "<td align='left' valign='top'>";
 if (isset ($_POST['submit'])) {
 	$submit = $_POST['submit'];
 }
-
 if (isset($submit)) {
 	echo "<b>".$locale_search_results.":</b><br><br>\n";
 	$string = mysqli_real_escape_string($db_connect, trim($_POST['string']));
@@ -29,9 +28,8 @@ if (isset($submit)) {
 		CONCAT(PlayerFirstName, ' ', PlayerLastName) AS player_name,
 		PlayerID AS player_id
 		FROM team_players
-		WHERE
-		PlayerFirstName LIKE '%".$string."%' OR
-		PlayerLastName LIKE '%".$string."%'
+		WHERE PlayerFirstName LIKE '%$string%'
+		OR PlayerLastName LIKE '%$string%'
 	") or die(mysqli_error());
 
 	if (mysqli_num_rows($get_players) > 0) {
@@ -45,7 +43,7 @@ if (isset($submit)) {
 		OpponentName AS opponent_name,
 		OpponentID AS opponent_id
 		FROM team_opponents
-		WHERE OpponentName LIKE '%".$string."%'
+		WHERE OpponentName LIKE '%$string%'
 	") or die(mysqli_error());
 
 	if (mysqli_num_rows($get_opps) > 0) {
