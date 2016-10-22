@@ -263,9 +263,9 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 				$i = "0".$i;
 			}
 			if ($i == "01")
-				echo "<option value='$i' SELECTED>$i</option>\n";
+				echo "<option value='".$i."' SELECTED>".$i."</option>\n";
 			else
-				echo "<option value='$i'>$i</option>\n";
+				echo "<option value='".$i."'>".$i."</option>\n";
 		}
 		echo "</select>\n";
 		echo "<select name='month'>\n";
@@ -274,9 +274,9 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 				$i = "0".$i;
 			}
 			if ($i == "01")
-				echo "<option value='$i' SELECTED>$i</option>\n";
+				echo "<option value='".$i."' SELECTED>".$i."</option>\n";
 			else
-				echo "<option value='$i'>$i</option>\n";
+				echo "<option value='".$i."'>".$i."</option>\n";
 		}
 		echo "</select>\n";
 		echo "<select name='year'>\n";
@@ -285,9 +285,9 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 				$i = "0".$i;
 			}
 			if ($i == "2014")
-				echo "<option value='$i' SELECTED>$i</option>\n";
+				echo "<option value='".$i."' SELECTED>".$i."</option>\n";
 			else
-				echo "<option value='$i'>$i</option>\n";
+				echo "<option value='".$i."'>".$i."</option>\n";
 		}
 		echo "</select><br>\n";
 		echo "at\n";
@@ -297,9 +297,9 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 				$i = "0".$i;
 			}
 			if ($i == "19")
-				echo "<option value='$i' SELECTED>$i</option>\n";
+				echo "<option value='".$i."' SELECTED>".$i."</option>\n";
 			else
-				echo "<option value='$i'>$i</option>\n";
+				echo "<option value='".$i."'>".$i."</option>\n";
 		}
 		echo "</select>\n";
 		echo "<select name='minute'>\n";
@@ -308,9 +308,9 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 				$i = "0".$i;
 			}
 			if ($i == "00")
-				echo "<option value='$i' SELECTED>$i</option>\n";
+				echo "<option value='".$i."' SELECTED>".$i."</option>\n";
 			else
-				echo "<option value='$i'>$i</option>\n";
+				echo "<option value='".$i."'>".$i."</option>\n";
 		}
 		echo "</select>";
 		echo "</td>\n";
@@ -459,9 +459,9 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 				$i = "0".$i;
 			}
 			if ($match_data['day'] == $i)
-				echo "<option value='$i' SELECTED>$i</option>\n";
+				echo "<option value='".$i."' SELECTED>".$i."</option>\n";
 			else
-				echo "<option value='$i'>$i</option>\n";
+				echo "<option value='".$i."'>".$i."</option>\n";
 		}
 		echo "</select>\n";
 		echo "<select name='month'>";
@@ -470,9 +470,9 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 				$i = "0".$i;
 			}
 			if ($match_data['month'] == $i)
-				echo "<option value='$i' SELECTED>$i</option>\n";
+				echo "<option value='".$i."' SELECTED>".$i."</option>\n";
 			else
-				echo "<option value='$i'>$i</option>\n";
+				echo "<option value='".$i."'>".$i."</option>\n";
 		}
 		echo "</select>\n";
 		echo "<select name='year'>";
@@ -481,9 +481,9 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 				$i = "0".$i;
 			}
 			if ($match_data['year'] == $i)
-				echo "<option value='$i' SELECTED>$i</option>\n";
+				echo "<option value='".$i."' SELECTED>".$i."</option>\n";
 			else
-				echo "<option value='$i'>$i</option>\n";
+				echo "<option value='".$i."'>".$i."</option>\n";
 		}
 		echo "</select><br>\n";
 		echo "at\n";
@@ -493,9 +493,9 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 				$i = "0".$i;
 			}
 			if ($match_data['hour'] == $i)
-				echo "<option value='$i' SELECTED>$i</option>\n";
+				echo "<option value='".$i."' SELECTED>".$i."</option>\n";
 			else
-				echo "<option value='$i'>$i</option>\n";
+				echo "<option value='".$i."'>".$i."</option>\n";
 		}
 		echo "</select>\n";
 		echo "<select name='minute'>";
@@ -504,9 +504,9 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 				$i = "0".$i;
 			}
 			if ($match_data['minute'] == $i)
-				echo "<option value='$i' SELECTED>$i</option>\n";
+				echo "<option value='".$i."' SELECTED>".$i."</option>\n";
 			else
-				echo "<option value='$i'>$i</option>\n";
+				echo "<option value='".$i."'>".$i."</option>\n";
 		}
 		echo "</select>\n";
 		echo "</td>\n";

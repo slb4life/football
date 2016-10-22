@@ -35,7 +35,7 @@ $get_manager_info = mysqli_query($db_connect, "SELECT
 	M.ManagerID AS manager_id,
 	M.ManagerProfile AS manager_description,
 	M.ManagerPC AS manager_pc,
-	DATE_FORMAT(M.ManagerDOB, '".$how_to_print_in_manager."') AS manager_dob,
+	DATE_FORMAT(M.ManagerDOB, '$how_to_print_in_manager') AS manager_dob,
 	M.ManagerPOB AS manager_pob,
 	M.ManagerPlayerID AS manager_player_id
 	FROM team_managers M

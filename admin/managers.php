@@ -150,37 +150,37 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<td align='left' valign='top'>\n";
 		echo "<select name='dob_day'>\n";
 		for($i = 1 ; $i < 32 ; $i++) {
-			if ($i<10) {
+			if ($i < 10) {
 				$i = "0".$i;
 			}
 			if ($i == "01") {
-				echo "<option value='$i' SELECTED>$i</option>\n";
+				echo "<option value='".$i."' SELECTED>".$i."</option>\n";
 			} else {
-				echo "<option value='$i'>$i</option>\n";
+				echo "<option value='".$i."'>".$i."</option>\n";
 			}
 		}
 		echo "</select>\n";
 		echo "<select name='dob_month'>\n";
 		for($i = 1 ; $i < 13 ; $i++) {
-			if ($i<10) {
+			if ($i < 10) {
 				$i = "0".$i;
 			}
 			if ($i == "01") {
-				echo "<option value='$i' SELECTED>$i</option>\n";
+				echo "<option value='".$i."' SELECTED>".$i."</option>\n";
 			} else {
-				echo "<option value='$i'>$i</option>\n";
+				echo "<option value='".$i."'>".$i."</option>\n";
 			}
 		}
 		echo "</select>\n";
 		echo "<select name='dob_year'>\n";
 		for($i = 1900 ; $i < 2025 ; $i++) {
-			if ($i<10) {
+			if ($i < 10) {
 				$i = "0".$i;
 			}
 			if ($i == "2015") {
-				echo "<option value='$i' SELECTED>$i</option>\n";
+				echo "<option value='".$i."' SELECTED>".$i."</option>\n";
 			} else {
-				echo "<option value='$i'>$i</option>\n";
+				echo "<option value='".$i."'>".$i."</option>\n";
 			}
 		}
 		echo "</select>\n";
@@ -219,7 +219,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "</form>\n";
 	} else if ($action == 'modify') {
 		$get_manager = mysqli_query($db_connect, "SELECT
-			M.ManagerID AS id,
+			M.ManagerID AS manager_id,
 			M.ManagerFirstName AS manager_first_name,
 			M.ManagerLastName AS manager_last_name,
 			M.ManagerPublish AS publish,
@@ -254,37 +254,37 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<td align='left' valign='top'>";
 		echo "<select name='dob_day'>";
 		for($i = 1 ; $i < 32 ; $i++) {
-			if ($i<10) {
+			if ($i < 10) {
 				$i = "0".$i;
 			}
 			if ($i == $pdata['day']) {
-				echo "<option value='$i' SELECTED>$i</option>\n";
+				echo "<option value='".$i."' SELECTED>".$i."</option>\n";
 			} else {
-				echo "<option value='$i'>$i</option>\n";
+				echo "<option value='".$i."'>".$i."</option>\n";
 			}
 		}
 		echo "</select>\n";
 		echo "<select name='dob_month'>";
 		for($i = 1 ; $i < 13 ; $i++) {
-			if ($i<10) {
+			if ($i < 10) {
 				$i = "0".$i;
 			}
 			if ($i == $pdata['month']) {
-				echo "<option value='$i' SELECTED>$i</option>\n";
+				echo "<option value='".$i."' SELECTED>".$i."</option>\n";
 			} else {
-				echo "<option value='$i'>$i</option>\n";
+				echo "<option value='".$i."'>".$i."</option>\n";
 			}
 		}
 		echo "</select>\n";
 		echo "<select name='dob_year'>";
 		for($i = 1900 ; $i < 2025 ; $i++) {
-			if ($i<10) {
+			if ($i < 10) {
 				$i = "0".$i;
 			}
 			if ($i == $pdata['year']) {
-				echo "<option value='$i' SELECTED>$i</option>\n";
+				echo "<option value='".$i."' SELECTED>".$i."</option>\n";
 			} else {
-				echo "<option value='$i'>$i</option>\n";
+				echo "<option value='".$i."'>".$i."</option>\n";
 			}
 		}
 		echo "</select>\n";
@@ -367,73 +367,73 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<b>Add Timeline:</b><br>\n";
 		echo "Start: <select name='start_year'>";
 		for($i = 1950 ; $i < 2025 ; $i++) {
-			if ($i<10) {
+			if ($i < 10) {
 				$i = "0".$i;
 			}
 			if ($i == "2015") {
-				echo "<option value='$i' SELECTED>$i</option>\n";
+				echo "<option value='".$i."' SELECTED>".$i."</option>\n";
 			} else {
-				echo "<option value='$i'>$i</option>\n";
+				echo "<option value='".$i."'>".$i."</option>\n";
 			}
 		}
 		echo "</select>\n";
 		echo "<select name='start_month'>";
 		for($i = 1 ; $i < 13 ; $i++) {
-			if ($i<10) {
+			if ($i < 10) {
 				$i = "0".$i;
 			}
 			if ($i == "01") {
-				echo "<option value='$i' SELECTED>$i</option>\n";
+				echo "<option value='".$i."' SELECTED>".$i."</option>\n";
 			} else {
-				echo "<option value='$i'>$i</option>\n";
+				echo "<option value='".$i."'>".$i."</option>\n";
 			}
 		}
 		echo "</select>\n";
 		echo "<select name='start_day'>";
 		for($i = 1 ; $i < 32 ; $i++) {
-			if ($i<10) {
+			if ($i < 10) {
 				$i = "0".$i;
 			}
 			if ($i == "01") {
-				echo "<option value='$i' SELECTED>$i</option>\n";
+				echo "<option value='".$i."' SELECTED>".$i."</option>\n";
 			} else {
-				echo "<option value='$i'>$i</option>\n";
+				echo "<option value='".$i."'>".$i."</option>\n";
 			}
 		}
 		echo "</select>\n";
 		echo "End: <select name='end_year'>";
 		for($i = 1950 ; $i < 2025 ; $i++) {
-			if ($i<10) {
+			if ($i < 10) {
 				$i = "0".$i;
 			}
 			if ($i == "2015") {
-				echo "<option value='$i' SELECTED>$i</option>\n";
+				echo "<option value='".$i."' SELECTED>".$i."</option>\n";
 			} else {
-				echo "<option value='$i'>$i</option>\n";
+				echo "<option value='".$i."'>".$i."</option>\n";
 			}
 		}
 		echo "</select>\n";
 		echo "<select name='end_month'>";
 		for($i = 1 ; $i < 13 ; $i++) {
-			if ($i<10) {
+			if ($i < 10) {
 				$i = "0".$i;
 			}
 			if ($i == "01") {
-				echo "<option value='$i' SELECTED>$i</option>\n";
+				echo "<option value='".$i."' SELECTED>".$i."</option>\n";
 			} else {
-				echo "<option value='$i'>$i</option>\n";
+				echo "<option value='".$i."'>".$i."</option>\n";
 			}
 		}
 		echo "</select>\n";
 		echo "<select name='end_day'>";
 		for($i = 1 ; $i < 32 ; $i++) {
-			if ($i<10) {
+			if ($i < 10) {
 				$i = "0".$i;
 			}
 			if ($i == "01") {
-				echo "<option value='$i' SELECTED>$i</option>\n";
+				echo "<option value='".$i."' SELECTED>".$i."</option>\n";
 			} else {
-				echo "<option value='$i'>$i</option>\n";
+				echo "<option value='".$i."'>".$i."</option>\n";
 			}
 		}
 		echo "</select>\n";
@@ -459,7 +459,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			SM.SeasonID AS season_id
 			FROM team_season_names SN, team_seasons_managers SM
 			WHERE SM.SeasonID = SN.SeasonID
-			AND SM.SeasonManagerID = '".$manager_id."'
+			AND SM.SeasonManagerID = '$manager_id'
 			ORDER BY season_name
 		") or die(mysqli_error());
 		$all_seasons = mysqli_query($db_connect, "SELECT SeasonID FROM team_season_names") or die(mysqli_error());
@@ -467,7 +467,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		mysqli_free_result($all_seasons);
 
 		$check_managers = mysqli_num_rows($query);
-		$check_seasons = '';
+		$check_seasons = "";
 		while($data = mysqli_fetch_array($query)) {
 			echo "".$data['season_name']."<br>\n";
 			$check_season[] = $data['season_id'];
@@ -576,10 +576,10 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 	$get_managers = mysqli_query($db_connect, "SELECT
 		CONCAT(M.ManagerFirstName, ' ', M.ManagerLastName) AS manager_name,
 		M.ManagerID AS manager_id,
-		M.ManagerPublish AS manager_publish
+		M.ManagerPublish AS publish
 		FROM team_managers M,team_seasons_managers SM
 		WHERE M.ManagerID = SM.SeasonManagerID
-		AND SM.SeasonID = '".$season_id."'
+		AND SM.SeasonID = '$season_id'
 		ORDER BY manager_name
 	") or die(mysqli_error());
 	$get_total = mysqli_num_rows($get_managers);
@@ -590,7 +590,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<b>Managers: ".$season_name."</b><br><br>Number of Managers: ".$get_total."<br><br>";
 		while($data = mysqli_fetch_array($get_managers)) {
 			echo "<a href='".$PHP_SELF."?session_id=".$session."&amp;action=modify&amp;manager_id=".$data['manager_id']."'>".$data['manager_name']."</a>";
-			if ($data['manager_publish'] == 0) {
+			if ($data['publish'] == 0) {
 				echo " (NB)<br>\n";
 			} else  {
 				echo "<br>\n";

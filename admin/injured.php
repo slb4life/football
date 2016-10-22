@@ -28,7 +28,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			MatchID AS match_id
 			FROM team_matches
 			WHERE MatchSeasonID = '$season_id'
-			ORDER BY MatchDateTime
+			ORDER BY match_date
 		") or die(mysqli_error());
 		mysqli_query($db_connect, "DELETE FROM team_injured WHERE InjuredPlayerID = '$injured_player_id' AND InjuredSeasonID = '$season_id'") or die(mysqli_error());
 		$i = 0;
@@ -84,9 +84,9 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		$injury_reason = '';
 		$i = 0;
 		$counter = 0;
-		while($injdata = mysqli_fetch_array($get_injured_matches)) {
-			$injury_table[$i] = $injdata['match_id'];
-			$injury_reason = $injdata['injured_reason'];
+		while($injury_data = mysqli_fetch_array($get_injured_matches)) {
+			$injury[$i] = $injury_data['match_id'];
+			$injury_reason = $injury_data['injured_reason'];
 			$i++;
 			$counter++;
 		}
@@ -119,16 +119,16 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		while($mdata = mysqli_fetch_array($get_matches)) {
 			$check = 0;
 			for($j = 0 ; $j < $counter ; $j++) {
-				if ($mdata['match_id'] == $injury_table[$j]) {
+				if ($mdata['match_id'] == $injury[$j]) {
 					$check = 1;
 				}
 			}
 			echo "<tr>\n";
 			echo "<td align='left' valign='middle' colspan='2'>";
 			if ($check == 1) {
-				echo "<input type='checkbox' name='selected_match[$i]' value='1' CHECKED>";
+				echo "<input type='checkbox' name='selected_match[".$i."]' value='1' CHECKED>";
 			} else {
-				echo "<input type='checkbox' name='selected_match[$i]' value='1'>";
+				echo "<input type='checkbox' name='selected_match[".$i."]' value='1'>";
 			}
 			echo " ".$mdata['match_date'].", vs. ".$mdata['opponent_name']." (".$mdata['match_type_name'].")";
 			echo "</td>\n";

@@ -213,37 +213,37 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<td align='left' valign='top'>";
 		echo "<select name='dob_day'>";
 		for($i = 1 ; $i < 32 ; $i++) {
-			if ($i<10) {
+			if ($i < 10) {
 				$i = "0".$i;
 			}
 			if ($i == "01") {
-				echo "<option value='$i' SELECTED>$i</option>\n";
+				echo "<option value='".$i."' SELECTED>".$i."</option>\n";
 			} else {
-				echo "<option value='$i'>$i</option>\n";
+				echo "<option value='".$i."'>".$i."</option>\n";
 			}
 		}
 		echo "</select>\n";
 		echo "<select name='dob_month'>";
 		for($i = 1 ; $i < 13 ; $i++) {
-			if ($i<10) {
+			if ($i < 10) {
 				$i = "0".$i;
 			}
 			if ($i == "01") {
-				echo "<option value='$i' SELECTED>$i</option>\n";
+				echo "<option value='".$i."' SELECTED>".$i."</option>\n";
 			} else {
-				echo "<option value='$i'>$i</option>\n";
+				echo "<option value='".$i."'>".$i."</option>\n";
 			}
 		}
 		echo "</select>\n";
 		echo "<select name='dob_year'>";
 		for($i = 1900 ; $i < 2025 ; $i++) {
-			if ($i<10) {
+			if ($i <10) {
 				$i = "0".$i;
 			}
 			if ($i == "2014") {
-				echo "<option value='$i' SELECTED>$i</option>\n";
+				echo "<option value='".$i."' SELECTED>".$i."</option>\n";
 			} else {
-				echo "<option value='$i'>$i</option>\n";
+				echo "<option value='".$i."'>".$i."</option>\n";
 			}
 		}
 		echo "</select>\n";
@@ -334,37 +334,37 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<td align='left' valign='top'>";
 		echo "<select name='dob_day'>";
 		for($i = 1 ; $i < 32 ; $i++) {
-			if ($i<10) {
+			if ($i < 10) {
 				$i = "0".$i;
 			}
 			if ($i == $pdata['day']) {
-				echo "<option value='$i' SELECTED>$i</option>\n";
+				echo "<option value='".$i."' SELECTED>".$i."</option>\n";
 			} else {
-				echo "<option value='$i'>$i</option>\n";
+				echo "<option value='".$i."'>".$i."</option>\n";
 			}
 		}
 		echo "</select>\n";
 		echo "<select name='dob_month'>";
 		for($i = 1 ; $i < 13 ; $i++) {
-			if($i<10) {
+			if($i < 10) {
 				$i = "0".$i;
 			}
 			if ($i == $pdata['month']) {
-				echo "<option value='$i' SELECTED>$i</option>\n";
+				echo "<option value='".$i."' SELECTED>".$i."</option>\n";
 			} else {
-				echo "<option value='$i'>$i</option>\n";
+				echo "<option value='".$i."'>".$i."</option>\n";
 			}
 		}
 		echo "</select>\n";
 		echo "<select name='dob_year'>";
 		for($i = 1900 ; $i < 2025 ; $i++) {
-			if ($i<10) {
+			if ($i < 10) {
 				$i = "0".$i;
 			}
 			if ($i == $pdata['year']) {
-				echo "<option value='$i' SELECTED>$i</option>\n";
+				echo "<option value='".$i."' SELECTED>".$i."</option>\n";
 			} else {
-				echo "<option value='$i'>$i</option>\n";
+				echo "<option value='".$i."'>".$i."</option>\n";
 			}
 		}
 		echo "</select>\n";
@@ -446,7 +446,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		mysqli_free_result($all_seasons);
 
 		$check_players = mysqli_num_rows($query);
-		$check_seasons = '';
+		$check_seasons = "";
 		while($data = mysqli_fetch_array($query)) {
 			echo "".$data['season_name']."<br>\n";
 			$check_season[] = $data['season_id'];

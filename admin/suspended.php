@@ -28,7 +28,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			MatchID AS match_id
 			FROM team_matches
 			WHERE MatchSeasonID = '$season_id'
-			ORDER BY MatchDateTime
+			ORDER BY match_date
 		")or die(mysqli_error());
 		mysqli_query($db_connect, "DELETE FROM team_suspended WHERE SuspendedPlayerID = '$suspended_player_id' AND SuspendedSeasonID = '$season_id'") or die(mysqli_error());
 		$i = 0;
@@ -80,8 +80,8 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			SuspendedMatchID AS match_id,
 			SuspendedReason AS reason
 			FROM team_suspended
-			WHERE SuspendedPlayerID = '$player_id' AND
-			SuspendedSeasonID = '$season_id'
+			WHERE SuspendedPlayerID = '$player_id'
+			AND SuspendedSeasonID = '$season_id'
 		") or die(mysqli_error());
 		$suspension_reason = '';
 		$i = 0;
@@ -132,9 +132,9 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			echo "<tr>\n";
 			echo "<td align='left' valign='middle' colspan='2'>";
 			if ($check == 1){
-				echo "<input type='checkbox' name='selected_match[$i]' value='1' CHECKED>";
+				echo "<input type='checkbox' name='selected_match[".$i."]' value='1' CHECKED>";
 			} else {
-				echo "<input type='checkbox' name='selected_match[$i]' value='1'>";
+				echo "<input type='checkbox' name='selected_match[".$i."]' value='1'>";
 			}
 			echo " ".$mdata['match_date'].", vs. ".$mdata['opponent_name']." (".$mdata['match_type_name'].")";
 			echo "</td>\n";

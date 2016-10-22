@@ -192,9 +192,9 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 	$get_seasons = mysqli_query($db_connect, "SELECT * FROM team_season_names WHERE SeasonPublish = '1' ORDER BY SeasonName") or die(mysqli_error());
 	while($data = mysqli_fetch_array($get_seasons)) {
 		if ($data['SeasonID'] == $pdata['default_season']) {
-			echo "<option value='$data[SeasonID]' SELECTED>$data[SeasonName]</option>\n";
+			echo "<option value='".$data['SeasonID']."' SELECTED>".$data['SeasonName']."</option>\n";
 		} else {
-			echo "<option value='$data[SeasonID]'>$data[SeasonName]</option>\n";
+			echo "<option value='".$data['SeasonID']."'>".$data['SeasonName']."</option>\n";
 		}
 	}
 	mysqli_free_result($get_seasons);
@@ -209,9 +209,9 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 	$get_types = mysqli_query($db_connect, "SELECT * FROM team_match_types ORDER BY MatchTypeName") or die(mysqli_error());
 	while($data = mysqli_fetch_array($get_types)) {
 		if ($data['MatchTypeID'] == $pdata['default_match_type']) {
-			echo "<option value='$data[MatchTypeID]' SELECTED>$data[MatchTypeName]</option>\n";
+			echo "<option value='".$data['MatchTypeID']."' SELECTED>".$data['MatchTypeName']."</option>\n";
 		} else {
-			echo "<option value='$data[MatchTypeID]'>$data[MatchTypeName]</option>\n";
+			echo "<option value='".$data['MatchTypeID']."'>".$data['MatchTypeName']."</option>\n";
 		}
 	}
 	mysqli_free_result($get_types);

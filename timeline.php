@@ -41,7 +41,7 @@ echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."' colspan='
 echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."' colspan='2' width='50%'>\n";
 echo "<select name='start_day'>\n";
 for ($i = 1 ; $i < 32 ; $i++) {
-	if ($i<10) {
+	if ($i < 10) {
 		$i = "0".$i;
 	}
 	if (isset($get_stats)) {
