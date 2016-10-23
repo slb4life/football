@@ -26,7 +26,6 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 	if (get_magic_quotes_gpc()) {
 		$value = addslashes($value);
 	}
-
 	if (isset($add)) {
 		mysqli_query($db_connect, "INSERT INTO team_transfers SET SeasonID = '$season_id', PlayerID = '$player_id', ClubID = '$club_id', InOrOut = '$in_or_out', Value = '$value'") or die(mysqli_error());
 		header("Location: $HTTP_REFERER");

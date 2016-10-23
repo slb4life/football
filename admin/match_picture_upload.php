@@ -27,7 +27,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		$check_type = explode(".",$_FILES['image_file']['name']);
 
 		if ($check_type[1] != 'jpg' && $check_type[1] != 'png') {
-			echo "Please upload only jpg or png-filetype";
+			echo "Please Upload only JPG or PNG-Filetype";
 			exit;
 		}
 		srand((double)microtime()*1000000);
@@ -51,7 +51,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			header("Location: $HTTP_REFERER");
 
 		} else {
-			echo "Upload attack. Filename: ".$_FILES['image_file']['name'];
+			echo "Upload Attack. Filename: ".$_FILES['image_file']['name'];
 		}
 		header("Location: $HTTP_REFERER");
 
@@ -178,7 +178,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 				echo " (NB)<br><br>";
 		}
 	}
-	echo "<br>NB = This Match is not Published yet.";
+	echo "<br>NB = This Match is not Published Yet.";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";

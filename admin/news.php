@@ -120,10 +120,10 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 
 		if (file_exists($image_url)) {
 			echo "<img src='".$image_url."' alt=''>";
-			echo "<br><a href='delete_picture.php?session_id=$session&amp;news_id=$news_id&amp;action=10&amp;type=jpg'>Delete this Picture</a>";
+			echo "<br><a href='delete_picture.php?session_id=".$session."&amp;news_id=".$news_id."&amp;action=10&amp;type=jpg'>Delete this Picture</a>";
 		} else if (file_exists($image_url2)) {
 			echo "<img src='".$image_url2."' alt=''>";
-			echo "<br><a href='delete_picture.php?session_id=$session&amp;news_id=$news_id&amp;action=10&amp;type=png'>Delete this Picture</a>";
+			echo "<br><a href='delete_picture.php?session_id=".$session."&amp;news_id=".$news_id."&amp;action=10&amp;type=png'>Delete this Picture</a>";
 		} else {
 				echo "<img src='../images/no_image.png' alt='' width='100' height='100'>";
 		}

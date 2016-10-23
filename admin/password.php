@@ -11,7 +11,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 
 	$season_id = $_SESSION['season_id'];
 	$season_name = $_SESSION['season_name'];
-	
+
 	$PHP_SELF = $_SERVER['PHP_SELF'];
 	
 	if (isset($_POST['submit'])){ $submit = $_POST['submit']; }
@@ -24,23 +24,22 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		$old = $_POST['old'];
 	
 		if ($old == '' || $new == '' || $new2 == '') {
-			$check = "You must fill all fields.";
+			$check = "You Must Fill All Fields.";
 		} else {
 			$old = md5($old);
-			if ($db_password['PasswordPassword'] != "$old") {
-				$check = 'Your old password was wrong.';
+			if ($db_password['PasswordPassword'] != "".$old."") {
+				$check = 'Your Old Password Was Wrong.';
 			} else {
-				if ($new != "$new2") {
-					$check = "You didn't retype correctly.";
+				if ($new != "".$new2."") {
+					$check = "You didn't Re-Type Correctly.";
 				} else {
 					$new = md5($new);
 					mysqli_query($db_connect, "UPDATE team_passwords SET PasswordPassword = '$new' WHERE PasswordID = '1'") or die(mysqli_error());
-					$check = "Password changed succesfully!";
+					$check = "Password Changed Succesfully!";
 				}
 			}
 		}
 		mysqli_free_result($get_password);
-
 	}
 	echo "<html>\n";
 	echo "<head>\n";
