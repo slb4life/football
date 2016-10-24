@@ -68,7 +68,7 @@ while ($data_m = mysqli_fetch_array($get_matches)) {
 	}
 	if ($data_m['goals'] == $data_m['goals_opponent']) {
 		$draws = $draws + 1;
-		$streak =0;
+		$streak = 0;
 		$track = 0;
 		$track2 = 1;
 		$streak2++;

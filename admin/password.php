@@ -27,6 +27,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			$check = "You Must Fill All Fields.";
 		} else {
 			$old = md5($old);
+
 			if ($db_password['PasswordPassword'] != "".$old."") {
 				$check = 'Your Old Password Was Wrong.';
 			} else {
@@ -49,7 +50,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 	echo "<body>\n";
 	include('menu.php');
 
-	if (isset($check) && ($check!=null)) {
+	if (isset($check) && ($check != null)) {
 		echo "<center><font color='red'>".$check."</font></center>";
 	}
 	echo "<table align='center' width='600'><tr>\n";

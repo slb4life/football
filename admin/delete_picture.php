@@ -4,7 +4,7 @@ $session_id = $_REQUEST['session_id'];
 $session = $_SESSION['session'];
 
 if (!isset($session_id) || $session_id != "$session") {
-	echo "Authorization failed.<br> <a href='index.php'>Restart, please</a>";
+	echo "Authorization Failed.<br> <a href='index.php'>Restart, Please</a>";
 } else {
 	$HTTP_REFERER = $_SERVER['HTTP_REFERER'];
 	$action = $_REQUEST['action'];

@@ -389,6 +389,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top'>Published:</td>\n";
 		echo "<td align='left' valign='top'>";
+
 		if ($pdata['publish'] == 1) {
 			echo "<input type='checkbox' name='publish' value='1' CHECKED>";
 		} else {
@@ -398,6 +399,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top'>Show in squad list in players list, previews and this season page?</td>\n";
 		echo "<td align='left' valign='top'>";
+
 		if ($pdata['in_squad'] == 1) {
 			echo "<input type='checkbox' name='in_squad' value='1' CHECKED>";
 		} else {
@@ -407,6 +409,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top'>All data filled to Database:</td>\n";
 		echo "<td align='left' valign='top'>";
+
 		if ($pdata['all_data'] == 1) {
 			echo "<input type='checkbox' name='all_data' value='1' CHECKED>";
 		} else {
@@ -416,6 +419,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top'>Show Stats for this Player:</td>\n";
 		echo "<td align='left' valign='top'>";
+
 		if ($pdata['show_stats'] == 1) {
 			echo "<input type='checkbox' name='show_stats' value='1' CHECKED>";
 		} else {
@@ -529,10 +533,10 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 
 		if (file_exists($image_url)) {
 			echo "<img src='".$image_url."' alt=''>";
-			echo"<br><a href='delete_picture.php?session_id=".$session."&amp;player_id=".$player_id."&amp;action=1&amp;type=jpg'>Delete this Picture</a>";
+			echo "<br><a href='delete_picture.php?session_id=".$session."&amp;player_id=".$player_id."&amp;action=1&amp;type=jpg'>Delete this Picture</a>";
 		} else if (file_exists($image_url2)) {
 			echo "<img src='".$image_url2."' alt=''>";
-			echo"<br><a href='delete_picture.php?session_id=".$session."&amp;player_id=".$player_id."&amp;action=1&amp;type=png'>Delete this Picture</a>";
+			echo "<br><a href='delete_picture.php?session_id=".$session."&amp;player_id=".$player_id."&amp;action=1&amp;type=png'>Delete this Picture</a>";
 		} else {
 			echo "<img src='../images/no_image.png' alt='' width='100' height='100'>";
 		}
@@ -604,6 +608,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<b>Player Squad: ".$season_name."</b><br><br>Number of Players: ".$get_total."<br><br>";
 		while($data = mysqli_fetch_array($get_players)) {
 		echo "<a href='".$PHP_SELF."?session_id=".$session."&amp;action=modify&amp;player_id=".$data['player_id']."'>#".$data['player_number']." ".$data['player_name']."</a>";
+
 			if ($data['publish'] == 0) {
 				echo " (NB)<br>\n";
 			} else {

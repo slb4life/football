@@ -33,7 +33,6 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			$preview_text = addslashes($preview_text);
 			$preview_text_under = addslashes($preview_text_under);
 		}
-
 		if($preview_id == -1) {
 			mysqli_query($db_connect, "INSERT INTO team_previews SET
 				PreviewText = '$preview_text',
@@ -167,13 +166,16 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<b>Matches in ".$season_name.":</b><br><br>";
 		while($data = mysqli_fetch_array($get_matches)) {
 			echo "<a href='".$PHP_SELF."?session_id=".$session."&amp;action=modify&amp;match_id=".$data['match_id']."'>".$data['match_date'].", vs. ".$data['opponent_name']."</a><br>".$data['match_place']."";
-			if ($data['neutral'] == 1)
+
+			if ($data['neutral'] == 1) {
 				echo "(neutral)";
 				echo ": ".$data['match_type_name']."";
-			if ($data['preview_text'] == '')
+			}
+			if ($data['preview_text'] == '') {
 				echo "<br><br>\n";
-			else
+			} else {
 				echo " (P)<br><br>\n";
+			}
 		}
 	}
 	echo "<br><br>P = Preview Text is filled</td>\n";

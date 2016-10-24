@@ -42,7 +42,6 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		if (!isset($publish)) {
 			$publish = 0;
 		}
-
 		if ($season_name != '') {
 			mysqli_query($db_connect, "UPDATE team_season_names SET SeasonName = '$season_name', SeasonPublish = '$publish' WHERE SeasonID = '$season_id'") or die(mysqli_error());
 		}
@@ -120,6 +119,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<b>Seasons so far in Database:</b><br><br>";
 		while($data = mysqli_fetch_array($get_seasons)) {
 			echo "<a href='".$PHP_SELF."?session_id=".$session."&amp;action=modify&amp;season=".$data['SeasonID']."'>".$data['SeasonName']."</a>";
+
 			if ($data['SeasonPublish'] == 0) {
 				echo " (NB)<br>";
 			} else {

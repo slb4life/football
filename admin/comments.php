@@ -17,10 +17,10 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 
 	if (isset($_REQUEST['action'])){ $action = $_REQUEST['action']; }
 	if (isset($_REQUEST['match_id'])){ $match_id = $_REQUEST['match_id']; }
-	if (isset($_POST['modifysubmit'])){ $modifysubmit = $_POST['modifysubmit']; }
-	if (isset($_POST['deletesubmit'])){ $deletesubmit = $_POST['deletesubmit']; }
+	if (isset($_POST['modify_submit'])){ $modify_submit = $_POST['modify_submit']; }
+	if (isset($_POST['delete_submit'])){ $delete_submit = $_POST['delete_submit']; }
 
-	if (isset($modifysubmit)) {
+	if (isset($modify_submit)) {
 		$name = trim($_POST['name']);
 		$comments = str_replace("\r\n", '<br>', trim($_POST['comments']));
 		$id = $_POST['id'];
@@ -32,7 +32,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		") or die(mysqli_error());
 		header("Location: $HTTP_REFERER");
 
-	} else if (isset($deletesubmit)) {
+	} else if (isset($delete_submit)) {
 		$id = $_POST['id'];
 		mysqli_query($db_connect, "DELETE FROM team_comments WHERE ID = '$id' LIMIT 1") or die(mysqli_error());
 		header("Location: $HTTP_REFERER");
@@ -44,16 +44,16 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 	echo "</head>\n";
 	echo "<body>\n";
 	include('menu.php');
-	
 	echo "<table align='center' width='600'><tr>\n";
 	echo "<td width='300' align='left' valign='top'>";
 
 	if (!isset($action)) {
-		echo "<h1>Fan comments</h1>";
-		echo "Choose a match from the right first...";
+		echo "<h1>Fan Comments</h1>";
+		echo "Choose a Match from the right first...";
 	} else if ($action == 'modify') {
-		echo'<h1>Fan comments</h1>';
-		$get_match = mysqli_query($db_connect, "SELECT DATE_FORMAT(team_matches.MatchDateTime, '%b %D %Y at %H:%i') AS match_date,
+		echo "<h1>Fan Comments</h1>";
+		$get_match = mysqli_query($db_connect, "SELECT
+			DATE_FORMAT(team_matches.MatchDateTime, '%b %D %Y at %H:%i') AS match_date,
 			team_opponents.OpponentName AS opponent_name,
 			team_match_types.MatchTypeName AS match_type_name,
 			team_match_places.MatchPlaceName AS match_place_name,
@@ -68,9 +68,11 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		") or die(mysqli_error());
 		while($data = mysqli_fetch_array($get_match)) {
 			echo "<b>".$data['match_date'].", vs. ".$data['opponent_name']."<br>".$data['match_place_name']."";
-			if ($data['match_neutral'] == 1)
-			echo "(match_neutral)";
-			echo ": ".$data['match_type_name']."</b><br><br>\n";
+
+			if ($data['match_neutral'] == 1) {
+				echo "(match_neutral)";
+				echo ": ".$data['match_type_name']."</b><br><br>\n";
+			}
 		}
 		mysqli_free_result($get_match);
 
@@ -90,12 +92,12 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			echo "</tr><tr>\n";
 			echo "<td align='left' valign='top' colspan='2'><b>Comments:</b><br><textarea name='comments' cols='40' rows='10'>".$data['comments']."</textarea></td>\n";
 			echo "</tr><tr>\n";
-			echo "<td align='left' valign='top' colspan='2'>Comment was sent from IP address ".$data['ip']."</td>\n";
+			echo "<td align='left' valign='top' colspan='2'>Comment was sent from IP Address ".$data['ip']."</td>\n";
 			echo "</tr><tr>\n";
 			echo "<td align='left' valign='top' colspan='2'>";
 			echo "<input type='hidden' name='id' value='".$data['id']."'>";
-			echo "<input type='submit' name='modifysubmit' value='Modify'>&nbsp;";
-			echo "<input type='submit' name='deletesubmit' value='Delete'>";
+			echo "<input type='submit' name='modify_submit' value='Modify'>&nbsp;";
+			echo "<input type='submit' name='delete_submit' value='Delete'>";
 			echo "<br>";
 			echo "</td>\n";
 			echo "</tr>\n";
@@ -103,7 +105,6 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			echo "</form>\n";
 			echo "<hr width='100%'>\n";
 		}
-
 		if (mysqli_num_rows($query) == 0) {
 			echo "Nobody has made a Comment Yet..";
 		}
@@ -136,9 +137,11 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<b>Matches in ".$season_name.":</b><br><br>";
 		while($data = mysqli_fetch_array($get_matches)) {
 			echo "<a href='".$PHP_SELF."?session_id=".$session."&amp;action=modify&amp;match_id=".$data['match_id']."'>".$data['match_date'].", vs. ".$data['opponent_name']."</a><br>".$data['match_place_name']."";
-			if ($data['match_neutral'] == 1)
+
+			if ($data['match_neutral'] == 1) {
 				echo "(match_neutral)";
 				echo ": ".$data['match_type_name']."<br><br>\n";
+			}
 		}
 	}
 	echo "</td>\n";

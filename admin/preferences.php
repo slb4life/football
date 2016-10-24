@@ -48,7 +48,6 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			$site_title = addslashes($site_title);
 			$contact = addslashes($contact);
 		}
-
 		if (!isset($accept_multi_language)){ $accept_multi_language = 0; }
 		if (!isset($show_staff)){ $show_staff = 0; }
 		if (!isset($show_comments)){ $show_comments = 0; }
@@ -101,7 +100,6 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 	echo "</head>\n";
 	echo "<body>\n";
 	include('menu.php');
-
 	echo "<table align='center' width='600'>\n";
 	echo "<tr>\n";
 	echo "<td>\n";

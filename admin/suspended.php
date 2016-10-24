@@ -131,6 +131,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			}
 			echo "<tr>\n";
 			echo "<td align='left' valign='middle' colspan='2'>";
+
 			if ($check == 1){
 				echo "<input type='checkbox' name='selected_match[".$i."]' value='1' CHECKED>";
 			} else {

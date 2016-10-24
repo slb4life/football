@@ -33,7 +33,6 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		if (!get_magic_quotes_gpc()) {
 			$opponent_name = addslashes($opponent_name);
 		}
-
 		if ($opponent_name != '') {
 			mysqli_query($db_connect, "INSERT INTO team_opponents SET OpponentName = '$opponent_name'") or die(mysqli_error());
 			header("Location: $PHP_SELF?session_id=$session");
@@ -49,7 +48,6 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			$opponent_name = addslashes($opponent_name);
 			$opponent_info = addslashes($opponent_info);
 		}
-
 		if (!isset($opponent_all_data)){ $opponent_all_data = 0; }
 
 		if ($opponent_name != '') {

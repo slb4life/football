@@ -29,7 +29,6 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			$news_subject = addslashes($news_subject);
 			$news_content = addslashes($news_content);
 		}
-
 		if ($news_subject != '') {
 			mysqli_query($db_connect, "INSERT INTO team_news SET news_subject = '$news_subject', news_content = '$news_content', news_date = CURRENT_TIMESTAMP()")or die(mysqli_error());
 			header("Location: $PHP_SELF?session_id=$session");
@@ -46,7 +45,6 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			$news_picture_text = addslashes($news_picture_text);
 			$news_content = addslashes($news_content);
 		}
-
 		if ($news_subject != '') {
 			mysqli_query($db_connect, "UPDATE team_news SET news_subject = '$news_subject', news_content = '$news_content', news_picture_text = '$news_picture_text', news_date = CURRENT_TIMESTAMP() WHERE news_id = '$news_id'") or die(mysqli_error());
 		}
@@ -125,7 +123,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			echo "<img src='".$image_url2."' alt=''>";
 			echo "<br><a href='delete_picture.php?session_id=".$session."&amp;news_id=".$news_id."&amp;action=10&amp;type=png'>Delete this Picture</a>";
 		} else {
-				echo "<img src='../images/no_image.png' alt='' width='100' height='100'>";
+			echo "<img src='../images/no_image.png' alt='' width='100' height='100'>";
 		}
 	}
 

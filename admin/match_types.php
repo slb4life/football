@@ -23,8 +23,8 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		$match_type = trim($_POST['match_type']);
 		$query = mysqli_query($db_connect, "SELECT MatchTypeName FROM team_match_types WHERE MatchTypeName = '$match_type'") or die(mysqli_error());
 
-		if(mysqli_num_rows($query) > 0) {
-			echo "There is already Match Type Named: ".$match_type." in database.<br>Please write another Match Type.";
+		if (mysqli_num_rows($query) > 0) {
+			echo "There is already Match Type Named: ".$match_type." in Database.<br>Please write another Match Type.";
 			exit();
 		}
 		mysqli_free_result($query);
@@ -44,7 +44,6 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		if (!get_magic_quotes_gpc()) {
 			$match_type = addslashes($match_type);
 		}
-
 		if ($match_type != '') {
 			mysqli_query($db_connect, "UPDATE team_match_types SET MatchTypeName = '$match_type' WHERE MatchTypeID = '$match_type_id'") or die(mysqli_error());
 		}
@@ -54,9 +53,8 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		$match_type_id = $_POST['match_type_id'];
 		$query = mysqli_query($db_connect, "SELECT MatchTypeID FROM team_matches WHERE MatchTypeID = '$match_type_id'") or die(mysqli_error());
 
-		if(mysqli_num_rows($query) == 0) {
-			mysqli_query($db_connect, "DELETE FROM team_match_types WHERE MatchTypeID = '$match_type_id'")
-			or die(mysqli_error());
+		if (mysqli_num_rows($query) == 0) {
+			mysqli_query($db_connect, "DELETE FROM team_match_types WHERE MatchTypeID = '$match_type_id'") or die(mysqli_error());
 			header("Location: $PHP_SELF?session_id=$session");
 
 		} else {

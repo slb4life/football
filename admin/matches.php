@@ -162,7 +162,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		if (!isset($publish_optional)){ $publish_optional = 0; }
 
 		if ($match_opponent != '') {
-			$modify = "UPDATE team_matches SET
+			$update = "UPDATE team_matches SET
 				MatchDateTime = '$match_date',
 				MatchTypeID = '$match_type_id',
 				MatchAdditionalType = '$match_additional_type',
@@ -172,25 +172,25 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 				MatchStadium = '$match_stadium',
 			";
 			if ($goals == '' || $goals_opponent == '') {
-				$modify .= "MatchGoals = NULL,";
-				$modify .= "MatchGoalsOpponent = NULL,";
+				$update .= "MatchGoals = NULL,";
+				$update .= "MatchGoalsOpponent = NULL,";
 			} else {
-				$modify .= "MatchGoals = '$goals',";
-				$modify .= "MatchGoalsOpponent = '$goals_opponent',";
+				$update .= "MatchGoals = '$goals',";
+				$update .= "MatchGoalsOpponent = '$goals_opponent',";
 			}
 			if ($penalty_goals == '' || $penalty_goals_opponent == '') {
-				$modify .= "MatchPenaltyGoals = NULL,";
-				$modify .= "MatchPenaltyGoalsOpponent = NULL,";
+				$update .= "MatchPenaltyGoals = NULL,";
+				$update .= "MatchPenaltyGoalsOpponent = NULL,";
 			} else {
-				$modify .= "MatchPenaltyGoals = '$penalty_goals',";
-				$modify .= "MatchPenaltyGoalsOpponent = '$penalty_goals_opponent',";
+				$update .= "MatchPenaltyGoals = '$penalty_goals',";
+				$update .= "MatchPenaltyGoalsOpponent = '$penalty_goals_opponent',";
 			}
 			if (!is_numeric($match_attendance) || $match_attendance == '') {
-				$modify .= "MatchAttendance = NULL,";
+				$update .= "MatchAttendance = NULL,";
 			} else {
-				$modify .= "MatchAttendance = '$match_attendance',";
+				$update .= "MatchAttendance = '$match_attendance',";
 			}
-			$modify .= "MatchOvertime = '$match_overtime',
+			$update .= "MatchOvertime = '$match_overtime',
 				MatchPenaltyShootout = '$match_penalty_shootout',
 				MatchShots = '$shots',
 				MatchShotsOpponent = '$shots_opponent',
@@ -216,7 +216,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 				MatchRedCardsOpponent = '$red_cards_opponent'
 				WHERE MatchID = '$match_id'
 			";
-			mysqli_query($db_connect, "$modify") or die(mysqli_error());
+			mysqli_query($db_connect, "$update") or die(mysqli_error());
 		}
 		header("Location: $HTTP_REFERER");
 
@@ -262,10 +262,11 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			if ($i<10) {
 				$i = "0".$i;
 			}
-			if ($i == "01")
+			if ($i == "01") {
 				echo "<option value='".$i."' SELECTED>".$i."</option>\n";
-			else
+			} else {
 				echo "<option value='".$i."'>".$i."</option>\n";
+			}
 		}
 		echo "</select>\n";
 		echo "<select name='month'>\n";
@@ -273,10 +274,11 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			if ($i<10) {
 				$i = "0".$i;
 			}
-			if ($i == "01")
+			if ($i == "01") {
 				echo "<option value='".$i."' SELECTED>".$i."</option>\n";
-			else
+			} else {
 				echo "<option value='".$i."'>".$i."</option>\n";
+			}
 		}
 		echo "</select>\n";
 		echo "<select name='year'>\n";
@@ -284,10 +286,11 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			if ($i<10) {
 				$i = "0".$i;
 			}
-			if ($i == "2014")
+			if ($i == "2014") {
 				echo "<option value='".$i."' SELECTED>".$i."</option>\n";
-			else
+			} else {
 				echo "<option value='".$i."'>".$i."</option>\n";
+			}
 		}
 		echo "</select><br>\n";
 		echo "at\n";
@@ -296,10 +299,11 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			if ($i<10) {
 				$i = "0".$i;
 			}
-			if ($i == "19")
+			if ($i == "19") {
 				echo "<option value='".$i."' SELECTED>".$i."</option>\n";
-			else
+			} else {
 				echo "<option value='".$i."'>".$i."</option>\n";
+			}
 		}
 		echo "</select>\n";
 		echo "<select name='minute'>\n";
@@ -307,10 +311,11 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			if ($i<10) {
 				$i = "0".$i;
 			}
-			if ($i == "00")
+			if ($i == "00") {
 				echo "<option value='".$i."' SELECTED>".$i."</option>\n";
-			else
+			} else {
 				echo "<option value='".$i."'>".$i."</option>\n";
+			}
 		}
 		echo "</select>";
 		echo "</td>\n";
@@ -458,21 +463,23 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			if ($i<10) {
 				$i = "0".$i;
 			}
-			if ($match_data['day'] == $i)
+			if ($match_data['day'] == $i) {
 				echo "<option value='".$i."' SELECTED>".$i."</option>\n";
-			else
+			} else {
 				echo "<option value='".$i."'>".$i."</option>\n";
+			}
 		}
 		echo "</select>\n";
 		echo "<select name='month'>";
 		for($i = 1 ; $i < 13 ; $i++) {
-			if($i<10) {
+			if ($i<10) {
 				$i = "0".$i;
 			}
-			if ($match_data['month'] == $i)
+			if ($match_data['month'] == $i) {
 				echo "<option value='".$i."' SELECTED>".$i."</option>\n";
-			else
+			} else {
 				echo "<option value='".$i."'>".$i."</option>\n";
+			}
 		}
 		echo "</select>\n";
 		echo "<select name='year'>";
@@ -480,10 +487,11 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			if ($i<10) {
 				$i = "0".$i;
 			}
-			if ($match_data['year'] == $i)
+			if ($match_data['year'] == $i) {
 				echo "<option value='".$i."' SELECTED>".$i."</option>\n";
-			else
+			} else {
 				echo "<option value='".$i."'>".$i."</option>\n";
+			}
 		}
 		echo "</select><br>\n";
 		echo "at\n";
@@ -492,10 +500,11 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			if ($i<10) {
 				$i = "0".$i;
 			}
-			if ($match_data['hour'] == $i)
+			if ($match_data['hour'] == $i) {
 				echo "<option value='".$i."' SELECTED>".$i."</option>\n";
-			else
+			} else {
 				echo "<option value='".$i."'>".$i."</option>\n";
+			}
 		}
 		echo "</select>\n";
 		echo "<select name='minute'>";
@@ -503,10 +512,11 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			if ( $i<10) {
 				$i = "0".$i;
 			}
-			if ($match_data['minute'] == $i)
+			if ($match_data['minute'] == $i) {
 				echo "<option value='".$i."' SELECTED>".$i."</option>\n";
-			else
+			} else {
 				echo "<option value='".$i."'>".$i."</option>\n";
+			}
 		}
 		echo "</select>\n";
 		echo "</td>\n";

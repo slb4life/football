@@ -27,7 +27,6 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			$page_title = addslashes($page_title);
 			$page_content = addslashes($page_content);
 		}
-
 		if ($page_title != '') {
 			mysqli_query($db_connect, "INSERT INTO team_pages SET page_title = '$page_title', page_content = '$page_content', publish = '1'") or die(mysqli_error());
 			header("Location: $PHP_SELF?session_id=$session");
@@ -42,7 +41,6 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			$page_title = addslashes($page_title);
 			$page_content = addslashes($page_content);
 		}
-
 		if (!isset($publish)) {
 			$publish = 0;
 		}
@@ -96,6 +94,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top'>Publish this Page?:</td>\n";
 		echo "<td align='left' valign='top'>";
+
 		if ($data['publish'] == 1) {
 			echo "<input type='checkbox' name='publish' value='1' CHECKED>";
 		} else {

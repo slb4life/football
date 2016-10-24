@@ -92,8 +92,10 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		") or die(mysqli_error());
 		while($data = mysqli_fetch_array($query)) {
 			echo "<b>".$data['match_date'].", vs. ".$data['opponent_name']."<br>".$data['match_place']."";
-			if ($data['neutral'] == 1)
+
+			if ($data['neutral'] == 1) {
 				echo "(neutral)";
+			}
 			echo ": ".$data['match_type_name']."</b><br><br>\n";
 		}
 		mysqli_free_result($query);
@@ -169,13 +171,16 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<b>Matches in ".$season_name.":</b><br><br>";
 		while($data = mysqli_fetch_array($get_matches)) {
 			echo "<a href='".$PHP_SELF."?session_id=".$session."&amp;action=modify&amp;match_id=".$data['match_id']."'>".$data['match_date'].", vs. ".$data['opponent_name']."</a><br>".$data['match_place']."";
-			if ($data['neutral'] == 1)
+
+			if ($data['neutral'] == 1) {
 				echo "(neutral)";
 				echo ": ".$data['match_type_name']."";
-			if ($data['publish'] == 1)
+			}
+			if ($data['publish'] == 1) {
 				echo "<br><br>";
-			else
+			} else {
 				echo " (NB)<br><br>";
+			}
 		}
 	}
 	echo "<br>NB = This Match is not Published Yet.";
