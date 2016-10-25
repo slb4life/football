@@ -520,7 +520,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			}
 		}
 		echo "<hr width='100%'>\n";
-		echo "<form enctype='multipart/form-data' method='post' action='image_upload.php?'session_id=".$session."'>\n";
+		echo "<form enctype='multipart/form-data' method='post' action='image_upload.php?session_id=".$session."'>\n";
 		echo "<b>Upload Player Picture</b><br>\n";
 		echo "<input type='hidden' name='MAX_FILE_SIZE' value='8000000'>\n";
 		echo "<input name='image_file' type='file'>\n";
@@ -542,7 +542,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		}
 		if (file_exists($image_url) || file_exists($image_url)) {
 			echo "<br><br>\n";
-			echo "<form enctype='multipart/form-data' method='post' action='image_upload.php?'session_id=".$session."'>\n";
+			echo "<form enctype='multipart/form-data' method='post' action='image_upload.php?session_id=".$session."'>\n";
 			echo "<b>Upload Second Player Picture</b><br>\n";
 			echo "<input type='hidden' name='MAX_FILE_SIZE' value='8000000'>\n";
 			echo "<input name='image_file' type='file'>\n";
@@ -563,7 +563,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 				echo "<img src='../images/no_image.png' alt='' width='100' height='100'>";
 			}
 			echo "<br><br>\n";
-			echo "<form enctype='multipart/form-data' method='post' action='image_upload.php?'session_id=$session'>\n";
+			echo "<form enctype='multipart/form-data' method='post' action='image_upload.php?session_id=".$session."'>\n";
 			echo "<b>Upload Third Player Picture</b><br>\n";
 			echo "<input type='hidden' name='MAX_FILE_SIZE' value='8000000'>\n";
 			echo "<input name='image_file' type='file'>\n";
@@ -610,13 +610,13 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<a href='".$PHP_SELF."?session_id=".$session."&amp;action=modify&amp;player_id=".$data['player_id']."'>#".$data['player_number']." ".$data['player_name']."</a>";
 
 			if ($data['publish'] == 0) {
-				echo " (NB)<br>\n";
+				echo " (NB)<br>";
 			} else {
-				echo "<br>\n";
+				echo "<br>";
 			}
 		}
 	}
-	echo "<br><br>NB = This Player is not Published yet.\n";
+	echo "<br><br>NB = This Player is not Published yet.";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";

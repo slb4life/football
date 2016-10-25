@@ -16,16 +16,14 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			$image_url2 = "../images/".$player_id.".png";
 
 			if ($check_type[1] != 'jpg' && $check_type[1] != 'png') {
-				print('Please Upload only jpg or png-filetype');
+				print('Please Upload Only JPG or PNG-Filetype');
 				exit;
 			}
-
 			if (file_exists($image_url)) {
 				unlink("$image_url");
 			} else if (file_exists($image_url2)) {
 				unlink("$image_url2");
 			}
-
 			if (is_uploaded_file($_FILES['image_file']['tmp_name'])) {
 				copy($_FILES['image_file']['tmp_name'], "../images/".$player_id . "." . $check_type[1]);
 				echo "Image Uploaded Succesfully!<br><a href='$HTTP_REFERER'>Back</a>";
@@ -43,16 +41,14 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			$image_url2 = "../images/".$player_id."_1.png";
 
 			if ($check_type[1] != 'jpg' && $check_type[1] != 'png') {
-				echo "Please Upload only jpg or png-filetype";
+				echo "Please Upload Only JPG or PNG-Filetype";
 				exit;
 			}
-
 			if (file_exists($image_url)) {
 				unlink("$image_url");
 			} else if (file_exists($image_url2)) {
 				unlink("$image_url2");
 			}
-
 			if (is_uploaded_file($_FILES['image_file']['tmp_name'])) {
 				copy($_FILES['image_file']['tmp_name'], "../images/".$player_id."_1.".$check_type[1]);
 				echo "Image Uploaded Succesfully!<br><a href='$HTTP_REFERER'>Back</a>";
@@ -70,16 +66,14 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			$image_url2 = "../images/".$player_id."_2.png";
 
 			if ($check_type[1] != 'jpg' && $check_type[1] != 'png') {
-				echo "Please Upload only jpg or png-filetype";
+				echo "Please Upload Only JPG or PNG-Filetype";
 				exit;
 			}
-
 			if (file_exists($image_url)) {
 				unlink("$image_url");
 			} else if (file_exists($image_url2)) {
 				unlink("$image_url2");
 			}
-
 			if (is_uploaded_file($_FILES['image_file']['tmp_name'])) {
 				copy($_FILES['image_file']['tmp_name'], "../images/".$player_id."_2.".$check_type[1]);
 				echo "Image Uploaded Succesfully!<br><a href='$HTTP_REFERER'>Back</a>";
@@ -94,17 +88,16 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			$check_type = explode(".",$_FILES['image_file']['name']);
 			$image_url = "../images/header.jpg";
 			$image_url2 = "../images/header.png";
+
 			if($check_type[1] != 'jpg' && $check_type[1] != 'png') {
-				echo "Please Upload only jpg or png-filetype";
+				echo "Please Upload Only JPG or PNG-Filetype";
 				exit;
 			}
-
 			if (file_exists($image_url)) {
 				unlink("$image_url");
 			} else if(file_exists($image_url2)) {
 				unlink("$image_url2");
 			}
-
 			if (is_uploaded_file($_FILES['image_file']['tmp_name'])) {
 				copy($_FILES['image_file']['tmp_name'], "../images/header.".$check_type[1]);
 				echo "Image Uploaded Succesfully!<br><a href='$HTTP_REFERER'>Back</a>";
@@ -121,21 +114,19 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			$image_url2 = "../images/team_logo.png";
 
 			if ($check_type[1] != 'jpg' && $check_type[1] != 'png') {
-				echo "Please Upload only jpg or png-filetype";
+				echo "Please Upload Only JPG or PNG-Filetype";
 				exit;
 			}
-
 			if (file_exists($image_url)) {
 				unlink("$image_url");
 			} else if (file_exists($image_url2)) {
 				unlink("$image_url2");
 			}
-
 			if (is_uploaded_file($_FILES['image_file']['tmp_name'])) {
 				copy($_FILES['image_file']['tmp_name'], "../images/team_logo.".$check_type[1]);
 				list($width, $height, $type, $attr) = getimagesize("../images/team_logo.".$check_type[1]."");
 
-				if($width > 80) {
+				if ($width > 80) {
 					unlink("../images/team_logo.$check_type[1]");
 					echo "Image is too big. Maximum width is 80 pixels.";
 				} else {
@@ -155,16 +146,14 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			$image_url2 = "../images/opponent_logo_".$opponent_id.".png";
 
 			if ($check_type[1] != 'jpg' && $check_type[1] != 'png') {
-				echo "Please Upload only jpg or png-filetype";
+				echo "Please Upload Only JPG or PNG-Filetype";
 				exit;
 			}
-
 			if (file_exists($image_url)) {
 				unlink("$image_url");
 			} else if(file_exists($image_url2)) {
 				unlink("$image_url2");
 			}
-
 			if (is_uploaded_file($_FILES['image_file']['tmp_name'])) {
 				copy($_FILES['image_file']['tmp_name'], "../images/opponent_logo_".$opponent_id.".".$check_type[1]);
 				list($width, $height, $type, $attr) = getimagesize("../images/opponent_logo_".$opponent_id.".".$check_type[1]."");
@@ -189,16 +178,14 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			$image_url2 = "../images/manager".$manager_id.".png";
 
 			if ($check_type[1] != 'jpg' && $check_type[1] != 'png') {
-				echo "Please Upload only jpg or png-filetype";
+				echo "Please Upload Only JPG or PNG-Filetype";
 				exit;
 			}
-
 			if (file_exists($image_url)) {
 				unlink("$image_url");
 			} else if(file_exists($image_url2)) {
 				unlink("$image_url2");
 			}
-
 			if (is_uploaded_file($_FILES['image_file']['tmp_name'])) {
 				copy($_FILES['image_file']['tmp_name'], "../images/manager".$manager_id.".".$check_type[1]);
 				echo "Image Uploaded Succesfully!<br><a href='$HTTP_REFERER'>Back</a>";
@@ -216,16 +203,14 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			$image_url2 = "../images/manager".$manager_id."_1.png";
 
 			if ($check_type[1] != 'jpg' && $check_type[1] != 'png') {
-				echo "Please Upload only jpg or png-filetype";
+				echo "Please Upload Only JPG or PNG-Filetype";
 				exit;
 			}
-
 			if (file_exists($image_url)) {
 				unlink("$image_url");
 			} else if (file_exists($image_url2)) {
 				unlink("$image_url2");
 			}
-
 			if (is_uploaded_file($_FILES['image_file']['tmp_name'])) {
 				copy($_FILES['image_file']['tmp_name'], "../images/manager".$manager_id."_1.".$check_type[1]);
 				echo "Image Uploaded Succesfully!<br><a href='$HTTP_REFERER'>Back</a>";
@@ -243,7 +228,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			$image_url2 = "../images/manager".$manager_id."_2.png";
 
 			if ($check_type[1] != 'jpg' && $check_type[1] != 'png') {
-				echo "Please Upload only jpg or png-filetype";
+				echo "Please Upload Only JPG or PNG-Filetype";
 				exit;
 			}
 
@@ -270,7 +255,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			$image_url2 = "../images/news_picture".$news_id.".png";
 
 			if ($check_type[1] != 'jpg' && $check_type[1] != 'png') {
-				echo "Please Upload only jpg or png-filetype";
+				echo "Please Upload Only JPG or PNG-Filetype";
 				exit;
 			}
 
