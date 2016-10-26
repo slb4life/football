@@ -93,6 +93,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 	mysqli_free_result($pref);
 
 	$pdata['contact'] = str_replace('<br>', "\r\n", $pdata['contact']);
+	echo "<!DOCTYPE html>\n";
 	echo "<html>\n";
 	echo "<head>\n";
 	echo "<title>Admin Area</title>\n";

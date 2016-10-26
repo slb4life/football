@@ -33,6 +33,7 @@ if (isset($submit)) {
 		$check = 1;
 	}
 }
+echo "<!DOCTYPE html>\n";
 echo "<html>\n";
 echo "<head>\n";
 echo "<title>Admin Area</title>\n";

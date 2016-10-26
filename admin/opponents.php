@@ -72,6 +72,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			exit();
 		}
 	}
+	echo "<!DOCTYPE html>\n";
 	echo "<html>\n";
 	echo "<head>\n";
 	echo "<title>Admin Area</title>\n";

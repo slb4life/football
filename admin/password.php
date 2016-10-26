@@ -42,6 +42,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		}
 		mysqli_free_result($get_password);
 	}
+	echo "<!DOCTYPE html>\n";
 	echo "<html>\n";
 	echo "<head>\n";
 	echo "<title>Admin Area</title>\n";

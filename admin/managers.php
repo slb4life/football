@@ -127,6 +127,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		mysqli_query($db_connect, "DELETE FROM team_managers_time WHERE ID = '$remove_timeline_select' LIMIT 1") or die(mysqli_error());
 		header("Location: $HTTP_REFERER");
 	}
+	echo "<!DOCTYPE html>\n";
 	echo "<html>\n";
 	echo "<head>\n";
 	echo "<title>Admin Area</title>\n";

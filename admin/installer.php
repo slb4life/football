@@ -412,6 +412,7 @@ if (isset($submit)) {
 	exit();
 
 } else {
+	echo "<!DOCTYPE html>\n";
 	echo "<html>\n";
 	echo "<head>\n";
 	echo "<title>Install FootballStats</title>\n";
