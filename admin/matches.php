@@ -389,7 +389,6 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top' colspan='2'><input type='submit' name='add_submit' value='Add Match'></td>\n";
 		echo "</tr>\n";
-		echo "</tr>\n";
 		echo "</table>\n";
 		echo "</form>\n";
 	} else if ($action == 'modify') {

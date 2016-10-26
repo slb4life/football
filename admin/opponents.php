@@ -157,18 +157,18 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "</table>\n";
 		mysqli_free_result($get_opponent);
 	}
-		echo "</td>\n";
-		echo "<td align='left' valign='top'>";
-		$get_opponents = mysqli_query($db_connect, "SELECT * FROM team_opponents ORDER BY OpponentName") or die(mysqli_error());
+	echo "</td>\n";
+	echo "<td align='left' valign='top'>";
+	$get_opponents = mysqli_query($db_connect, "SELECT * FROM team_opponents ORDER BY OpponentName") or die(mysqli_error());
 
-		if (mysqli_num_rows($get_opponents) < 1) {
-			echo "<b>No Opponents so far in Database</b>";
-		} else {
-			echo "<b>Opponents so far in Database:</b><br><br>";
-			while($data = mysqli_fetch_array($get_opponents)) {
-				echo "<a href='".$PHP_SELF."?session_id=".$session."&amp;action=modify&amp;opponent_id=".$data['OpponentID']."'>".$data['OpponentName']."</a><br>\n";
-			}
+	if (mysqli_num_rows($get_opponents) < 1) {
+		echo "<b>No Opponents so far in Database</b>";
+	} else {
+		echo "<b>Opponents so far in Database:</b><br><br>";
+		while($data = mysqli_fetch_array($get_opponents)) {
+			echo "<a href='".$PHP_SELF."?session_id=".$session."&amp;action=modify&amp;opponent_id=".$data['OpponentID']."'>".$data['OpponentName']."</a><br>\n";
 		}
+	}
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";

@@ -134,7 +134,7 @@ if ($current_time_unix < $match_time_unix) {
 			}
 			if ($c == 0) {
 				if ($data['publish'] == 1) {
-					echo"<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>";
+					echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>";
 				} else {
 					echo "".$data['player_name']."";
 				}

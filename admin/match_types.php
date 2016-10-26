@@ -32,7 +32,6 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		if (!get_magic_quotes_gpc()) {
 			$match_type = addslashes($match_type);
 		}
-
 		if ($match_type != ''){
 			mysqli_query($db_connect, "INSERT INTO team_match_types SET MatchTypeName = '$match_type'") or die(mysqli_error());
 			header("Location: $PHP_SELF?session_id=$session");
@@ -75,7 +74,8 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 	if (!isset($action)) {
 		echo "<form method='post' action='".$PHP_SELF."?session_id=".$session."'>\n";
 		echo "<h1>Add Match Type (Leagues, Cups)</h1>\n";
-		echo "<table width='100%' cellspacing='3' cellpadding='3' border='0'><tr>\n";
+		echo "<table width='100%' cellspacing='3' cellpadding='3' border='0'>\n";
+		echo "<tr>\n";
 		echo "<td align='left' valign='top'>Match Type Name:</td>\n";
 		echo "<td align='left' valign='top'><input type='text' name='match_type'></td>\n";
 		echo "</tr>\n";
@@ -107,9 +107,9 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 	$get_match_types = mysqli_query($db_connect, "SELECT * FROM team_match_types ORDER BY MatchTypeName") or die(mysqli_error());
 
 	if (mysqli_num_rows($get_match_types) < 1) {
-		echo '<b>No Match Types so far in Database</b>';
+		echo "<b>No Match Types so far in Database</b>";
 	} else {
-		echo '<b>Match Types so far in Database:</b><br><br>';
+		echo "<b>Match Types so far in Database:</b><br><br>";
 		while($data = mysqli_fetch_array($get_match_types)) {
 			echo "<a href='".$PHP_SELF."?session_id=".$session."&amp;action=modify&amp;match_type=".$data['MatchTypeID']."'>".$data['MatchTypeName']."</a><br>";
 		}

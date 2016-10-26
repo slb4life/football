@@ -237,7 +237,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "</select>\n";
 		echo "<select name='dob_year'>";
 		for($i = 1900 ; $i < 2025 ; $i++) {
-			if ($i <10) {
+			if ($i < 10) {
 				$i = "0".$i;
 			}
 			if ($i == "2014") {
@@ -607,7 +607,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 	} else {
 		echo "<b>Player Squad: ".$season_name."</b><br><br>Number of Players: ".$get_total."<br><br>";
 		while($data = mysqli_fetch_array($get_players)) {
-		echo "<a href='".$PHP_SELF."?session_id=".$session."&amp;action=modify&amp;player_id=".$data['player_id']."'>#".$data['player_number']." ".$data['player_name']."</a>";
+			echo "<a href='".$PHP_SELF."?session_id=".$session."&amp;action=modify&amp;player_id=".$data['player_id']."'>#".$data['player_number']." ".$data['player_name']."</a>";
 
 			if ($data['publish'] == 0) {
 				echo " (NB)<br>";
