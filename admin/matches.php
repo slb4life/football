@@ -976,14 +976,13 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			}
 			echo "</select>\n";
 			echo "<input type='submit' name='add_goal_assist_submit' value='Add'><br>\n";
-//			echo "<input type='hidden' name='add_to_goal_assist_minute' value='".$goal_minute."'>\n";
 			echo "<input type='hidden' name='add_to_goal_assist_minute' value='0'>\n";
 			echo "<input type='hidden' name='match_id' value='".$match_id."'>\n";
 			echo "<input type='hidden' name='season_id' value='".$season_id."'>\n";
 			$get_goal_assists = mysqli_query($db_connect, "SELECT
 				CONCAT(team_players.PlayerFirstName, ' ', team_players.PlayerLastName) AS player_name,
-				team_goal_assists.GoalAssistMinute AS goal_assist_minute,
-				team_goal_assists.GoalAssistID AS goal_assist_id
+				team_goal_assists.GoalAssistID AS goal_assist_id,
+				team_goal_assists.GoalAssistMinute AS goal_assist_minute
 				FROM team_players, team_goal_assists
 				WHERE team_players.PlayerID = team_goal_assists.GoalAssistPlayerID
 				AND team_goal_assists.GoalAssistMatchID = '$match_id'
@@ -1038,8 +1037,8 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<input type='hidden' name='season_id' value='".$season_id."'>";
 		$get_yellow_cards = mysqli_query($db_connect, "SELECT
 			CONCAT(team_players.PlayerFirstName, ' ', team_players.PlayerLastName) AS player_name,
-			team_yellow_cards.YellowCardMinute AS yellow_card_minute,
-			team_yellow_cards.YellowCardID AS yellow_card_id
+			team_yellow_cards.YellowCardID AS yellow_card_id,
+			team_yellow_cards.YellowCardMinute AS yellow_card_minute
 			FROM team_players, team_yellow_cards
 			WHERE team_players.PlayerID = team_yellow_cards.YellowCardPlayerID
 			AND team_yellow_cards.YellowCardMatchID = '$match_id'
@@ -1091,8 +1090,8 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<input type='hidden' name='season_id' value='".$season_id."'>\n";
 		$get_red_cards = mysqli_query($db_connect, "SELECT
 			CONCAT(team_players.PlayerFirstName, ' ', team_players.PlayerLastName) AS player_name,
-			team_red_cards.RedCardMinute AS red_card_minute,
-			team_red_cards.RedCardID as red_card_id
+			team_red_cards.RedCardID as red_card_id,
+			team_red_cards.RedCardMinute AS red_card_minute
 			FROM team_players, team_red_cards
 			WHERE team_players.PlayerID = team_red_cards.RedCardPlayerID
 			AND team_red_cards.RedCardMatchID = '$match_id'

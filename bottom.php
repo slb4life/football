@@ -13,7 +13,7 @@ if (SHOW_NEXT_MATCH == 1) {
 	echo "<tr>\n";
 	echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORBOTTOM)."'>";
 	$max_show = 1;
-	$get_matches = mysqli_query($db_connect, "SELECT
+	$get_next_matche = mysqli_query($db_connect, "SELECT
 		O.OpponentName AS opponent_name,
 		O.OpponentID AS opponent_id,
 		M.MatchID AS match_id,
@@ -30,10 +30,10 @@ if (SHOW_NEXT_MATCH == 1) {
 	") or die(mysqli_error());		
 	$team_name = TEAM_NAME;
 
-	if (mysqli_num_rows($get_matches) == 0) {
-		echo "<b>".$locale_season_ended."</b>";
+	if (mysqli_num_rows($get_next_matche) == 0) {
+		echo "<b>".$locale_end_of_season."</b>";
 	} else {
-		while ($data = mysqli_fetch_array($get_matches)) {
+		while ($data = mysqli_fetch_array($get_next_matche)) {
 			$logos = 0;
 			$image_url_1 = "images/team_logo.png";
 			$image_url_2 = "images/team_logo.jpg";
@@ -49,20 +49,20 @@ if (SHOW_NEXT_MATCH == 1) {
 				echo " / ".$data['match_additional_type']."";
 			}
 			echo "<br>\n";
-			$query = mysqli_query($db_connect, "SELECT							
+			$get_preview = mysqli_query($db_connect, "SELECT							
 				P.PreviewText AS preview_text
 				FROM team_previews P
 				WHERE P.PreviewMatchID = '$id'
 				LIMIT 1
 			") or die(mysqli_error());
-			$data = mysqli_fetch_array($query);
+			$data = mysqli_fetch_array($get_preview);
 
 			if ($data['preview_text'] != '') {
 				echo "<a href='preview.php?id=".$data['match_id']."'>".$locale_preview."</a><br><br>\n";
 			} else {
 				echo "<br>";
 			}									
-			mysqli_free_result($query);
+			mysqli_free_result($get_preview);
 
 			if ($data['match_place_id'] == 1) {
 				if ($logos == 1) {
@@ -127,7 +127,7 @@ if (SHOW_NEXT_MATCH == 1) {
 			}
 		}
 	}
-	mysqli_free_result($get_matches);
+	mysqli_free_result($get_next_matche);
 
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -137,7 +137,6 @@ if (SHOW_NEXT_MATCH == 1) {
 	echo "</table>\n";
 	echo "<br>\n";
 }
-
 if (SHOW_TOP_SCORERS == 1) {
 	echo "<table align='center' width='100%' cellspacing='0' cellpadding='0' border='0' bgcolor='#".(BORDERCOLOR)."'>\n";
 	echo "<tr>\n";
@@ -161,7 +160,7 @@ if (SHOW_TOP_SCORERS == 1) {
 		$tdefault_season_id = $default_season_id;
 	}
 	$max_show = 5;
-	$query = mysqli_query($db_connect, "SELECT
+	$get_top_scorers = mysqli_query($db_connect, "SELECT
 		P.PlayerID AS player_id,
 		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
 		COUNT( G.GoalPlayerID ) AS goals
@@ -175,7 +174,7 @@ if (SHOW_TOP_SCORERS == 1) {
 		LIMIT $max_show
 	") or die(mysqli_error());
 	$i = 1;
-	while ($data = mysqli_fetch_array($query)) {
+	while ($data = mysqli_fetch_array($get_top_scorers)) {
 		echo "<tr>\n";
 		echo "<td align='right' valign='top'>".$i.".</td>\n";
 		echo "<td align='left' valign='top' width='90%'><a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a></td>\n";
@@ -183,7 +182,7 @@ if (SHOW_TOP_SCORERS == 1) {
 		echo "</tr>\n";
 		$i++;
 	}
-	mysqli_free_result($query);
+	mysqli_free_result($get_top_scorers);
 
 	echo "</table>\n";
 	echo "</td>\n";
@@ -193,7 +192,6 @@ if (SHOW_TOP_SCORERS == 1) {
 	echo "</tr>\n";
 	echo "</table>\n";
 }
-
 if (SHOW_TOP_APPS == 1) {
 	echo "<br>\n";
 	echo "<table align='center' width='100%' cellspacing='0' cellpadding='0' border='0' bgcolor='#".(BORDERCOLOR)."'>\n";
@@ -218,7 +216,7 @@ if (SHOW_TOP_APPS == 1) {
 		$tdefault_season_id = $default_season_id;
 	}
 	$max_show = 5;
-	$query = mysqli_query($db_connect, "SELECT
+	$get_top_apps = mysqli_query($db_connect, "SELECT
 		P.PlayerID AS player_id,
 		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
 		COUNT( A.AppearancePlayerID ) AS appearance_player_id
@@ -232,7 +230,7 @@ if (SHOW_TOP_APPS == 1) {
 		LIMIT $max_show
 	") or die(mysqli_error());
 	$i = 1;
-	while ($data = mysqli_fetch_array($query)) {
+	while ($data = mysqli_fetch_array($get_top_apps)) {
 		echo "<tr>\n";
 		echo "<td align='right' valign='top'>".$i.".</td>\n";
 		echo "<td align='left' valign='top' width='90%'><a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a></td>\n";
@@ -240,7 +238,7 @@ if (SHOW_TOP_APPS == 1) {
 		echo "</tr>\n";
 		$i++;
 	}
-	mysqli_free_result($query);
+	mysqli_free_result($get_top_apps);
 
 	echo "</table>\n";
 	echo "</td>\n";
@@ -274,7 +272,7 @@ if (SHOW_TOP_ASSISTS == 1) {
 		$tdefault_season_id = $default_season_id;
 	}
 	$max_show = 5;
-	$query = mysqli_query($db_connect, "SELECT
+	$get_top_assists = mysqli_query($db_connect, "SELECT
 		P.PlayerID AS player_id,
 		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
 		COUNT( GA.GoalAssistPlayerID ) AS goal_assists
@@ -288,7 +286,7 @@ if (SHOW_TOP_ASSISTS == 1) {
 		LIMIT $max_show
 	") or die(mysqli_error($db_connect));
 	$i = 1;
-	while ($data = mysqli_fetch_array($query)) {
+	while ($data = mysqli_fetch_array($get_top_assists)) {
 		echo "<tr>\n";
 		echo "<td align='right' valign='top'>".$i.".</td>\n";
 		echo "<td align='left' valign='top' width='90%'><a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a></td>\n";
@@ -296,7 +294,7 @@ if (SHOW_TOP_ASSISTS == 1) {
 		echo "</tr>\n";
 		$i++;
 	}
-	mysqli_free_result($query);
+	mysqli_free_result($get_top_assists);
 
 	echo "</table>\n";
 	echo "</td>\n";
@@ -330,7 +328,7 @@ if (SHOW_TOP_BOOKINGS == 1) {
 		$tdefault_season_id = $default_season_id;
 	}
 	$max_show = 5;
-	$query = mysqli_query($db_connect, "SELECT
+	$get_top_bookings = mysqli_query($db_connect, "SELECT
 		P.PlayerID AS player_id,
 		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
 		COUNT( Y.YellowCardPlayerID ) AS yellows
@@ -344,7 +342,7 @@ if (SHOW_TOP_BOOKINGS == 1) {
 		LIMIT $max_show
 	") or die(mysqli_error());
 	$i = 1;
-	while ($data = mysqli_fetch_array($query)) {
+	while ($data = mysqli_fetch_array($get_top_bookings)) {
 		echo "<tr>\n";
 		echo "<td align='right' valign='top'>".$i.".</td>\n";
 		echo "<td align='left' valign='top' width='90%'><a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a></td>\n";
@@ -352,7 +350,7 @@ if (SHOW_TOP_BOOKINGS == 1) {
 		echo "</tr>\n";
 		$i++;
 	}
-	mysqli_free_result($query);
+	mysqli_free_result($get_top_bookings);
 
 	echo "</table>\n";
 	echo "</td>\n";
@@ -362,7 +360,6 @@ if (SHOW_TOP_BOOKINGS == 1) {
 	echo "</tr>\n";
 	echo "</table>\n";
 }
-
 if (SHOW_CONTACT == 1) {
 	echo "<br>\n";
 	echo "<table align='center' width='100%' cellspacing='0' cellpadding='0' border='0' bgcolor='#".(BORDERCOLOR)."'>\n";

@@ -2,9 +2,9 @@
 session_start();
 
 include("admin/user.php");
-$db_connect = mysqli_connect($db_host, $db_user, $db_password,$db_name) or die(mysqli_error());
-$query = mysqli_query($db_connect, "SELECT * FROM team_preferences WHERE id = '1' LIMIT 1") or die(mysqli_error());
-$data = mysqli_fetch_array($query);
+$db_connect = mysqli_connect($db_host, $db_user, $db_password, $db_name) or die(mysqli_error());
+$get_preferences = mysqli_query($db_connect, "SELECT * FROM team_preferences WHERE id = '1' LIMIT 1") or die(mysqli_error());
+$data = mysqli_fetch_array($get_preferences);
 
 define("TEAM_NAME", $data['team_name']);
 define("SITE_TITLE", $data['site_title']);
@@ -31,7 +31,7 @@ define("SHOW_TOP_APPS", $data['show_top_apps']);
 define("SHOW_TOP_ASSISTS", $data['show_top_assists']);
 define("SHOW_TOP_BOOKINGS", $data['show_top_bookings']);
 define("SHOW_CONTACT", $data['show_contact']);
-mysqli_free_result($query);
+mysqli_free_result($get_preferences);
 
 if (!isset($_SESSION['default_season_id_team']) || !isset($_SESSION['default_match_type_id_team']) || !isset($_SESSION['default_language_team'])) {
 	$_SESSION['default_season_id_team'] = DEFAULT_SEASON;
@@ -88,6 +88,7 @@ if (file_exists($image_header_url) || file_exists($image_header_url2)) {
 	echo "<table width='100%' cellspacing='0' cellpadding='0' border='0'>\n";
 	echo "<tr>\n";
 	echo "<td align='left' valign='middle'>";
+
 	if (file_exists($image_header_url)) {
 		echo "<img src='".$image_header_url."' alt=''><br>";
 	} else if (file_exists($image_header_url2)) {
@@ -97,7 +98,6 @@ if (file_exists($image_header_url) || file_exists($image_header_url2)) {
 	echo "</tr>\n";
 	echo "</table>\n";
 }
-
 echo "<form method='post' action='change.php'>\n";
 echo "<input name='script_name' type='hidden' value='index.php'>\n";
 echo "<table width='100%' cellspacing='2' cellpadding='0' border='0' bgcolor='#".(CELLBGCOLORTOP)."'>\n";
@@ -106,6 +106,7 @@ echo "<td align='left' valign='middle'>\n";
 echo "<table width='100%'>\n";
 echo "<tr>\n";
 echo "<td valign='middle' align='left'>";
+
 if (ACCEPT_ML == 1) {
 	echo "".$locale_language.": \n";
 	echo "<select name='language'>\n";
@@ -144,7 +145,7 @@ if (SHOW_LATEST_MATCH == 1) {
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td align='left' valign='top' bgcolor='#".(CELLBGCOLORBOTTOM)."'>";
-	$query = mysqli_query($db_connect, "SELECT
+	$get_lastest_match = mysqli_query($db_connect, "SELECT
 		M.MatchID AS match_id,
 		M.MatchGoals AS goals,
 		M.MatchGoalsOpponent AS goals_opponent,
@@ -159,10 +160,17 @@ if (SHOW_LATEST_MATCH == 1) {
 		ORDER BY M.MatchDateTime DESC
 		LIMIT 1
 	") or die(mysqli_error());
-	$data = mysqli_fetch_array($query);
-	mysqli_free_result($query);
 
-	echo "".$locale_latest_match.": <a href='match_details.php?id=".$data['match_id']."'>VS. ".$data['opponent_name']."</a></td>\n";
+	if (mysqli_num_rows($get_lastest_match) == 0) {
+		echo "<b>".$locale_start_of_season."</b>";
+	} else {
+		while ($data = mysqli_fetch_array($get_lastest_match)) {
+			echo "".$locale_latest_match.": <a href='match_details.php?id=".$data['match_id']."'>VS. ".$data['opponent_name']."</a>";
+		}
+	}
+	mysqli_free_result($get_lastest_match);
+
+	echo "</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
 	echo "</td>\n";
@@ -210,10 +218,9 @@ echo "</table>\n";
 echo "</td>\n";
 echo "</tr>\n";
 echo "</table>\n";
+$get_pages = mysqli_query($db_connect, "SELECT page_id, page_title FROM team_pages WHERE publish = '1' ORDER BY page_title") or die(mysqli_error());
 
-$query = mysqli_query($db_connect, "SELECT page_id, page_title FROM team_pages WHERE publish = '1' ORDER BY page_title") or die(mysqli_error());
-
-if (mysqli_num_rows($query) > 0) {
+if (mysqli_num_rows($get_pages) > 0) {
 	echo "<br>\n";
 	echo "<table align='center' width='100%' cellspacing='0' cellpadding='0' border='0' bgcolor='#".(BORDERCOLOR)."'>\n";
 	echo "<tr>\n";
@@ -224,7 +231,7 @@ if (mysqli_num_rows($query) > 0) {
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td align='left' valign='top' bgcolor='#".(CELLBGCOLORBOTTOM)."'>\n";
-	while ($data = mysqli_fetch_array($query)) {
+	while ($data = mysqli_fetch_array($get_pages)) {
 		echo "<a href='additional_page.php?id=".$data['page_id']."'>".$data['page_title']."</a><br>\n";
 	}
 	echo "</td>\n";
@@ -234,7 +241,7 @@ if (mysqli_num_rows($query) > 0) {
 	echo "</tr>\n";
 	echo "</table>\n";
 }
-mysqli_free_result($query);
+mysqli_free_result($get_pages);
 
 if (SHOW_FEATURED_PLAYER == 1) {
 	echo "<br>\n";
@@ -247,7 +254,7 @@ if (SHOW_FEATURED_PLAYER == 1) {
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td align='left' valign='top' bgcolor='#".(CELLBGCOLORBOTTOM)."'>";
-	$query = mysqli_query($db_connect, "SELECT
+	$get_featured_player = mysqli_query($db_connect, "SELECT
 		P.PlayerID AS player_id,
 		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
 		P.PlayerDescription AS player_description,
@@ -258,9 +265,9 @@ if (SHOW_FEATURED_PLAYER == 1) {
 		ORDER BY RAND()
 		LIMIT 1
 	") or die(mysqli_error());
-	$data = mysqli_fetch_array($query);
+	$data = mysqli_fetch_array($get_featured_player);
 	$small_text = substr($data['player_description'], 0, 150);
-	mysqli_free_result($query);
+	mysqli_free_result($get_featured_player);
 
 	echo "<b><a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a></b><br>".$small_text."...</td>\n";
 	echo "</tr>\n";
@@ -269,7 +276,6 @@ if (SHOW_FEATURED_PLAYER == 1) {
 	echo "</tr>\n";
 	echo "</table>\n";
 }
-
 if (SHOW_SEARCH == 1) {
 	echo "<br>\n";
 	echo "<table align='center' width='100%' cellspacing='0' cellpadding='0' border='0' bgcolor='#".(BORDERCOLOR)."'>\n";
