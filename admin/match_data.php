@@ -17,7 +17,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 	if (isset($_REQUEST['action'])){ $action = $_REQUEST['action']; }
 	if (isset($_POST['add_squad_submit'])){ $add_squad_submit = $_POST['add_squad_submit']; }
 	if (isset($_POST['add_goal_scorer_submit'])){ $add_goal_scorer_submit = $_POST['add_goal_scorer_submit']; }
-	if (isset($_POST['add_to_assists_scorer'])){ $add_to_assists_scorer = $_POST['add_to_assists_scorer']; }
+	if (isset($_POST['add_goal_assist_submit'])){ $add_goal_assist_submit = $_POST['add_goal_assist_submit']; }
 	if (isset($_POST['add_yellow_card_submit'])){ $add_yellow_card_submit = $_POST['add_yellow_card_submit']; }
 	if (isset($_POST['add_red_card_submit'])){ $add_red_card_submit = $_POST['add_red_card_submit']; }
 	if (isset($_POST['add_substitutes_submit'])){ $add_substitutes_submit = $_POST['add_substitutes_submit']; }
@@ -73,7 +73,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		") or die(mysqli_error());
 
 		if (mysqli_num_rows($query) == 0) {
-			echo "Please Add Player to Open Line-up or Substitutions first.<br>Push Back Button to get Back.";
+			echo "Please Add Player to Open Line-up or Substitutions First.<br>Push Back Button to get Back.";
 			exit();
 		} else {
 			if (isset($penalty)) {
@@ -111,8 +111,36 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		}
 		mysqli_free_result($query);
 
-	} else if (isset($add_to_assists_scorer)) {
-		// 
+	} else if (isset($add_goal_assist_submit)) {
+		$player_id = $_POST['add_to_goal_assists'];
+		$match_id = $_POST['match_id'];
+		$season_id = $_POST['season_id'];
+		$goal_assist_minute = $_POST['add_to_goal_assist_minute'];
+		$query = mysqli_query($db_connect, "SELECT
+			team_substitutes.SubstitutePlayerID AS substitute_player_id
+			FROM team_substitutes,team_appearances
+			WHERE (team_substitutes.SubstitutePlayerID = '$player_id'
+			AND team_substitutes.SubstituteMatchID = '$match_id'
+			AND team_substitutes.SubstituteSeasonID = '$season_id')
+			OR (team_appearances.AppearancePlayerID = '$player_id'
+			AND team_appearances.AppearanceMatchID = '$match_id'
+			AND team_appearances.AppearanceSeasonID = '$season_id')
+		") or die(mysqli_error());
+
+		if (mysqli_num_rows($query) == 0) {
+			echo "Please Add Player to Open Line-up or Substitutions first.<br>Push Back Button to get Back.";
+			exit();
+		} else {
+			mysqli_query($db_connect, "INSERT INTO team_goal_assists SET
+				GoalAssistPlayerID = '$player_id',
+				GoalAssistMatchID = '$match_id',
+				GoalAssistSeasonID = '$season_id',
+				GoalAssistMinute = '$goal_assist_minute'
+			") or die(mysqli_error($db_connect));
+			header("Location: $HTTP_REFERER");
+		}
+		mysqli_free_result($query);
+
 	} else if (isset($add_yellow_card_submit)) {
 		$player_id = $_POST['add_to_yellow_cards'];
 		$match_id = $_POST['match_id'];
@@ -207,7 +235,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		$season_id = $_POST['season_id'];
 		$substitution_minute = $_POST['substitution_minute'];
 
-		if ($player_id_in == "$player_id_out") {
+		if ($player_id_in == $player_id_out) {
 			echo "In and Out Player can't be the same.<br>Push Back Button to get Back.";
 			exit();
 		}
@@ -229,6 +257,11 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		} else if ($action == 'remove_from_goal_scorers') {
 			$id = $_REQUEST['id'];
 			mysqli_query($db_connect, "DELETE FROM team_goals WHERE GoalID = '$id'") or die(mysqli_error());
+			header("Location: $HTTP_REFERER");
+
+		} else if ($action == 'remove_from_goal_assists') {
+			$id = $_REQUEST['id'];
+			mysqli_query($db_connect, "DELETE FROM team_goal_assists WHERE GoalAssistID = '$id'") or die(mysqli_error());
 			header("Location: $HTTP_REFERER");
 
 		} else if ($action == 'remove_from_yellow_cards') {

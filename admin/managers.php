@@ -440,7 +440,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "</select>\n";
 		echo "<input type='submit' name='add_timeline' value='Add'><br><br>\n";
 		while($data = mysqli_fetch_array($query)) {
-			echo "<b>Remove Timeline:</b>\n";
+			echo "<b>Remove Timeline:</b>";
 			echo "<select name='remove_timeline_select'>";
 			echo "<option value='".$data['id']."'>".$data['start_date']." - ".$data['end_date']."</option>\n";
 			echo "</select>\n";
@@ -454,7 +454,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<form method='post' action='".$PHP_SELF."?session_id=".$session."'>\n";
 		echo "<table width='100%' cellspacing='3' cellpadding='3' border='0'>\n";
 		echo "<tr>\n";
-		echo "<td align='left' valign='top'><b>Already in Squad in Season(s):</b><br>\n";
+		echo "<td align='left' valign='top'><b>Already in Squad in Season(s):</b><br>";
 		$query = mysqli_query($db_connect, "SELECT
 			SN.SeasonName AS season_name,
 			SM.SeasonID AS season_id
@@ -565,7 +565,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 				echo "<img src='".$image_url6."' alt=''>";
 				echo "<br><a href='delete_picture.php?session_id=".$session."&amp;manager_id=".$manager_id."&amp;action=9&amp;type=png'>Delete this Picture</a>";
 			} else {
-			echo "<img src='../images/no_image.png' alt='' width='100' height='100'>";
+				echo "<img src='../images/no_image.png' alt='' width='100' height='100'>";
 			}
 		}
 		echo "</td>\n";
@@ -591,15 +591,16 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<b>Managers: ".$season_name."</b><br><br>Number of Managers: ".$get_total."<br><br>";
 		while($data = mysqli_fetch_array($get_managers)) {
 			echo "<a href='".$PHP_SELF."?session_id=".$session."&amp;action=modify&amp;manager_id=".$data['manager_id']."'>".$data['manager_name']."</a>";
+
 			if ($data['publish'] == 0) {
-				echo " (NB)<br>\n";
+				echo " (NB)<br>";
 			} else  {
-				echo "<br>\n";
+				echo "<br>";
 			}
 		}
 	}
-	echo "<br><br>\n";
-	echo "NB = This Manager is not Published yet.\n";
+	echo "<br><br>";
+	echo "NB = This Manager is not Published yet.";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";

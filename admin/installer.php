@@ -67,6 +67,19 @@ if (isset($submit)) {
 		KEY `GoalSeasonID` (`GoalSeasonID`)
 		) ENGINE=MyISAM
 	") or die(mysqli_error($db_connect));
+	
+	mysqli_query($db_connect, "CREATE TABLE `team_goal_assists` (
+		`GoalAssistID` int(10) unsigned NOT NULL auto_increment,
+		`GoalAssistPlayerID` int(10) unsigned NOT NULL default '0',
+		`GoalAssistMatchID` int(10) unsigned NOT NULL default '0',
+		`GoalAssistSeasonID` int(10) unsigned NOT NULL default '0',
+		`GoalAssistMinute` tinyint(3) unsigned NOT NULL default '0',
+		PRIMARY KEY  (`GoalAssistID`),
+		KEY `GoalAssistPlayerID` (`GoalAssistPlayerID`),
+		KEY `GoalAssistMatchID` (`GoalAssistMatchID`),
+		KEY `GoalAssistSeasonID` (`GoalAssistSeasonID`)
+		) ENGINE=MyISAM
+	") or die(mysqli_error($db_connect));
 
 	mysqli_query($db_connect, "CREATE TABLE `team_injured` (
 		`InjuredReason` varchar(128) NOT NULL default '',
@@ -271,6 +284,7 @@ if (isset($submit)) {
 		`show_next_match` tinyint(1) NOT NULL default '1',
 		`show_top_scorers` tinyint(1) NOT NULL default '1',
 		`show_top_apps` tinyint(1) NOT NULL default '1',
+		`show_top_assists` tinyint(1) NOT NULL default '1',
 		`show_top_bookings` tinyint(1) NOT NULL default '1',
 		`show_contact` tinyint(1) NOT NULL default '1',
 		PRIMARY KEY  (`id`)
@@ -397,8 +411,8 @@ if (isset($submit)) {
 
 	mysqli_query($db_connect, "INSERT INTO team_passwords (PasswordID, PasswordUser, PasswordPassword) VALUES ('1','$db_username',MD5('$db_password'))") or die(mysqli_error($db_connect));
 	mysqli_query($db_connect, "INSERT INTO team_match_places (MatchPlaceID, MatchPlaceName) VALUES ('1','Home'),('2','Away')") or die(mysqli_error($db_connect));
-	mysqli_query($db_connect, "INSERT INTO team_preferences (id, site_title, team_name, bgcolor, bgcolor1, bgcolor2, cellbgcolortop, cellbgcolorbottom, bordercolor, show_staff, show_comments, default_season, default_match_type, print_date, default_language, accept_multi_language, contact, show_latest_match, show_featured_player, show_search, show_next_match, show_top_scorers, show_top_apps, show_top_bookings, show_contact)
-		VALUES ('1', '$team_name', '$team_name','B9D3EE', 'B9D3EE', 'A0B6CD', 'D2D7DD', 'DEE3E7', '000000', '1', '1', '1', '1', '1', '1', '1', 'contact info', '1', '1', '1', '1', '1', '1', '1', '1')
+	mysqli_query($db_connect, "INSERT INTO team_preferences (id, site_title, team_name, bgcolor, bgcolor1, bgcolor2, cellbgcolortop, cellbgcolorbottom, bordercolor, show_staff, show_comments, default_season, default_match_type, print_date, default_language, accept_multi_language, contact, show_latest_match, show_featured_player, show_search, show_next_match, show_top_scorers, show_top_apps, show_top_assists, show_top_bookings, show_contact)
+		VALUES ('1', '$team_name', '$team_name','B9D3EE', 'B9D3EE', 'A0B6CD', 'D2D7DD', 'DEE3E7', '000000', '1', '1', '1', '1', '1', '1', '1', '1', 'contact info', '1', '1', '1', '1', '1', '1', '1', '1')
 	") or die(mysqli_error($db_connect));
 	mysqli_query($db_connect, "INSERT INTO team_season_names (SeasonID, SeasonName, SeasonPublish) VALUES ('1', '$season_name', '1')") or die(mysqli_error($db_connect));
 	mysqli_query($db_connect, "INSERT INTO `team_player_positions` (`PlayerPositionID`, `PlayerPositionName`) VALUES ('1', 'Goalkeeper')") or die(mysqli_error($db_connect));

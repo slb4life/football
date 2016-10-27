@@ -40,6 +40,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		if (isset($_POST['show_next_match'])){ $show_next_match = $_POST['show_next_match']; }
 		if (isset($_POST['show_top_scorers'])){ $show_top_scorers = $_POST['show_top_scorers']; }
 		if (isset($_POST['show_top_apps'])){ $show_top_apps = $_POST['show_top_apps']; }
+		if (isset($_POST['show_top_assists'])){ $show_top_assists = $_POST['show_top_assists']; }
 		if (isset($_POST['show_top_bookings'])){ $show_top_bookings = $_POST['show_top_bookings']; }
 		if (isset($_POST['show_contact'])){ $show_contact = $_POST['show_contact']; }
 
@@ -57,6 +58,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		if (!isset($show_next_match)){ $show_next_match = 0; }
 		if (!isset($show_top_scorers)){ $show_top_scorers = 0; }
 		if (!isset($show_top_apps)){ $show_top_apps = 0; }
+		if (!isset($show_top_assists)){ $show_top_assists = 0; }
 		if (!isset($show_top_bookings)){ $show_top_bookings = 0; }
 		if (!isset($show_contact)){ $show_contact = 0; }
 
@@ -83,6 +85,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			show_next_match = '$show_next_match',
 			show_top_scorers = '$show_top_scorers',
 			show_top_apps = '$show_top_apps',
+			show_top_assists = '$show_top_assists',
 			show_top_bookings = '$show_top_bookings',
 			show_contact = '$show_contact'
 			WHERE ID = '1'
@@ -298,6 +301,16 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<input type='checkbox' name='show_top_apps' value='1' CHECKED>";
 	} else {
 		echo "<input type='checkbox' name='show_top_apps' value='1'>";
+	}
+	echo "</td>\n";
+	echo "</tr><tr>\n";
+	echo "<td align='left' valign='top'>Show Top Assists?</td>";
+	echo "<td align='left' valign='top'>";
+	
+	if ($pdata['show_top_assists'] == 1) {
+		echo "<input type='checkbox' name='show_top_assists' value='1' CHECKED>";
+	} else {
+		echo "<input type='checkbox' name='show_top_assists' value='1'>";
 	}
 	echo "</td>\n";
 	echo "</tr><tr>\n";

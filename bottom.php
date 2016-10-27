@@ -250,7 +250,62 @@ if (SHOW_TOP_APPS == 1) {
 	echo "</tr>\n";
 	echo "</table>\n";
 }
+if (SHOW_TOP_ASSISTS == 1) {
+	echo "<br>\n";
+	echo "<table align='center' width='100%' cellspacing='0' cellpadding='0' border='0' bgcolor='#".(BORDERCOLOR)."'>\n";
+	echo "<tr>\n";
+	echo "<td>\n";
+	echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
+	echo "<tr>\n";
+	echo "<td bgcolor='#".(CELLBGCOLORTOP)."' align='left' valign='middle'><b><i>".$locale_top_assists."</i></b></td>\n";
+	echo "</tr>\n";
+	echo "<tr>\n";
+	echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORBOTTOM)."'>\n";
+	echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
 
+	if ($default_match_type_id == 0) {
+		$tdefault_match_type_id = '%';
+	} else {
+		$tdefault_match_type_id = $default_match_type_id;
+	}
+	if ($default_season_id == 0) {
+		$tdefault_season_id = '%';
+	} else {
+		$tdefault_season_id = $default_season_id;
+	}
+	$max_show = 5;
+	$query = mysqli_query($db_connect, "SELECT
+		P.PlayerID AS player_id,
+		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
+		COUNT( GA.GoalAssistPlayerID ) AS goal_assists
+		FROM team_seasons S
+		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID LIKE '$tdefault_season_id'
+		LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID LIKE '$tdefault_match_type_id'
+		LEFT OUTER JOIN team_goal_assists GA ON GA.GoalAssistPlayerID = S.SeasonPlayerID AND GA.GoalAssistMatchID = M.MatchID
+		WHERE P.PlayerID != ''
+		GROUP BY player_id
+		ORDER BY goal_assists DESC, player_name
+		LIMIT $max_show
+	") or die(mysqli_error($db_connect));
+	$i = 1;
+	while ($data = mysqli_fetch_array($query)) {
+		echo "<tr>\n";
+		echo "<td align='right' valign='top'>".$i.".</td>\n";
+		echo "<td align='left' valign='top' width='90%'><a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a></td>\n";
+		echo "<td align='right' valign='top'>".$data['goal_assists']."</td>\n";
+		echo "</tr>\n";
+		$i++;
+	}
+	mysqli_free_result($query);
+
+	echo "</table>\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+	echo "</table>\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+	echo "</table>\n";
+}
 if (SHOW_TOP_BOOKINGS == 1) {
 	echo "<br>\n";
 	echo "<table align='center' width='100%' cellspacing='0' cellpadding='0' border='0' bgcolor='#".(BORDERCOLOR)."'>\n";

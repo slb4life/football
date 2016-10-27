@@ -22,6 +22,7 @@ $locale_next_match = 'Next Match';
 $locale_season_ended = 'Season has ended';
 $locale_top_scorers = 'TOP Scorers';
 $locale_top_appearances = 'TOP Appearances';
+$locale_top_assists = 'Top Assists';
 $locale_top_bookings = 'TOP Bookings';
 $locale_featured_player = 'Featured Player';
 $locale_contact = 'Contact';

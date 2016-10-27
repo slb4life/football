@@ -28,6 +28,7 @@ define("SHOW_SEARCH", $data['show_search']);
 define("SHOW_NEXT_MATCH", $data['show_next_match']);
 define("SHOW_TOP_SCORERS", $data['show_top_scorers']);
 define("SHOW_TOP_APPS", $data['show_top_apps']);
+define("SHOW_TOP_ASSISTS", $data['show_top_assists']);
 define("SHOW_TOP_BOOKINGS", $data['show_top_bookings']);
 define("SHOW_CONTACT", $data['show_contact']);
 mysqli_free_result($query);
