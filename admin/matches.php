@@ -450,7 +450,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		$match_data['yellow_cards_opponent'] = str_replace('<br>',"\r\n", $match_data['yellow_cards_opponent']);
 		$match_data['red_cards_opponent'] = str_replace('<br>',"\r\n", $match_data['red_cards_opponent']);
 		echo "<form method='post' action='".$PHP_SELF."?session_id=".$session."'>\n";
-		echo "<input name='script_name' type='hidden' value='".$script_name."'>\n";
+		echo "<input type='hidden' name='script_name' value='".$script_name."'>\n";
 		echo "<b>JUMP TO:</b> [<a href='#your_team'>Your Team Statistics</a>] [<a href='#opp_team'>Opponent Statistics</a>] [<a href='#opp'>Optional Stats</a>]<br>\n";
 		echo "<b>CHECK:</b> [<a href='../match_details.php?id=".$match_id."'>Match Details Page</a>]<br>\n";
 		echo "<table cellspacing='3' cellpadding='3' width='100%' border='0'>\n";
@@ -712,7 +712,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			ORDER BY player_name
 		") or die(mysqli_error());
 		echo "<form method='post' action='match_data.php?session_id=".$session."'>\n";
-		echo "<input name='script_name' type='hidden' value='".$script_name."'>\n";
+		echo "<input type='hidden' name='script_name' value='".$script_name."'>\n";
 		echo "(NOTE: hold down CTRL to select more than one.)<br>\n";
 		echo "<select name='add_to_squad[]' size='10' multiple='multiple'>";
 		while($data = mysqli_fetch_array($get_players)) {
@@ -753,7 +753,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			mysqli_data_seek($get_players, 0);
 		}
 		echo "<form method='post' action='match_data.php?session_id=".$session."'>\n";
-		echo "<input name='script_name' type='hidden' value='".$script_name."'>\n";
+		echo "<input type='hidden' name='script_name' value='".$script_name."'>\n";
 		echo "(NOTE: hold down CTRL to select more than one.)<br>\n";
 		echo "<select name='add_to_substitutes[]' size='10' multiple='multiple'>";
 		while($data = mysqli_fetch_array($get_players)) {
@@ -879,7 +879,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			mysqli_data_seek($get_sub_in, 0);
 		}
 		echo "<form method='post' action='match_data.php?session_id=".$session."'>\n";
-		echo "<input name='script_name' type='hidden' value='".$script_name."'>\n";
+		echo "<input type='hidden' name='script_name' value='".$script_name."'>\n";
 		echo "<select name='add_to_goal_scorers'>";
 		while($data = mysqli_fetch_array($get_opening)) {
 			echo "<option value='".$data['player_id']."'>".$data['player_name']."</option>\n";
@@ -887,7 +887,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		if (mysqli_num_rows($get_sub_in) > 0) {
 			echo "<option value='-'>----------------------</option>\n";
 			while($data = mysqli_fetch_array($get_sub_in)) {
-				echo"<option value='".$data['player_id']."'>".$data['player_name']."</option>\n";
+				echo "<option value='".$data['player_id']."'>".$data['player_name']."</option>\n";
 			}
 		}
 		echo "</select>\n";
@@ -934,8 +934,15 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<td align='left' valign='top' bgcolor='#99CCFF' colspan='2'><b>Assists:</b></td>\n";
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top' colspan='2'>\n";
+
+		if (mysqli_num_rows($get_opening) > 0) {
+			mysqli_data_seek($get_opening, 0);
+		}
+		if (mysqli_num_rows($get_sub_in) > 0) {
+			mysqli_data_seek($get_sub_in, 0);
+		}
 		echo "<form method='post' action='match_data.php?session_id=".$session."'>\n";
-		echo "<input name='script_name' type='hidden' value='".$script_name."'>\n";
+		echo "<input type='hidden' name='script_name' value='".$script_name."'>\n";
 		$get_goal_scorers = mysqli_query($db_connect, "SELECT
 			CONCAT(team_players.PlayerFirstName, ' ', team_players.PlayerLastName) AS player_name,
 			team_players.PlayerID AS player_id,
@@ -957,13 +964,6 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			}
 			echo "</select>\n";
 			echo " Assisted By: ";
-
-			if (mysqli_num_rows($get_opening) > 0) {
-				mysqli_data_seek($get_opening, 0);
-			}
-			if (mysqli_num_rows($get_sub_in) > 0) {
-				mysqli_data_seek($get_sub_in, 0);
-			}
 			echo "<select name='add_to_goal_assists'>";
 			while($data = mysqli_fetch_array($get_opening)) {
 				echo "<option value='".$data['player_id']."'>".$data['player_name']."</option>\n";
@@ -1000,7 +1000,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			mysqli_free_result($get_goal_assists);
 
 		} else {
-			echo "No Goals In This Match...";
+			echo "No Goals Added Yet...";
 		}
 		mysqli_free_result($get_goal_scorers);
 
@@ -1019,7 +1019,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			mysqli_data_seek($get_sub_in, 0);
 		}
 		echo "<form method='post' action='match_data.php?session_id=".$session."'>\n";
-		echo "<input name='script_name' type='hidden' value='".$script_name."'>\n";
+		echo "<input type='hidden' name='script_name' value='".$script_name."'>\n";
 		echo "<select name='add_to_yellow_cards'>";
 		while($data = mysqli_fetch_array($get_opening)) {
 			echo "<option value='".$data['player_id']."'>".$data['player_name']."</option>\n";
@@ -1069,7 +1069,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			mysqli_data_seek($get_sub_in, 0);
 		}
 		echo "<form method='post' action='match_data.php?session_id=".$session."'>\n";
-		echo "<input name='script_name' type='hidden' value='".$script_name."'>\n";
+		echo "<input type='hidden' name='script_name' value='".$script_name."'>\n";
 		echo "<select name='add_to_red_cards'>";
 		while($data = mysqli_fetch_array($get_opening)) {
 			echo "<option value='".$data['player_id']."'>".$data['player_name']."</option>\n";
