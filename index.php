@@ -1,9 +1,7 @@
 <?php
 include('top.php');
 
-if (isset($_REQUEST['news_id'])) {
-	$news_id = $_REQUEST['news_id'];
-}
+if (isset($_REQUEST['news_id'])){ $news_id = $_REQUEST['news_id']; }
 
 if (!isset($news_id)) {
 	echo "<h3>".$locale_latest_match."</h3>\n";
@@ -13,7 +11,7 @@ if (!isset($news_id)) {
 	echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
 	echo "<tr>\n";
 	echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORBOTTOM)."'>";
-	$get_details = mysqli_query($db_connect, "SELECT
+	$get_latest_match = mysqli_query($db_connect, "SELECT
 		O.OpponentName AS opponent_name,
 		O.OpponentID AS opponent_id,
 		M.MatchID AS match_id,
@@ -35,8 +33,8 @@ if (!isset($news_id)) {
 		ORDER BY match_date DESC
 		LIMIT 1
 	") or die(mysqli_error());
-	$data = mysqli_fetch_array($get_details);
-	mysqli_free_result($get_details);
+	$data = mysqli_fetch_array($get_latest_match);
+	mysqli_free_result($get_latest_match);
 
 	$logos = 0;
 	$image_url_1 = "images/team_logo.png";
@@ -181,7 +179,7 @@ if (!isset($news_id)) {
 	echo "<tr>\n";
 	echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORBOTTOM)."'>\n";
 	echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
-	$query = mysqli_query($db_connect, "SELECT
+	$get_latest_news = mysqli_query($db_connect, "SELECT
 		N.news_id AS news_id,
 		N.news_subject AS news_subject,
 		N.news_content AS news_content,
@@ -191,7 +189,7 @@ if (!isset($news_id)) {
 		LIMIT 5
 	") or die(mysqli_error());
 	$i = 0;
-	while ($data = mysqli_fetch_array($query)) {
+	while ($data = mysqli_fetch_array($get_latest_news)) {
 		echo "<tr>\n";
 		echo "<td align='right' valign='top'><i>".$data['news_date']."</i></td>\n";
 		echo "<td align='left' valign='top' width='85%'><b><a href='index.php?news_id=".$data['news_id']."'>".$data['news_subject']."</a></b>";
@@ -204,7 +202,7 @@ if (!isset($news_id)) {
 		echo "</tr>\n";
 		$i++;
 	}
-	mysqli_free_result($query);
+	mysqli_free_result($get_latest_news);
 
 	echo "<tr>\n";
 	echo "<td colspan='2' align='left' valign='top'><br><a href='news_archive.php'>".$locale_to_news_archive."</a></td>\n";
@@ -220,19 +218,19 @@ if (!isset($news_id)) {
 	if ($news_id == '' || !is_numeric($news_id)) {
 		$news_id = 1;
 	}
-	$query = mysqli_query($db_connect, "SELECT
+	$get_latest_news = mysqli_query($db_connect, "SELECT
 		N.news_id AS news_id,
 		N.news_subject AS news_subject,
 		N.news_content AS news_content,
 		N.news_picture_text AS news_picture_text,
-		DATE_FORMAT(N.news_date, '".$how_to_print."') AS news_date
+		DATE_FORMAT(N.news_date, '$how_to_print') AS news_date
 		FROM team_news N
-		WHERE news_id = '".$news_id."'
+		WHERE news_id = '$news_id'
 		LIMIT 1
 	") or die(mysqli_error());
-	$data = mysqli_fetch_array($query);
+	$data = mysqli_fetch_array($get_latest_news);
 	$data['news_content'] = str_replace('\r\n', '<br>', $data['news_content']);
-	mysqli_free_result($query);
+	mysqli_free_result($get_latest_news);
 
 	echo "<h3>".$data['news_subject']."</h3>\n";
 	echo "<table align='center' width='100%' cellspacing='0' cellpadding='0' border='0' bgcolor='#".(BORDERCOLOR)."'>\n";
