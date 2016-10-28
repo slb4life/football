@@ -931,16 +931,9 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "</td>\n";
 		echo "</tr>\n";
 		echo "<tr>\n";
-		echo "<td align='left' valign='top' bgcolor='#99CCFF' colspan='2'><b>Assists:</b></td>\n";
+		echo "<td align='left' valign='top' bgcolor='#99CCFF' colspan='2'><b>Goal Assists:</b></td>\n";
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top' colspan='2'>\n";
-
-		if (mysqli_num_rows($get_opening) > 0) {
-			mysqli_data_seek($get_opening, 0);
-		}
-		if (mysqli_num_rows($get_sub_in) > 0) {
-			mysqli_data_seek($get_sub_in, 0);
-		}
 		echo "<form method='post' action='match_data.php?session_id=".$session."'>\n";
 		echo "<input type='hidden' name='script_name' value='".$script_name."'>\n";
 		$get_goal_scorers = mysqli_query($db_connect, "SELECT
@@ -958,13 +951,19 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		") or die(mysqli_error());
 
 		if (mysqli_num_rows($get_goal_scorers) > 0) {
-			echo "<select name='add_goal_assist_submit'>";
+			echo "<select name='goal_minute' name='add_goal_assist_submit'>";
 			while($data = mysqli_fetch_array($get_goal_scorers)) {
-				echo "<option value='".$data['player_id']."'>".$data['player_name']." (".$data['goal_minute'].")</option>\n";
+				echo "<option value='".$data['goal_minute']."' value='".$data['player_id']."'>".$data['player_name']." (".$data['goal_minute'].")</option>\n";
 			}
 			echo "</select>\n";
-			echo " Assisted By: ";
-			echo "<select name='add_to_goal_assists'>";
+
+			if (mysqli_num_rows($get_opening) > 0) {
+				mysqli_data_seek($get_opening, 0);
+			}
+			if (mysqli_num_rows($get_sub_in) > 0) {
+				mysqli_data_seek($get_sub_in, 0);
+			}
+			echo " Assisted By: <select name='add_to_goal_assists'>";
 			while($data = mysqli_fetch_array($get_opening)) {
 				echo "<option value='".$data['player_id']."'>".$data['player_name']."</option>\n";
 			}
@@ -976,7 +975,6 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			}
 			echo "</select>\n";
 			echo "<input type='submit' name='add_goal_assist_submit' value='Add'><br>\n";
-			echo "<input type='hidden' name='add_to_goal_assist_minute' value='0'>\n";
 			echo "<input type='hidden' name='match_id' value='".$match_id."'>\n";
 			echo "<input type='hidden' name='season_id' value='".$season_id."'>\n";
 			$get_goal_assists = mysqli_query($db_connect, "SELECT
