@@ -139,6 +139,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		$substitutes_opponent = str_replace("\r\n",'<br>', trim($_POST['substitutes_opponent']));
 		$substitutions_opponent = str_replace("\r\n",'<br>', trim($_POST['substitutions_opponent']));
 		$goal_scorers_opponent = str_replace("\r\n",'<br>', trim($_POST['goal_scorers_opponent']));
+		$goal_assists_opponent = str_replace("\r\n",'<br>', trim($_POST['goal_assists_opponent']));
 		$yellow_cards_opponent = str_replace("\r\n",'<br>', trim($_POST['yellow_cards_opponent']));
 		$red_cards_opponent = str_replace("\r\n",'<br>', trim($_POST['red_cards_opponent']));
 		$match_date = $year."-".$month."-".$day." ".$hour."-".$minute."-00";
@@ -152,6 +153,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			$substitutes_opponent = addslashes($substitutes_opponent);
 			$substitutions_opponent = addslashes($substitutions_opponent);
 			$goal_scorers_opponent = addslashes($goal_scorers_opponent);
+			$goal_assists_opponent = addslashes($goal_assists_opponent);
 			$yellow_cards_opponent = addslashes($yellow_cards_opponent);
 			$red_cards_opponent = addslashes($red_cards_opponent);
 		}
@@ -212,6 +214,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 				MatchSubstitutesOpponent = '$substitutes_opponent',
 				MatchSubstitutionsOpponent = '$substitutions_opponent',
 				MatchGoalscorersOpponent = '$goal_scorers_opponent',
+				MatchGoalAssistsOpponent = '$goal_assists_opponent',
 				MatchYellowCardsOpponent = '$yellow_cards_opponent',
 				MatchRedCardsOpponent = '$red_cards_opponent'
 				WHERE MatchID = '$match_id'
@@ -433,6 +436,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			MatchSubstitutesOpponent AS substitutes_opponent,
 			MatchSubstitutionsOpponent AS substitutions_opponent,
 			MatchGoalscorersOpponent AS goal_scorers_opponent,
+			MatchGoalAssistsOpponent AS goal_assists_opponent,
 			MatchYellowCardsOpponent AS yellow_cards_opponent,
 			MatchRedCardsOpponent AS red_cards_opponent
 			FROM team_matches
@@ -447,6 +451,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		$match_data['substitutes_opponent'] = str_replace('<br>',"\r\n", $match_data['substitutes_opponent']);
 		$match_data['substitutions_opponent'] = str_replace('<br>',"\r\n", $match_data['substitutions_opponent']);
 		$match_data['goal_scorers_opponent'] = str_replace('<br>',"\r\n", $match_data['goal_scorers_opponent']);
+		$match_data['goal_assists_opponent'] = str_replace('<br>',"\r\n", $match_data['goal_assists_opponent']);
 		$match_data['yellow_cards_opponent'] = str_replace('<br>',"\r\n", $match_data['yellow_cards_opponent']);
 		$match_data['red_cards_opponent'] = str_replace('<br>',"\r\n", $match_data['red_cards_opponent']);
 		echo "<form method='post' action='".$PHP_SELF."?session_id=".$session."'>\n";
@@ -690,6 +695,8 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<td align='left' valign='top' colspan='2'>Substitutions for Opponent:<br><textarea name='substitutions_opponent' cols='30' rows='3'>".$match_data['substitutions_opponent']."</textarea></td>\n";
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top' colspan='2'>Goal Scorers for Opponent:<br><textarea name='goal_scorers_opponent' cols='30' rows='3'>".$match_data['goal_scorers_opponent']."</textarea></td>\n";
+		echo "</tr><tr>\n";
+		echo "<td align='left' valign='top' colspan='2'>Goal Assists for Opponent:<br><textarea name='goal_assists_opponent' cols='30' rows='3'>".$match_data['goal_assists_opponent']."</textarea></td>\n";
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top' colspan='2'>Yellow Cards for Opponent:<br><textarea name='yellow_cards_opponent' cols='30' rows='3'>".$match_data['yellow_cards_opponent']."</textarea></td>\n";
 		echo "</tr><tr>\n";
@@ -951,7 +958,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		") or die(mysqli_error());
 
 		if (mysqli_num_rows($get_goal_scorers) > 0) {
-			echo "<select name='goal_minute' name='add_goal_assist_submit'>";
+			echo "<select name='add_goal_assist_minute' name='add_goal_assist_submit'>";
 			while($data = mysqli_fetch_array($get_goal_scorers)) {
 				echo "<option value='".$data['goal_minute']."' value='".$data['player_id']."'>".$data['player_name']." (".$data['goal_minute'].")</option>\n";
 			}

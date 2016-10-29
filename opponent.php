@@ -54,7 +54,7 @@ if ($data['OpponentWWW'] != '') {
 }
 echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
 echo "<tr>\n";
-echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><b>".$locale_players_played_for_this_team.":</b></td>\n";
+echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><b>".$locale_our_players_that_played_for_this_team.":</b></td>\n";
 echo "</tr>\n";
 echo "<tr>\n";
 echo "<td align='left' valign='middle'>";
@@ -70,7 +70,7 @@ $query = mysqli_query($db_connect, "SELECT
 $i = 1;
 
 if (mysqli_num_rows($query) == 0) {
-	echo "".$locale_no_players_have_played_for_this_team."";
+	echo "".$locale_no_player_has_played_for_this_team."";
 } else {
 	while ($data = mysqli_fetch_array($query)) {
 		echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>";

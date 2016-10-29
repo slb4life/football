@@ -45,7 +45,7 @@ $get_matches = mysqli_query($db_connect, "SELECT
 	ORDER BY match_date
 ") or die(mysqli_error());
 $k = 0;
-while ($data_m = mysqli_fetch_array($get_matches)) {
+while ($data = mysqli_fetch_array($get_matches)) {
 	if ($k > 0) {
 		if ($track == 1) {
 			if ($streak >= $record) {
@@ -58,7 +58,7 @@ while ($data_m = mysqli_fetch_array($get_matches)) {
 			}
 		}
 	}
-	if ($data_m['goals'] > $data_m['goals_opponent']) {
+	if ($data['goals'] > $data['goals_opponent']) {
 		$wins = $wins + 1;
 		$streak++;
 		$streak2++;
@@ -66,25 +66,26 @@ while ($data_m = mysqli_fetch_array($get_matches)) {
 		$track = 1;
 		$track2 = 1;
 	}
-	if ($data_m['goals'] == $data_m['goals_opponent']) {
+	if ($data['goals'] == $data['goals_opponent']) {
 		$draws = $draws + 1;
 		$streak = 0;
 		$track = 0;
 		$track2 = 1;
 		$streak2++;
 	}
-	if ($data_m['goals'] < $data_m['goals_opponent']) {
+	if ($data['goals'] < $data['goals_opponent']) {
 		$loses = $loses + 1;
 		$streak = 0;
 		$streak2 = 0;
 		$track = 0;
 		$track2 = 0;
 	}
-	$goals_for = $goals_for + $data_m['goals'];
-	$goals_against = $goals_against + $data_m['goals_opponent'];
+	$goals_for = $goals_for + $data['goals'];
+	$goals_against = $goals_against + $data['goals_opponent'];
 	$k = $k +1;
 }
 $all = $wins + $loses + $draws;
+
 if ($all == 0) {
 	$win_pros = round(0, 2);
 	$draw_pros = round(0, 2);
@@ -99,7 +100,7 @@ mysqli_free_result($get_matches);
 echo "<tr>\n";
 echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."' colspan='4'><b>".$locale_this_season."</b></td>\n";
 echo "</tr>\n";
-$query = mysqli_query($db_connect, "SELECT
+$get_players = mysqli_query($db_connect, "SELECT
 	CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
 	P.PlayerID AS player_id,
 	P.PlayerPositionID AS player_position_id,
@@ -112,10 +113,10 @@ $query = mysqli_query($db_connect, "SELECT
 	AND P.PlayerInSquadList = '1'
 	ORDER BY player_position_id, player_number
 ") or die(mysqli_error());
-$n_of_players = mysqli_num_rows($query);
+$n_of_players = mysqli_num_rows($get_players);
 $all_players_txt = "";
 $k = 1;
-while ($data = mysqli_fetch_array($query)) {
+while ($data = mysqli_fetch_array($get_players)) {
 	if ($data['publish'] == 1) {
 		$all_players_txt .= "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>";
 	} else {
@@ -126,9 +127,9 @@ while ($data = mysqli_fetch_array($query)) {
 	}
 	$k++;
 }
-mysqli_free_result($query);
+mysqli_free_result($get_players);
 
-$query = mysqli_query($db_connect, "SELECT
+$get_players = mysqli_query($db_connect, "SELECT
 	CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
 	P.PlayerID AS player_id,
 	P.PlayerPublish AS publish,
@@ -140,16 +141,16 @@ $query = mysqli_query($db_connect, "SELECT
 	ORDER BY player_dob DESC
 	LIMIT 1
 ") or die(mysqli_error());
-$data = mysqli_fetch_array($query);
+$data = mysqli_fetch_array($get_players);
 
 if ($data['publish'] == 1) {
 	$youngest = "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a> (".$locale_dob.": ".$data['player_dob'].")";
 } else {
 	$youngest = "".$data['player_name']."";
 }
-mysqli_free_result($query);
+mysqli_free_result($get_players);
 
-$query = mysqli_query($db_connect, "SELECT
+$get_players = mysqli_query($db_connect, "SELECT
 	CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
 	P.PlayerID AS player_id,
 	P.PlayerPublish AS publish,
@@ -161,14 +162,14 @@ $query = mysqli_query($db_connect, "SELECT
 	ORDER BY player_dob ASC
 	LIMIT 1
 ") or die(mysqli_error());
-$data = mysqli_fetch_array($query);
+$data = mysqli_fetch_array($get_players);
 
 if ($data['publish'] == 1) {
 	$oldest = "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a> (".$locale_dob.": ".$data['player_dob'].")";
 } else {
 	$oldest = "".$data['player_name']."";
 }
-mysqli_free_result($query);
+mysqli_free_result($get_players);
 
 echo "<tr>\n";
 echo "<td align='left' valign='top' colspan='2'>".$locale_all_players." (".$n_of_players.")<br><a href='stats.php'>".$locale_see_player_stats."</a></td>\n";
@@ -236,12 +237,56 @@ echo "<tr>\n";
 echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."' colspan='4'><b>".$locale_individual_leaders."</b></td>\n";
 echo "</tr>\n";
 echo "<tr>\n";
-echo "<td align='left' valign='middle' colspan='2'>".$locale_most_goals."</td>\n";
+echo "<td align='left' valign='middle' colspan='2'>".$locale_most_appearances."</td>\n";
 echo "<td align='left' valign='middle' colspan='2'>";
-$query = mysqli_query($db_connect, "SELECT
+$get_appearances = mysqli_query($db_connect, "SELECT
 	P.PlayerID AS player_id,
 	CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
-	COUNT( G.GoalPlayerID ) AS goal_player_id
+	COUNT(A.AppearancePlayerID) AS appearance_player_id
+	FROM team_seasons S
+	LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID
+	AND S.SeasonID = '$default_season_id'
+	LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID
+	LEFT OUTER JOIN team_appearances A ON A.AppearancePlayerID = S.SeasonPlayerID
+	AND A.AppearanceMatchID = M.MatchID
+	WHERE P.PlayerID != ''
+	GROUP BY player_id
+	ORDER BY appearance_player_id DESC, player_name
+") or die(mysqli_error());
+$i = 0;
+$check = 92892892892;
+while ($data = mysqli_fetch_array($get_appearances)) {
+	if ($i == 0) {
+		echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>";
+		$most_appearances = $data['appearance_player_id'];
+	}
+	if ($i > 0) {
+		if ($data['appearance_player_id'] == $check) {
+			echo ", <a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>";
+		} else {
+			break;
+		}
+	}
+	$check = $data['appearance_player_id'];
+	$i++;
+}
+
+if ($data['appearance_player_id'] == 0) {
+	echo " (".$most_appearances.")";
+} else {
+	echo " (0)";
+}
+mysqli_free_result($get_appearances);
+
+echo "</td>\n";
+echo "</tr>\n";
+echo "<tr>\n";
+echo "<td align='left' valign='middle' colspan='2'>".$locale_most_goals."</td>\n";
+echo "<td align='left' valign='middle' colspan='2'>";
+$get_goals = mysqli_query($db_connect, "SELECT
+	P.PlayerID AS player_id,
+	CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
+	COUNT(G.GoalPlayerID) AS goal_player_id
 	FROM team_seasons S
 	LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID
 	AND S.SeasonID LIKE '$default_season_id'
@@ -255,7 +300,7 @@ $query = mysqli_query($db_connect, "SELECT
 ") or die(mysqli_error());
 $i = 0;
 $check = 92892892892;
-while ($data = mysqli_fetch_array($query)) {
+while ($data = mysqli_fetch_array($get_goals)) {
 	if ($i == 0) {
 		echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>";
 		$most_goals = $data['goal_player_id'];
@@ -275,17 +320,60 @@ if ($data['goal_player_id'] == 1) {
 } else {
 	echo " (0)";
 }
-mysqli_free_result($query);
+mysqli_free_result($get_goals);
+
+echo "</td>\n";
+echo "</tr>\n";
+echo "<tr>\n";
+echo "<td align='left' valign='middle' colspan='2'>".$locale_most_assists."</td>\n";
+echo "<td align='left' valign='middle' colspan='2'>";
+$get_assists = mysqli_query($db_connect, "SELECT
+	P.PlayerID AS player_id,
+	CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
+	COUNT(GA.GoalAssistPlayerID) AS goal_assist_player_id
+	FROM team_seasons S
+	LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID
+	AND S.SeasonID = '$default_season_id'
+	LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID
+	LEFT OUTER JOIN team_goal_assists GA ON GA.GoalAssistPlayerID = S.SeasonPlayerID
+	AND GA.GoalAssistMatchID = M.MatchID
+	WHERE P.PlayerID != ''
+	GROUP BY player_id
+	ORDER BY goal_assist_player_id DESC, player_name
+") or die(mysqli_error());
+$i = 0;
+$check = 92892892892;
+while ($data = mysqli_fetch_array($get_assists)) {
+	if ($i == 0) {
+		echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>";
+		$most_assists = $data['goal_assist_player_id'];
+	}
+	if ($i > 0) {
+		if ($data['goal_assist_player_id'] == $check) {
+			echo ", <a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>";
+		} else {
+			break;
+		}
+	}
+	$check = $data['goal_assist_player_id'];
+	$i++;
+}
+if ($data['goal_assist_player_id'] == 1) {
+	echo " (".$most_assists.")";
+} else {
+	echo " (0)";
+}
+mysqli_free_result($get_assists);
 
 echo "</td>\n";
 echo "</tr>\n";
 echo "<tr>\n";
 echo "<td align='left' valign='middle' colspan='2'>".$locale_most_booked."</td>\n";
 echo "<td align='left' valign='middle' colspan='2'>";
-$query = mysqli_query($db_connect, "SELECT
+$get_yellows = mysqli_query($db_connect, "SELECT
 	P.PlayerID AS player_id,
 	CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
-	COUNT( Y.YellowCardPlayerID ) AS yellow_card_player_id
+	COUNT(Y.YellowCardPlayerID) AS yellow_card_player_id
 	FROM team_seasons S
 	LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID
 	AND S.SeasonID = '$default_season_id'
@@ -298,7 +386,7 @@ $query = mysqli_query($db_connect, "SELECT
 ") or die(mysqli_error());
 $i = 0;
 $check = 92892892892;
-while ($data = mysqli_fetch_array($query)) {
+while ($data = mysqli_fetch_array($get_yellows)) {
 	if ($i == 0) {
 		echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>";
 		$most_yellows = $data['yellow_card_player_id'];
@@ -318,51 +406,7 @@ if ($data['yellow_card_player_id'] == 1) {
 } else {
 	echo " (0)";
 }
-mysqli_free_result($query);
-
-echo "</td>\n";
-echo "</tr>\n";
-echo "<tr>\n";
-echo "<td align='left' valign='middle' colspan='2'>".$locale_most_appearances."</td>\n";
-echo "<td align='left' valign='middle' colspan='2'>";
-$query = mysqli_query($db_connect, "SELECT
-	P.PlayerID AS player_id,
-	CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
-	COUNT( A.AppearancePlayerID ) AS appearance_player_id
-	FROM team_seasons S
-	LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID
-	AND S.SeasonID = '$default_season_id'
-	LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID
-	LEFT OUTER JOIN team_appearances A ON A.AppearancePlayerID = S.SeasonPlayerID
-	AND A.AppearanceMatchID = M.MatchID
-	WHERE P.PlayerID != ''
-	GROUP BY player_id
-	ORDER BY appearance_player_id DESC, player_name
-") or die(mysqli_error());
-$i = 0;
-$check = 92892892892;
-while ($data = mysqli_fetch_array($query)) {
-	if ($i == 0) {
-		echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>";
-		$most_appearances = $data['appearance_player_id'];
-	}
-	if ($i > 0) {
-		if ($data['appearance_player_id'] == $check) {
-			echo ", <a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>";
-		} else {
-			break;
-		}
-	}
-	$check = $data['appearance_player_id'];
-	$i++;
-}
-
-if ($data['appearance_player_id'] == 1) {
-	echo " (".$most_appearances.")";
-} else {
-	echo " (0)";
-}
-mysqli_free_result($query);
+mysqli_free_result($get_yellows);
 
 echo "</td>\n";
 echo "</tr>\n";

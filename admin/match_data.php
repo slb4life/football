@@ -115,7 +115,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		$player_id = $_POST['add_to_goal_assists'];
 		$match_id = $_POST['match_id'];
 		$season_id = $_POST['season_id'];
-		$goal_assist_minute = $_POST['goal_minute'];
+		$goal_assist_minute = $_POST['add_goal_assist_minute'];
 		$query = mysqli_query($db_connect, "SELECT
 			team_substitutes.SubstitutePlayerID AS substitute_player_id
 			FROM team_substitutes,team_appearances

@@ -46,6 +46,7 @@ $get_details = mysqli_query($db_connect, "SELECT
 	M.MatchOpeningOpponent AS opening_opponent,
 	M.MatchSubstitutesOpponent AS substitutes_opponent,
 	M.MatchSubstitutionsOpponent AS substitutions_opponent,
+	M.MatchGoalAssistsOpponent AS goal_assists_opponent,
 	M.MatchYellowCardsOpponent AS yellow_cards_opponent,
 	M.MatchRedCardsOpponent AS red_cards_opponent,
 	M.MatchShots AS shots,
@@ -77,7 +78,7 @@ $get_details = mysqli_query($db_connect, "SELECT
 	AND M.MatchTypeID = MT.MatchTypeID
 	AND M.MatchOpponent = O.OpponentID
 	LIMIT 1
-") or die(mysqli_error());
+") or die(mysqli_error($db_connect));
 $mdata = mysqli_fetch_array($get_details);
 mysqli_free_result($get_details);
 
@@ -95,6 +96,9 @@ if ($mdata['goal_scorers_opponent'] == '') {
 }
 if ($mdata['substitutions_opponent'] == '') {
 	$mdata['substitutions_opponent'] = "".$locale_none."";
+}
+if ($mdata['goal_assists_opponent'] == '') {
+	$mdata['goal_assists_opponent'] = "".$locale_none."";
 }
 if ($mdata['yellow_cards_opponent'] == '') {
 	$mdata['yellow_cards_opponent'] = "".$locale_none."";
@@ -338,6 +342,47 @@ if ($mdata['match_place_id'] == 1) {
 
 	echo "</td>\n";
 	echo "<td align='right' valign='top' width='50%'>".$mdata['substitutions_opponent']."</td>\n";
+	echo "</tr>\n";
+	echo "</table>\n";
+	echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
+	echo "<tr align='left' bgcolor='#".(CELLBGCOLORTOP)."'>\n";
+	echo "<td align='left' valign='middle'><b>".$locale_goal_assists_long."</b></td>\n";
+	echo "</tr>\n";
+	echo "</table>\n";
+	echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
+	echo "<tr>\n";
+	echo "<td align='left' valign='top' width='50%'>";
+	$get_assists = mysqli_query($db_connect, "SELECT
+		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
+		P.PlayerID AS player_id,
+		P.PlayerPublish AS publish,
+		GA.GoalAssistMinute AS goal_assist_minute
+		FROM team_players P, team_goal_assists GA
+		WHERE GA.GoalAssistMatchID = '$id'
+		AND P.PlayerID = GA.GoalAssistPlayerID
+		ORDER BY goal_assist_minute
+	") or die(mysqli_error());
+
+	if (mysqli_num_rows($get_assists) == 0) {
+		echo "".$locale_none."";
+	} else {
+		while ($data = mysqli_fetch_array($get_assists)) {
+			if ($data['goal_assist_minute'] == 0) {
+				$check_minute = '';
+			} else {
+				$check_minute = " (".$data['goal_assist_minute'].")";
+			}
+			if ($data['publish'] == 1) {
+				echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>".$check_minute."<br>\n";
+			} else {
+				echo "".$data['player_name']."".$check_minute."<br>\n";
+			}
+		}
+	}
+	mysqli_free_result($get_assists);
+
+	echo "</td>\n";
+	echo "<td align='right' valign='top' width='50%'>".$mdata['goal_assists_opponent']."</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
 	echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
@@ -710,6 +755,47 @@ if ($mdata['match_place_id'] == 1) {
 		}
 	}
 	mysqli_free_result($get_substitutions);
+
+	echo "</td>\n";
+	echo "</tr>\n";
+	echo "</table>\n";
+	echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
+	echo "<tr align='left' bgcolor='#".(CELLBGCOLORTOP)."'>\n";
+	echo "<td align='left' valign='middle'><b>".$locale_goal_assists_long."</b></td>\n";
+	echo "</tr>\n";
+	echo "</table>\n";
+	echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
+	echo "<tr>\n";
+	echo "<td align='left' valign='top' width='50%'>".$mdata['goal_assists_opponent']."</td>\n";
+	echo "<td align='right' valign='top' width='50%'>";
+	$get_assists = mysqli_query($db_connect, "SELECT
+		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
+		P.PlayerID AS player_id,
+		P.PlayerPublish AS publish,
+		GA.GoalAssistMinute AS goal_assist_minute
+		FROM team_players P, team_goal_assists GA
+		WHERE GA.GoalAssistMatchID = '$id'
+		AND P.PlayerID = GA.GoalAssistPlayerID
+		ORDER BY goal_assist_minute
+	") or die(mysqli_error());
+
+	if (mysqli_num_rows($get_assists) == 0) {
+		echo "".$locale_none."";
+	} else {
+		while ($data = mysqli_fetch_array($get_assists)) {
+			if ($data['goal_assist_minute'] == 0) {
+				$check_minute = '';
+			} else {
+				$check_minute = " (".$data['goal_assist_minute'].")";
+			}
+			if ($data['publish'] == 1) {
+				echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>".$check_minute."<br>\n";
+			} else {
+				echo "".$data['player_name']."".$check_minute."<br>\n";
+			}
+		}
+	}
+	mysqli_free_result($get_assists);
 
 	echo "</td>\n";
 	echo "</tr>\n";

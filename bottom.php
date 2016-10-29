@@ -137,7 +137,63 @@ if (SHOW_NEXT_MATCH == 1) {
 	echo "</table>\n";
 	echo "<br>\n";
 }
+if (SHOW_TOP_APPS == 1) {
+	echo "<table align='center' width='100%' cellspacing='0' cellpadding='0' border='0' bgcolor='#".(BORDERCOLOR)."'>\n";
+	echo "<tr>\n";
+	echo "<td>\n";
+	echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
+	echo "<tr>\n";
+	echo "<td bgcolor='#".(CELLBGCOLORTOP)."' align='left' valign='middle'><b><i>".$locale_top_appearances."</i></b></td>\n";
+	echo "</tr>\n";
+	echo "<tr>\n";
+	echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORBOTTOM)."'>\n";
+	echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
+
+	if ($default_match_type_id == 0) {
+		$tdefault_match_type_id = '%';
+	} else {
+		$tdefault_match_type_id = $default_match_type_id;
+	}
+	if ($default_season_id == 0) {
+		$tdefault_season_id = '%';
+	} else {
+		$tdefault_season_id = $default_season_id;
+	}
+	$max_show = 5;
+	$get_top_apps = mysqli_query($db_connect, "SELECT
+		P.PlayerID AS player_id,
+		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
+		COUNT( A.AppearancePlayerID ) AS appearance_player_id
+		FROM team_seasons S
+		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID LIKE '$tdefault_season_id'
+		LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID LIKE '$tdefault_match_type_id'
+		LEFT OUTER JOIN team_appearances A ON A.AppearancePlayerID = S.SeasonPlayerID AND A.AppearanceMatchID = M.MatchID
+		WHERE P.PlayerID != ''
+		GROUP BY player_id
+		ORDER BY appearance_player_id DESC, player_name
+		LIMIT $max_show
+	") or die(mysqli_error());
+	$i = 1;
+	while ($data = mysqli_fetch_array($get_top_apps)) {
+		echo "<tr>\n";
+		echo "<td align='right' valign='top'>".$i.".</td>\n";
+		echo "<td align='left' valign='top' width='90%'><a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a></td>\n";
+		echo "<td align='right' valign='top'>".$data['appearance_player_id']."</td>\n";
+		echo "</tr>\n";
+		$i++;
+	}
+	mysqli_free_result($get_top_apps);	
+
+	echo "</table>\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+	echo "</table>\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+	echo "</table>\n";
+}
 if (SHOW_TOP_SCORERS == 1) {
+	echo "<br>\n";
 	echo "<table align='center' width='100%' cellspacing='0' cellpadding='0' border='0' bgcolor='#".(BORDERCOLOR)."'>\n";
 	echo "<tr>\n";
 	echo "<td>\n";
@@ -183,62 +239,6 @@ if (SHOW_TOP_SCORERS == 1) {
 		$i++;
 	}
 	mysqli_free_result($get_top_scorers);
-
-	echo "</table>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "</table>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "</table>\n";
-}
-if (SHOW_TOP_APPS == 1) {
-	echo "<br>\n";
-	echo "<table align='center' width='100%' cellspacing='0' cellpadding='0' border='0' bgcolor='#".(BORDERCOLOR)."'>\n";
-	echo "<tr>\n";
-	echo "<td>\n";
-	echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
-	echo "<tr>\n";
-	echo "<td bgcolor='#".(CELLBGCOLORTOP)."' align='left' valign='middle'><b><i>".$locale_top_appearances."</i></b></td>\n";
-	echo "</tr>\n";
-	echo "<tr>\n";
-	echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORBOTTOM)."'>\n";
-	echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
-
-	if ($default_match_type_id == 0) {
-		$tdefault_match_type_id = '%';
-	} else {
-		$tdefault_match_type_id = $default_match_type_id;
-	}
-	if ($default_season_id == 0) {
-		$tdefault_season_id = '%';
-	} else {
-		$tdefault_season_id = $default_season_id;
-	}
-	$max_show = 5;
-	$get_top_apps = mysqli_query($db_connect, "SELECT
-		P.PlayerID AS player_id,
-		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
-		COUNT( A.AppearancePlayerID ) AS appearance_player_id
-		FROM team_seasons S
-		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID LIKE '$tdefault_season_id'
-		LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID LIKE '$tdefault_match_type_id'
-		LEFT OUTER JOIN team_appearances A ON A.AppearancePlayerID = S.SeasonPlayerID AND A.AppearanceMatchID = M.MatchID
-		WHERE P.PlayerID != ''
-		GROUP BY player_id
-		ORDER BY appearance_player_id DESC, player_name
-		LIMIT $max_show
-	") or die(mysqli_error());
-	$i = 1;
-	while ($data = mysqli_fetch_array($get_top_apps)) {
-		echo "<tr>\n";
-		echo "<td align='right' valign='top'>".$i.".</td>\n";
-		echo "<td align='left' valign='top' width='90%'><a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a></td>\n";
-		echo "<td align='right' valign='top'>".$data['appearance_player_id']."</td>\n";
-		echo "</tr>\n";
-		$i++;
-	}
-	mysqli_free_result($get_top_apps);
 
 	echo "</table>\n";
 	echo "</td>\n";

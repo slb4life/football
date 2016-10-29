@@ -41,6 +41,7 @@ echo "<td align='center' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><a href
 echo "<td align='center' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><a href='?sort=apps'>".$locale_openings_short."</a></td>\n";
 echo "<td align='center' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><a href='?sort=ins'>".$locale_to_the_field_short."</a></td>\n";
 echo "<td align='center' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><a href='?sort=goals'>".$locale_goals_short."</a></td>\n";
+echo "<td align='center' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><a href='?sort=assists'>".$locale_goal_assists_short."</a></td>\n";
 echo "<td align='center' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><a href='?sort=yellows'>".$locale_yellow_cards_short."</a></td>\n";
 echo "<td align='center' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><a href='?sort=reds'>".$locale_red_cards_short."</a></td>\n";
 echo "</tr>\n";
@@ -56,6 +57,17 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID = '$default_season_id'
 		LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID = '$default_match_type_id'
 		LEFT OUTER JOIN team_goals G ON G.GoalPlayerID = S.SeasonPlayerID AND G.GoalMatchID = M.MatchID AND G.GoalOwn = '0'
+		WHERE P.PlayerID != '' AND P.PlayerPositionID != '5'
+		GROUP BY player_id
+		ORDER BY player_id
+	") or die(mysqli_error());
+	$get_assists = mysqli_query($db_connect, "SELECT
+		P.PlayerID AS player_id,
+		COUNT(GA.GoalAssistPlayerID) AS assists
+		FROM team_seasons S
+		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID = '$default_season_id'
+		LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID = '$default_match_type_id'
+		LEFT OUTER JOIN team_goal_assists GA ON GA.GoalAssistPlayerID = S.SeasonPlayerID AND GA.GoalAssistMatchID = M.MatchID
 		WHERE P.PlayerID != '' AND P.PlayerPositionID != '5'
 		GROUP BY player_id
 		ORDER BY player_id
@@ -121,6 +133,17 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 		GROUP BY player_id
 		ORDER BY player_id
 	") or die(mysqli_error());
+	$get_assists = mysqli_query($db_connect, "SELECT
+		P.PlayerID AS player_id,
+		COUNT(GA.GoalAssistPlayerID) AS assists
+		FROM team_seasons S
+		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID
+		LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID = '$default_match_type_id'
+		LEFT OUTER JOIN team_goal_assists GA ON GA.GoalAssistPlayerID = S.SeasonPlayerID AND GA.GoalAssistMatchID = M.MatchID
+		WHERE P.PlayerID != '' AND P.PlayerPositionID != '5'
+		GROUP BY player_id
+		ORDER BY player_id
+	") or die(mysqli_error());
 	$get_yellows = mysqli_query($db_connect, "SELECT
 		P.PlayerID AS player_id,
 		COUNT(Y.YellowCardPlayerID) AS yellows
@@ -180,6 +203,16 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 		GROUP BY player_id
 		ORDER BY player_id
 	") or die(mysqli_error());
+	$get_assists = mysqli_query($db_connect, "SELECT
+		P.PlayerID AS player_id,
+		COUNT(GA.GoalAssistPlayerID) AS assists
+		FROM team_seasons S
+		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID = '$default_season_id'
+		LEFT OUTER JOIN team_goal_assists GA ON GA.GoalAssistPlayerID = S.SeasonPlayerID AND GA.GoalAssistSeasonID = '$default_season_id'
+		WHERE P.PlayerID != '' AND P.PlayerPositionID != '5'
+		GROUP BY player_id
+		ORDER BY player_id
+	") or die(mysqli_error());
 	$get_yellows = mysqli_query($db_connect, "SELECT
 		P.PlayerID AS player_id,
 		COUNT(Y.YellowCardPlayerID) AS yellows
@@ -230,6 +263,15 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 		COUNT( G.GoalPlayerID ) AS goals
 		FROM team_players P
 		LEFT OUTER JOIN team_goals G ON G.GoalPlayerID = P.PlayerID AND G.GoalOwn = '0'
+		WHERE P.PlayerID != '' AND P.PlayerPositionID != '5'
+		GROUP BY player_id
+		ORDER BY player_id
+	") or die(mysqli_error());
+	$get_assists = mysqli_query($db_connect, "SELECT
+		P.PlayerID AS player_id,
+		COUNT( GA.GoalAssistPlayerID ) AS assists
+		FROM team_players P
+		LEFT OUTER JOIN team_goal_assists GA ON GA.GoalAssistPlayerID = P.PlayerID
 		WHERE P.PlayerID != '' AND P.PlayerPositionID != '5'
 		GROUP BY player_id
 		ORDER BY player_id
@@ -374,6 +416,13 @@ $get_total = mysqli_num_rows($get_players);
 mysqli_free_result($get_players);
 
 $i = 0;
+while ($data = mysqli_fetch_array($get_assists)) {
+	$assists[$i] = $data['assists'];
+	$i++;
+}
+mysqli_free_result($get_assists);
+
+$i = 0;
 while ($data = mysqli_fetch_array($get_yellows)) {
 	$yellows[$i] = $data['yellows'];
 	$i++;
@@ -404,25 +453,28 @@ mysqli_free_result($get_ins);
 if ($get_total > 0) {
 	switch ($sort) {
 		case 'name':
-		array_multisort($names, SORT_ASC, SORT_STRING, $players, $numbers, $goals, $apps, $yellows, $reds, $ins, $minutes, $publish);
+		array_multisort($names, SORT_ASC, SORT_STRING, $players, $numbers, $goals, $apps, $assists, $yellows, $reds, $ins, $minutes, $publish);
 		break;
 		case 'number':
-		array_multisort($numbers, SORT_ASC, SORT_NUMERIC, $names, SORT_ASC, SORT_STRING, $players, $goals, $apps, $yellows, $reds, $ins, $minutes, $publish);
+		array_multisort($numbers, SORT_ASC, SORT_NUMERIC, $names, SORT_ASC, SORT_STRING, $players, $goals, $apps, $assists, $yellows, $reds, $ins, $minutes, $publish);
 		break;
 		case 'minutes':
-		array_multisort($minutes, SORT_DESC, SORT_NUMERIC, $apps, SORT_DESC, SORT_NUMERIC, $ins, SORT_DESC, SORT_NUMERIC, $names, SORT_ASC, SORT_STRING, $players, $goals, $numbers, $yellows, $reds, $minutes, $publish);
+		array_multisort($minutes, SORT_DESC, SORT_NUMERIC, $apps, SORT_DESC, SORT_NUMERIC, $ins, SORT_DESC, SORT_NUMERIC, $names, SORT_ASC, SORT_STRING, $players, $goals, $numbers, $assists, $yellows, $reds, $minutes, $publish);
 		break;
 		case 'apps':
-		array_multisort($apps, SORT_DESC, SORT_NUMERIC, $ins, SORT_DESC, SORT_NUMERIC, $names, SORT_ASC, SORT_STRING, $players, $goals, $numbers, $yellows, $reds, $minutes, $publish);
+		array_multisort($apps, SORT_DESC, SORT_NUMERIC, $ins, SORT_DESC, SORT_NUMERIC, $names, SORT_ASC, SORT_STRING, $players, $goals, $numbers, $assists, $yellows, $reds, $minutes, $publish);
 		break;
 		case 'ins':
-		array_multisort($ins, SORT_DESC, SORT_NUMERIC, $apps, SORT_DESC, SORT_NUMERIC, $names, SORT_ASC, SORT_STRING, $players, $goals, $numbers, $yellows, $reds, $minutes, $publish);
+		array_multisort($ins, SORT_DESC, SORT_NUMERIC, $apps, SORT_DESC, SORT_NUMERIC, $names, SORT_ASC, SORT_STRING, $players, $goals, $numbers, $assists, $yellows, $reds, $minutes, $publish);
 		break;
 		case 'goals':
-		array_multisort($goals, SORT_DESC, SORT_NUMERIC, $names, SORT_ASC, SORT_STRING, $players, $numbers, $apps, $yellows, $reds, $ins, $minutes, $publish);
+		array_multisort($goals, SORT_DESC, SORT_NUMERIC, $names, SORT_ASC, SORT_STRING, $players, $numbers, $apps, $assists, $yellows, $reds, $ins, $minutes, $publish);
+		break;
+		case 'assists':
+		array_multisort($assists, SORT_DESC, SORT_NUMERIC, $names, SORT_ASC, SORT_STRING, $players, $goals, $apps, $numbers, $yellows, $reds, $ins, $minutes, $publish);
 		break;
 		case 'yellows':
-		array_multisort($yellows, SORT_DESC, SORT_NUMERIC, $names, SORT_ASC, SORT_STRING, $players, $goals, $apps, $numbers, $reds, $ins, $minutes, $publish);
+		array_multisort($yellows, SORT_DESC, SORT_NUMERIC, $names, SORT_ASC, SORT_STRING, $players, $goals, $apps, $numbers, $assists, $reds, $ins, $minutes, $publish);
 		break;
 		case 'reds':
 		array_multisort($reds, SORT_DESC, SORT_NUMERIC, $names, SORT_ASC, SORT_STRING, $players, $goals, $apps, $yellows, $numbers, $ins, $minutes, $publish);
@@ -487,6 +539,21 @@ if ($get_total > 0) {
 			case 'goals': {
 				if ($i > 0) {
 					if ($goals[$i] == $goals[$i-1]) {
+						echo "&nbsp;";
+						$j++;
+					} else {
+						echo "".$j.".";
+						$j++;
+					}
+				} else {
+					echo "".$j.".";
+					$j++;
+				}
+			}
+			break;
+			case 'assists': {
+				if ($i > 0) {
+					if ($assists[$i] == $assists[$i-1]) {
 						echo "&nbsp;";
 						$j++;
 					} else {
@@ -577,6 +644,13 @@ if ($get_total > 0) {
 			echo "</b>";
 			echo "</td>\n";
 			echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
+		if ($sort == 'assists')
+			echo "<b>";
+			echo "".$assists[$i]."";
+		if ($sort == 'assists')
+			echo "</b>";
+			echo "</td>\n";
+			echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
 		if ($sort == 'yellows')
 			echo "<b>";
 			echo "".$yellows[$i]."";
@@ -594,13 +668,14 @@ if ($get_total > 0) {
 		$i++;
 	}
 	echo "<tr>\n";
-	echo "<td align='center' valign='middle' colspan='8' bgcolor='#".(CELLBGCOLORTOP)."'>\n";
+	echo "<td align='center' valign='middle' colspan='9' bgcolor='#".(CELLBGCOLORTOP)."'>\n";
 	echo "<a href='?sort=number'>".$locale_by_number."</a> |\n";
 	echo "<a href='?sort=name'>".$locale_alphabetically."</a> |\n";
 	echo "<a href='?sort=minutes'>".$locale_minutes."</a> |\n";
 	echo "<a href='?sort=apps'>".$locale_in_opening."</a> |\n";
 	echo "<a href='?sort=ins'>".$locale_substituted."</a> |\n";
 	echo "<a href='?sort=goals'>".$locale_goals_long."</a> |\n";
+	echo "<a href='?sort=assists'>".$locale_goal_assists_long."</a> |\n";
 	echo "<a href='?sort=yellows'>".$locale_yellow_cards_long."</a> |\n";
 	echo "<a href='?sort=reds'>".$locale_red_cards_long."</a>\n";
 	echo "</td>\n";

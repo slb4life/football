@@ -154,6 +154,7 @@ if (isset($submit)) {
 		`MatchSubstitutesOpponent` text NULL,
 		`MatchSubstitutionsOpponent` text NULL,
 		`MatchGoalscorersOpponent` text NULL,
+		`MatchGoalAssistsOpponent` text NULL,
 		`MatchYellowCardsOpponent` text NULL,
 		`MatchRedCardsOpponent` text NULL,
 		PRIMARY KEY  (`MatchID`),
