@@ -100,6 +100,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<input type='submit' name='modify_submit' value='Modify Type'>\n";
 		echo "<input type='submit' name='delete_submit' value='Delete Type'>\n";
 		echo "</form>\n";
+		echo "<br>";
 		echo "<a href='".$PHP_SELF."?session_id=".$session."'>Add Match Type</a>\n";
 		mysqli_free_result($get_match_type);
 	}

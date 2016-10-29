@@ -167,7 +167,7 @@ $get_transfers = mysqli_query($db_connect, "SELECT
 	AND T.PlayerID = '$id'
 ") or die(mysqli_error());
 $j = 1;
-while ($data = mysqli_fetch_array($get_transfers)) {
+while($data = mysqli_fetch_array($get_transfers)) {
 	if ($j % 2 == 0) {
 		$bg_color = '#'.BGCOLOR1;
 	} else {
@@ -207,7 +207,7 @@ if (!isset($season_id_page)) {
 		echo "".$locale_match_type_filter.": \n";
 		echo "<select name='match_type_player'>\n";
 		echo "<option value='0'>".$locale_all."</option>\n";
-		while ($data = mysqli_fetch_array($get_types)) {
+		while($data = mysqli_fetch_array($get_types)) {
 			if ($data['MatchTypeID'] == $default_match_type_id) {
 				echo "<option value='".$data['MatchTypeID']."' selected>".$data['MatchTypeName']."</option>\n";
 			} else {
@@ -243,7 +243,7 @@ if (!isset($season_id_page)) {
 	$query = mysqli_query($db_connect, "".$sql."") or die(mysqli_error());
 	echo "<br>".$locale_change_player.": \n";
 	echo "<select name='player_id'>\n";
-	while ($data = mysqli_fetch_array($query)) {
+	while($data = mysqli_fetch_array($query)) {
 		if ($data['player_id'] == $id) {
 			echo "<option value='".$data['player_id']."' SELECTED>".$data['player_name']."</option>\n";
 		} else {
@@ -439,7 +439,7 @@ if (!isset($season_id_page)) {
 			") or die(mysqli_error());
 		}
 		$i = 0;
-		while ($data = mysqli_fetch_array($get_seasons)) {
+		while($data = mysqli_fetch_array($get_seasons)) {
 			$season_name[$i] = $data['season_name'];
 			$season_id[$i] = $data['season_id'];
 			$apps[$i] = $data['apps'];
@@ -459,7 +459,7 @@ if (!isset($season_id_page)) {
 				AND M.MatchID = S.SubstitutionMatchID
 				AND M.MatchTypeID LIKE '$tdefault_match_type_id'
 			") or die(mysqli_error());
-			while ($tdata = mysqli_fetch_array($query)) {
+			while($tdata = mysqli_fetch_array($query)) {
 				if ($tdata['match_overtime'] == 0) {
 					$match_minutes = 90;
 				} else {
@@ -476,7 +476,7 @@ if (!isset($season_id_page)) {
 				AND M.MatchID = A.AppearanceMatchID
 				AND M.MatchTypeID LIKE '$tdefault_match_type_id'
 			") or die(mysqli_error());
-			while ($tdata = mysqli_fetch_array($query)) {
+			while($tdata = mysqli_fetch_array($query)) {
 				if (isset($tdata['team_matches.MatchOvertime']) == 0) {
 					$match_minutes = 90;
 				} else {
@@ -495,7 +495,7 @@ if (!isset($season_id_page)) {
 				AND M.MatchID = S.SubstitutionMatchID
 				AND M.MatchTypeID LIKE '$tdefault_match_type_id'
 			") or die(mysqli_error());
-			while ($tdata = mysqli_fetch_array($query)) {
+			while($tdata = mysqli_fetch_array($query)) {
 				if ($tdata['match_overtime'] == 0) {
 					$match_minutes = 90;
 				} else {
@@ -514,7 +514,7 @@ if (!isset($season_id_page)) {
 				AND M.MatchID = R.RedCardMatchID
 				AND M.MatchTypeID LIKE '$tdefault_match_type_id'
 			") or die(mysqli_error());
-			while ($tdata = mysqli_fetch_array($query)) {
+			while($tdata = mysqli_fetch_array($query)) {
 				if ($tdata['match_overtime'] == 0) {
 					$match_minutes = 90;
 				} else {
@@ -526,27 +526,27 @@ if (!isset($season_id_page)) {
 			$i++;
 		}
 		$i = 0;
-		while ($data = mysqli_fetch_array($get_goals)) {
+		while($data = mysqli_fetch_array($get_goals)) {
 			$goals[$i] = $data['goals'];
 			$i++;
 		}
 		$i = 0;
-		while ($data = mysqli_fetch_array($get_ins)) {
+		while($data = mysqli_fetch_array($get_ins)) {
 			$ins[$i] = $data['ins'];
 			$i++;
 		}
 		$i = 0;
-		while ($data = mysqli_fetch_array($get_assists)) {
+		while($data = mysqli_fetch_array($get_assists)) {
 			$assists[$i] = $data['assists'];
 			$i++;
 		}
 		$i = 0;
-		while ($data = mysqli_fetch_array($get_yellows)) {
+		while($data = mysqli_fetch_array($get_yellows)) {
 			$yellows[$i] = $data['yellows'];
 			$i++;
 		}
 		$i = 0;
-		while ($data = mysqli_fetch_array($get_reds)) {
+		while($data = mysqli_fetch_array($get_reds)) {
 			$reds[$i] = $data['reds'];
 			$i++;
 		}
@@ -557,6 +557,8 @@ if (!isset($season_id_page)) {
 		mysqli_free_result($get_reds);
 		mysqli_free_result($get_goals);
 		mysqli_free_result($get_ins);
+
+		$sort = array();
 		switch ($sort) {
 			case 'season_name':
 			array_multisort($season_name, SORT_ASC, SORT_STRING, $goals, $apps, $assists, $yellows, $reds, $ins, $minutes, $season_id);
@@ -592,7 +594,7 @@ if (!isset($season_id_page)) {
 		$total_reds = 0;
 		$i = 0;
 		$j = 1;
-		while ($i < $get_total) {
+		while($i < $get_total) {
 			if ($j % 2 == 0) {
 				$bg_color = '#'.BGCOLOR1;
 			} else {
@@ -729,7 +731,7 @@ if (!isset($season_id_page)) {
 			echo "<td align='left' valign='middle' bgcolor='".$bg_color."' colspan='5'>".$locale_none."</td>\n";
 		} else {
 			$j = 1;
-			while ($data = mysqli_fetch_array($get_appearances)) {
+			while($data = mysqli_fetch_array($get_appearances)) {
 				if ($j % 2 == 0) {
 					$bg_color = '#'.BGCOLOR1;
 				} else {
@@ -804,7 +806,7 @@ if (!isset($season_id_page)) {
 			echo "<td align='left' valign='middle' bgcolor='".$bg_color."' colspan='5'>".$locale_none."</td>\n";
 		} else {
 			$j = 1;
-			while ($data = mysqli_fetch_array($get_goals)) {
+			while($data = mysqli_fetch_array($get_goals)) {
 				if ($j % 2 == 0) {
 					$bg_color = '#'.BGCOLOR1;
 				} else {
@@ -880,7 +882,7 @@ if (!isset($season_id_page)) {
 			echo "<td align='left' valign='middle' bgcolor='".$bg_color."' colspan='5'>".$locale_none."</td>\n";
 		} else {
 			$j = 1;
-			while ($data = mysqli_fetch_array($get_goal_assists)) {
+			while($data = mysqli_fetch_array($get_goal_assists)) {
 				if ($j % 2 == 0) {
 					$bg_color = '#'.BGCOLOR1;
 				} else {
@@ -956,7 +958,7 @@ if (!isset($season_id_page)) {
 			echo "<td align='left' valign='middle' bgcolor='".$bg_color."' colspan='5'>".$locale_none."</td>\n";
 		} else {
 			$j = 1;
-			while ($data = mysqli_fetch_array($get_yellow_cards)) {
+			while($data = mysqli_fetch_array($get_yellow_cards)) {
 				if ($j % 2 == 0) {
 					$bg_color = '#'.BGCOLOR1;
 				} else {
@@ -1032,7 +1034,7 @@ if (!isset($season_id_page)) {
 			echo "<td align='left' valign='middle' bgcolor='".$bg_color."' colspan='5'>".$locale_none."</td>\n";
 		} else {
 			$j = 1;
-			while ($data = mysqli_fetch_array($get_red_cards)) {
+			while($data = mysqli_fetch_array($get_red_cards)) {
 				if ($j % 2 == 0) {
 					$bg_color = '#'.BGCOLOR1;
 				} else {
@@ -1140,7 +1142,7 @@ if (!isset($season_id_page)) {
 	echo "<td align='center' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><b>".$locale_cards."</b></td>\n";
 	echo "</tr>\n";
 	$j = 0;
-	while ($data = mysqli_fetch_array($get_matchs)) {
+	while($data = mysqli_fetch_array($get_matchs)) {
 		if ($j % 2 == 0) {
 			$bg_color = '#'.BGCOLOR1;
 		} else {

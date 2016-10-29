@@ -101,7 +101,7 @@ $injured_query = mysqli_query($db_connect, "SELECT
 	AND I.InjuredMatchID = '$id'
 ") or die(mysqli_error());
 
-while ($data = mysqli_fetch_array($injured_query)) {
+while($data = mysqli_fetch_array($injured_query)) {
 	$check[] = $data['player_id'];
 }
 
@@ -116,7 +116,7 @@ if ($current_time_unix < $match_time_unix) {
 		AND S.SuspendedMatchID = '$id'
 	") or die(mysqli_error());
 
-	while ($data = mysqli_fetch_array($suspended_query)) {
+	while($data = mysqli_fetch_array($suspended_query)) {
 		$check[] = $data['player_id'];
 	}
 	$qty_check = count($check);
@@ -125,7 +125,7 @@ if ($current_time_unix < $match_time_unix) {
 		$squad_qty = mysqli_num_rows($get_squad);
 		$ii = 1;
 		echo "<b>".$locale_squad.":</b><br>";
-		while ($data = mysqli_fetch_array($get_squad)) {
+		while($data = mysqli_fetch_array($get_squad)) {
 			$c = 0;
 			for($i = 0 ; $i < $qty_check ; $i++) {
 				if ($data['player_id'] == $check[$i]) {
@@ -158,7 +158,7 @@ if ($current_time_unix < $match_time_unix) {
 
 	if (mysqli_num_rows($injured_query) > 0) {
 		echo "<b>".$locale_injured.":</b><br>";
-		while ($data = mysqli_fetch_array($injured_query)) {
+		while($data = mysqli_fetch_array($injured_query)) {
 			if ($data['publish'] == 1) {
 				echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>";
 			} else {
@@ -182,7 +182,7 @@ if ($current_time_unix < $match_time_unix) {
 
 	if (mysqli_num_rows($suspended_query) > 0) {
 		echo "<b>".$locale_suspended.":</b><br>";
-		while ($data = mysqli_fetch_array($suspended_query)) {
+		while($data = mysqli_fetch_array($suspended_query)) {
 			if ($data['publish'] == 1) {
 				echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>";
 			} else {
@@ -259,7 +259,7 @@ $total_draws = 0;
 $total_goals = 0;
 $total_goals_against = 0;
 $i = 0;
-while ($data = mysqli_fetch_array($get_matches)) {
+while($data = mysqli_fetch_array($get_matches)) {
 	$id[$i] = $data['id'];
 	$match_date[$i] = $data['match_date'];
 	$match_type_name[$i] = $data['match_type_name'];
@@ -421,7 +421,7 @@ echo "<td align='center' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><b>".$l
 echo "<td align='center' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><b>".$locale_final_score."</b></td>\n";
 echo "</tr>\n";
 $j = 0;
-while ($j < $i) {
+while($j < $i) {
 	if ($j % 2 == 0) {
 		$bg_color = BGCOLOR1;
 	} else {

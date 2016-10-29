@@ -136,7 +136,7 @@ echo "<tr>\n";
 echo "<td align='left' valign='top'><br><br>".$locale_match_type_filter.": \n";
 echo "<select name='match_type_manager'>\n";
 echo "<option value='0'>".$locale_all."</option>\n";
-while ($data = mysqli_fetch_array($get_types)) {
+while($data = mysqli_fetch_array($get_types)) {
 	if ($data['MatchTypeID'] == $default_match_type_id) {
 		echo "<option value='".$data['MatchTypeID']."' selected>".$data['MatchTypeName']."</option>\n";
 	} else {
@@ -172,7 +172,7 @@ if ($default_season_id == 0) {
 $query = mysqli_query($db_connect, $sql) or die(mysqli_error());
 echo "<br>".$locale_change_manager.": \n";
 echo "<select name='manager_id'>\n";
-while ($data = mysqli_fetch_array($query)) {
+while($data = mysqli_fetch_array($query)) {
 	if ($data['manager_id'] == $id) {
 		echo "<option value='".$data['manager_id']."' SELECTED>".$data['manager_name']."</option>\n";
 	} else {
@@ -223,7 +223,7 @@ $total_win_pros = 0.00;
 $total_draw_pros = 0.00;
 $total_lose_pros = 0.00;
 $j = 1;
-while ($data = mysqli_fetch_array($query)) {
+while($data = mysqli_fetch_array($query)) {
 	$season_id = $data['season_id'];
 
 	if ($j % 2 == 0) {
@@ -251,7 +251,7 @@ while ($data = mysqli_fetch_array($query)) {
 	if ($y > 0) {
 		$temp_to_query = ' AND (';
 		$x = 1;
-		while ($date_time = mysqli_fetch_array($get_timeline)) {
+		while($date_time = mysqli_fetch_array($get_timeline)) {
 			$temp_to_query .= "(M.MatchDateTime <= '$date_time[end_date] 00:00:00' AND M.MatchDateTime >= '$date_time[start_date] 00:00:00')";
 			if ($x != $y) {
 				$temp_to_query .= ' OR ';
@@ -273,7 +273,7 @@ while ($data = mysqli_fetch_array($query)) {
 		ORDER BY M.MatchDateTime
 	") or die(mysqli_error());
 	$k = 0;
-	while ($match_data = mysqli_fetch_array($get_matches)) {
+	while($match_data = mysqli_fetch_array($get_matches)) {
 		if ($k > 0) {
 			if ($track == 1) {
 				if ($streak >= $record) {

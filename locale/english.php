@@ -6,6 +6,7 @@ $locale_latest_match = 'Latest Match';
 $locale_quick_links = 'Quick Links';
 $locale_news = 'News';
 $locale_latest_news = 'Latest News';
+$locale_no_news = 'No News Add Yet.';
 $locale_player_stats = 'Player Stats';
 $locale_players = 'Players';
 $locale_matches = 'Matches';
@@ -64,7 +65,7 @@ $locale_player_statistics = 'Players';
 $locale_opponent_list = 'Opponents';
 $locale_this_day = 'This Day';
 $locale_manual = 'Manual';
-$locale_searchengine = 'Search Engine';
+$locale_search_engine = 'Search Engine';
 $locale_no_players_added = 'No Players Added To Selected Season...';
 $locale_no_staff_added = 'No Staff Added To Selected Season...';
 $locale_managers = 'Managers';
@@ -245,7 +246,7 @@ $locale_youngest_player = 'Youngest Player';
 $locale_oldest_player = 'Oldest Player';
 
 // News Archive
-$locale_to_news_archive = 'To News Archive';
 $locale_news_archive = 'News Archive';
+$locale_no_news_archive = 'No News Add to Archive Yet.';
 
 ?>

@@ -47,7 +47,7 @@ $get_matches = mysqli_query($db_connect, "SELECT
 	ORDER BY match_date
 ") or die(mysqli_error());
 $i = 1;
-while ($data = mysqli_fetch_array($get_matches)) {
+while($data = mysqli_fetch_array($get_matches)) {
 	if ($i % 2 == 0) {
 		$bg_color = BGCOLOR1;
 	} else {

@@ -60,7 +60,7 @@ echo "<td colspan='5' align='left' bgcolor='".(CELLBGCOLORTOP)."'><b>".$locale_g
 echo "</tr>\n";
 $j = 1;
 $player_position_id = 1;
-while ($data = mysqli_fetch_array($query)) {
+while($data = mysqli_fetch_array($query)) {
 	if ($j % 2 == 0) {
 		$bg_color = BGCOLOR1;
 	} else {

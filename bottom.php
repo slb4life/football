@@ -13,7 +13,7 @@ if (SHOW_NEXT_MATCH == 1) {
 	echo "<tr>\n";
 	echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORBOTTOM)."'>";
 	$max_show = 1;
-	$get_next_matche = mysqli_query($db_connect, "SELECT
+	$get_next_match = mysqli_query($db_connect, "SELECT
 		O.OpponentName AS opponent_name,
 		O.OpponentID AS opponent_id,
 		M.MatchID AS match_id,
@@ -27,13 +27,13 @@ if (SHOW_NEXT_MATCH == 1) {
 		AND O.OpponentID = M.MatchOpponent
 		ORDER BY match_date
 		LIMIT 1
-	") or die(mysqli_error());		
+	") or die(mysqli_error());	
 	$team_name = TEAM_NAME;
 
-	if (mysqli_num_rows($get_next_matche) == 0) {
+	if (mysqli_num_rows($get_next_match) == 0) {
 		echo "<b>".$locale_end_of_season."</b>";
 	} else {
-		while ($data = mysqli_fetch_array($get_next_matche)) {
+		while($data = mysqli_fetch_array($get_next_match)) {
 			$logos = 0;
 			$image_url_1 = "images/team_logo.png";
 			$image_url_2 = "images/team_logo.jpg";
@@ -52,7 +52,7 @@ if (SHOW_NEXT_MATCH == 1) {
 			$get_preview = mysqli_query($db_connect, "SELECT							
 				P.PreviewText AS preview_text
 				FROM team_previews P
-				WHERE P.PreviewMatchID = '$id'
+				WHERE P.PreviewMatchID = '$data[match_id]'
 				LIMIT 1
 			") or die(mysqli_error());
 			$data = mysqli_fetch_array($get_preview);
@@ -127,7 +127,7 @@ if (SHOW_NEXT_MATCH == 1) {
 			}
 		}
 	}
-	mysqli_free_result($get_next_matche);
+	mysqli_free_result($get_next_match);
 
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -174,7 +174,7 @@ if (SHOW_TOP_APPS == 1) {
 		LIMIT $max_show
 	") or die(mysqli_error());
 	$i = 1;
-	while ($data = mysqli_fetch_array($get_top_apps)) {
+	while($data = mysqli_fetch_array($get_top_apps)) {
 		echo "<tr>\n";
 		echo "<td align='right' valign='top'>".$i.".</td>\n";
 		echo "<td align='left' valign='top' width='90%'><a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a></td>\n";
@@ -230,7 +230,7 @@ if (SHOW_TOP_SCORERS == 1) {
 		LIMIT $max_show
 	") or die(mysqli_error());
 	$i = 1;
-	while ($data = mysqli_fetch_array($get_top_scorers)) {
+	while($data = mysqli_fetch_array($get_top_scorers)) {
 		echo "<tr>\n";
 		echo "<td align='right' valign='top'>".$i.".</td>\n";
 		echo "<td align='left' valign='top' width='90%'><a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a></td>\n";
@@ -286,7 +286,7 @@ if (SHOW_TOP_ASSISTS == 1) {
 		LIMIT $max_show
 	") or die(mysqli_error());
 	$i = 1;
-	while ($data = mysqli_fetch_array($get_top_assists)) {
+	while($data = mysqli_fetch_array($get_top_assists)) {
 		echo "<tr>\n";
 		echo "<td align='right' valign='top'>".$i.".</td>\n";
 		echo "<td align='left' valign='top' width='90%'><a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a></td>\n";
@@ -342,7 +342,7 @@ if (SHOW_TOP_BOOKINGS == 1) {
 		LIMIT $max_show
 	") or die(mysqli_error());
 	$i = 1;
-	while ($data = mysqli_fetch_array($get_top_bookings)) {
+	while($data = mysqli_fetch_array($get_top_bookings)) {
 		echo "<tr>\n";
 		echo "<td align='right' valign='top'>".$i.".</td>\n";
 		echo "<td align='left' valign='top' width='90%'><a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a></td>\n";

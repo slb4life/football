@@ -244,7 +244,7 @@ if (!isset($get_stats)) {
 		ORDER BY M.MatchDateTime
 	") or die(mysqli_error());
 	$k = 0;
-	while ($data = mysqli_fetch_array($get_matches)) {
+	while($data = mysqli_fetch_array($get_matches)) {
 		if ($data['goals'] > $data['goals_opponent']) {
 			$wins = $wins + 1;
 			$streak++;
@@ -373,7 +373,7 @@ if (!isset($get_stats)) {
 	") or die(mysqli_error());
 	$i = 0;
 	$check = 92892892892;
-	while ($data = mysqli_fetch_array($get_appearances)) {
+	while($data = mysqli_fetch_array($get_appearances)) {
 		if ($i == 0) {
 			echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>";
 			$most_appearances = $data['appearance_player_id'];
@@ -420,7 +420,7 @@ if (!isset($get_stats)) {
 	") or die(mysqli_error());
 	$i = 0;
 	$check = 92892892892;
-	while ($data = mysqli_fetch_array($get_goals)) {
+	while($data = mysqli_fetch_array($get_goals)) {
 		if ($i == 0) {
 			echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>";
 			$most_goals = $data['goal_player_id'];
@@ -467,7 +467,7 @@ if (!isset($get_stats)) {
 	") or die(mysqli_error());
 	$i = 0;
 	$check = 92892892892;
-	while ($data = mysqli_fetch_array($get_assists)) {
+	while($data = mysqli_fetch_array($get_assists)) {
 		if ($i == 0) {
 			echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>";
 			$most_assists = $data['goal_assist_player_id'];
@@ -514,7 +514,7 @@ if (!isset($get_stats)) {
 	") or die(mysqli_error());
 	$i = 0;
 	$check = 92892892892;
-	while ($data = mysqli_fetch_array($get_yellows)) {
+	while($data = mysqli_fetch_array($get_yellows)) {
 		if ($i == 0) {
 			echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>";
 			$most_yellows = $data['yellow_card_player_id'];

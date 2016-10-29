@@ -56,13 +56,11 @@ switch (PRINT_DATE) {
 		$how_to_print_in_report = "%d.%m.%Y $locale_at %H:%i";
 	}
 	break;
-
 	case 2: {
 		$how_to_print = "%m.%d.%Y";
 		$how_to_print_in_report = "%m.%d.%Y $locale_at %H:%i";
 	}
 	break;
-
 	case 3: {
 		$how_to_print = "%b %D %Y";
 		$how_to_print_in_report = "%b %D %Y $locale_at %H:%i";
@@ -72,7 +70,6 @@ switch (PRINT_DATE) {
 
 $get_seasons = mysqli_query($db_connect, "SELECT * FROM team_season_names WHERE SeasonPublish = '1' ORDER BY SeasonName DESC") or die(mysqli_error());
 $get_types = mysqli_query($db_connect, "SELECT * FROM team_match_types ORDER BY MatchTypeName") or die(mysqli_error());
-
 echo "<!DOCTYPE html>\n";
 echo "<html>\n";
 echo "<head>\n";
@@ -80,7 +77,6 @@ echo "<title>".(SITE_TITLE)."</title>\n";
 echo "<link rel='stylesheet' type='text/css' href='css/style.css'>\n";
 echo "</head>\n";
 echo "<body bgcolor='".(BGCOLOR)."' leftmargin='0' topmargin='0' marginheight='0' marginwidth='0'>\n";
-
 $image_header_url = "images/header.jpg";
 $image_header_url2 = "images/header.png";
 
@@ -164,7 +160,7 @@ if (SHOW_LATEST_MATCH == 1) {
 	if (mysqli_num_rows($get_lastest_match) == 0) {
 		echo "<b>".$locale_start_of_season."</b>";
 	} else {
-		while ($data = mysqli_fetch_array($get_lastest_match)) {
+		while($data = mysqli_fetch_array($get_lastest_match)) {
 			echo "".$locale_latest_match.": <a href='match_details.php?id=".$data['match_id']."'>VS. ".$data['opponent_name']."</a>";
 		}
 	}
@@ -231,7 +227,7 @@ if (mysqli_num_rows($get_pages) > 0) {
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td align='left' valign='top' bgcolor='#".(CELLBGCOLORBOTTOM)."'>\n";
-	while ($data = mysqli_fetch_array($get_pages)) {
+	while($data = mysqli_fetch_array($get_pages)) {
 		echo "<a href='additional_page.php?id=".$data['page_id']."'>".$data['page_title']."</a><br>\n";
 	}
 	echo "</td>\n";

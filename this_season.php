@@ -45,7 +45,7 @@ $get_matches = mysqli_query($db_connect, "SELECT
 	ORDER BY match_date
 ") or die(mysqli_error());
 $k = 0;
-while ($data = mysqli_fetch_array($get_matches)) {
+while($data = mysqli_fetch_array($get_matches)) {
 	if ($k > 0) {
 		if ($track == 1) {
 			if ($streak >= $record) {
@@ -116,7 +116,7 @@ $get_players = mysqli_query($db_connect, "SELECT
 $n_of_players = mysqli_num_rows($get_players);
 $all_players_txt = "";
 $k = 1;
-while ($data = mysqli_fetch_array($get_players)) {
+while($data = mysqli_fetch_array($get_players)) {
 	if ($data['publish'] == 1) {
 		$all_players_txt .= "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>";
 	} else {
@@ -255,7 +255,7 @@ $get_appearances = mysqli_query($db_connect, "SELECT
 ") or die(mysqli_error());
 $i = 0;
 $check = 92892892892;
-while ($data = mysqli_fetch_array($get_appearances)) {
+while($data = mysqli_fetch_array($get_appearances)) {
 	if ($i == 0) {
 		echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>";
 		$most_appearances = $data['appearance_player_id'];
@@ -300,7 +300,7 @@ $get_goals = mysqli_query($db_connect, "SELECT
 ") or die(mysqli_error());
 $i = 0;
 $check = 92892892892;
-while ($data = mysqli_fetch_array($get_goals)) {
+while($data = mysqli_fetch_array($get_goals)) {
 	if ($i == 0) {
 		echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>";
 		$most_goals = $data['goal_player_id'];
@@ -343,7 +343,7 @@ $get_assists = mysqli_query($db_connect, "SELECT
 ") or die(mysqli_error());
 $i = 0;
 $check = 92892892892;
-while ($data = mysqli_fetch_array($get_assists)) {
+while($data = mysqli_fetch_array($get_assists)) {
 	if ($i == 0) {
 		echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>";
 		$most_assists = $data['goal_assist_player_id'];
@@ -386,7 +386,7 @@ $get_yellows = mysqli_query($db_connect, "SELECT
 ") or die(mysqli_error());
 $i = 0;
 $check = 92892892892;
-while ($data = mysqli_fetch_array($get_yellows)) {
+while($data = mysqli_fetch_array($get_yellows)) {
 	if ($i == 0) {
 		echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>";
 		$most_yellows = $data['yellow_card_player_id'];

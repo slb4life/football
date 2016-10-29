@@ -33,7 +33,7 @@ if (isset($submit)) {
 	") or die(mysqli_error());
 
 	if (mysqli_num_rows($get_players) > 0) {
-		while ($data = mysqli_fetch_array($get_players)) {
+		while($data = mysqli_fetch_array($get_players)) {
 			echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a><br>\n";
 		}
 	}
@@ -47,7 +47,7 @@ if (isset($submit)) {
 	") or die(mysqli_error());
 
 	if (mysqli_num_rows($get_opps) > 0) {
-		while ($data = mysqli_fetch_array($get_opps)) {
+		while($data = mysqli_fetch_array($get_opps)) {
 			echo "<a href='opponent.php?id=".$data['opponent_id']."'>".$data['opponent_name']."</a><br>\n";
 		}
 	}

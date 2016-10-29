@@ -201,7 +201,7 @@ if ($mdata['match_place_id'] == 1) {
 	if (mysqli_num_rows($get_goal_scorers) == 0) {
 		echo "".$locale_none."";
 	} else {
-		while ($data = mysqli_fetch_array($get_goal_scorers)) {
+		while($data = mysqli_fetch_array($get_goal_scorers)) {
 			if ($data['goal_minute'] == 0) {
 				$check_minute = '';
 			} else {
@@ -254,7 +254,7 @@ if ($mdata['match_place_id'] == 1) {
 	if (mysqli_num_rows($get_appearances) == 0) {
 		echo "".$locale_none."";
 	} else {
-		while ($data = mysqli_fetch_array($get_appearances)) {
+		while($data = mysqli_fetch_array($get_appearances)) {
 			if ($data['publish'] == 1) {
 				echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a><br>\n";
 			} else {
@@ -291,7 +291,7 @@ if ($mdata['match_place_id'] == 1) {
 	if (mysqli_num_rows($get_substitutes) == 0) {
 		echo "".$locale_none."";
 	} else {
-		while ($data = mysqli_fetch_array($get_substitutes)) {
+		while($data = mysqli_fetch_array($get_substitutes)) {
 			if ($data['publish'] == 1) {
 				echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a><br>\n";
 			} else {
@@ -331,7 +331,7 @@ if ($mdata['match_place_id'] == 1) {
 	if (mysqli_num_rows($get_substitutions) == 0) {
 		echo "".$locale_none."";
 	} else {
-		while ($data = mysqli_fetch_array($get_substitutions)) {
+		while($data = mysqli_fetch_array($get_substitutions)) {
 			if ($data['substitution_minute'] == 0) {
 				$check_minute = '';
 			} else {
@@ -378,7 +378,7 @@ if ($mdata['match_place_id'] == 1) {
 	if (mysqli_num_rows($get_goal_assists) == 0) {
 		echo "".$locale_none."";
 	} else {
-		while ($data = mysqli_fetch_array($get_goal_assists)) {
+		while($data = mysqli_fetch_array($get_goal_assists)) {
 			if ($data['goal_assist_minute'] == 0) {
 				$check_minute = '';
 			} else {
@@ -419,7 +419,7 @@ if ($mdata['match_place_id'] == 1) {
 	if (mysqli_num_rows($get_yellows) == 0) {
 		echo "".$locale_none."";
 	} else {
-		while ($data = mysqli_fetch_array($get_yellows)) {
+		while($data = mysqli_fetch_array($get_yellows)) {
 			if ($data['yellow_card_minute'] == 0) {
 				$check_minute = '';
 			} else {
@@ -460,7 +460,7 @@ if ($mdata['match_place_id'] == 1) {
 	if (mysqli_num_rows($get_reds) == 0) {
 		echo "".$locale_none."";
 	} else {
-		while ($data = mysqli_fetch_array($get_reds)) {
+		while($data = mysqli_fetch_array($get_reds)) {
 			if ($data['red_card_minute'] == 0) {
 				$check_minute = '';
 			} else {
@@ -628,7 +628,7 @@ if ($mdata['match_place_id'] == 1) {
 	if (mysqli_num_rows($get_goal_scorers) == 0) {
 		echo "".$locale_none."";
 	} else {
-		while ($data = mysqli_fetch_array($get_goal_scorers)) {
+		while($data = mysqli_fetch_array($get_goal_scorers)) {
 			if ($data['goal_minute'] == 0) {
 				$check_minute = '';
 			} else {
@@ -680,7 +680,7 @@ if ($mdata['match_place_id'] == 1) {
 	if (mysqli_num_rows($get_appearances) == 0) {
 		echo "".$locale_none."";
 	} else {
-		while ($data = mysqli_fetch_array($get_appearances)) {
+		while($data = mysqli_fetch_array($get_appearances)) {
 			if ($data['publish'] == 1) {
 				echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a><br>\n";
 			} else {
@@ -717,7 +717,7 @@ if ($mdata['match_place_id'] == 1) {
 	if (mysqli_num_rows($get_substitutes) == 0) {
 		echo "".$locale_none."";
 	} else {
-		while ($data = mysqli_fetch_array($get_substitutes)) {
+		while($data = mysqli_fetch_array($get_substitutes)) {
 			if($data['publish'] == 1) {
 				echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a><br>\n";
 			} else {
@@ -757,7 +757,7 @@ if ($mdata['match_place_id'] == 1) {
 	if (mysqli_num_rows($get_substitutions) == 0) {
 		echo "".$locale_none."";
 	} else {
-		while ($data = mysqli_fetch_array($get_substitutions)) {
+		while($data = mysqli_fetch_array($get_substitutions)) {
 			if ($data['substitution_minute'] == 0) {
 				$check_minute = '';
 			} else {
@@ -804,7 +804,7 @@ if ($mdata['match_place_id'] == 1) {
 	if (mysqli_num_rows($get_goal_assists) == 0) {
 		echo "".$locale_none."";
 	} else {
-		while ($data = mysqli_fetch_array($get_goal_assists)) {
+		while($data = mysqli_fetch_array($get_goal_assists)) {
 			if ($data['goal_assist_minute'] == 0) {
 				$check_minute = '';
 			} else {
@@ -845,7 +845,7 @@ if ($mdata['match_place_id'] == 1) {
 	if (mysqli_num_rows($get_yellows) == 0) {
 		echo "".$locale_none."";
 	} else {
-		while ($data = mysqli_fetch_array($get_yellows)) {
+		while($data = mysqli_fetch_array($get_yellows)) {
 			if ($data['yellow_card_minute'] == 0) {
 				$check_minute = '';
 			} else {
@@ -887,7 +887,7 @@ if ($mdata['match_place_id'] == 1) {
 	if (mysqli_num_rows($get_reds) == 0) {
 		echo "".$locale_none."";
 	} else {
-		while ($data = mysqli_fetch_array($get_reds)) {
+		while($data = mysqli_fetch_array($get_reds)) {
 			if ($data['red_card_minute'] == 0) {
 				$check_minute = '';
 			} else {

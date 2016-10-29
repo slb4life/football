@@ -13,7 +13,7 @@ echo "<tr>\n";
 echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORBOTTOM)."'>".$locale_match_type_filter.": \n";
 echo "<select name='match_type_player'>\n";
 echo "<option value='0'>".$locale_all."</option>\n";
-while ($data = mysqli_fetch_array($get_types)) {
+while($data = mysqli_fetch_array($get_types)) {
 	if($data['MatchTypeID'] == $default_match_type_id) {
 		echo "<option value='".$data['MatchTypeID']."' SELECTED>".$data['MatchTypeName']."</option>\n";
 	} else {
@@ -151,7 +151,7 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 	") or die(mysqli_error());
 }
 $i = 1;
-while ($data = mysqli_fetch_array($get_matches)) {
+while($data = mysqli_fetch_array($get_matches)) {
 	if ($i % 2 == 0) {
 		$bg_color = BGCOLOR1;
 	} else {

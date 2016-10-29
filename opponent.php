@@ -72,7 +72,7 @@ $i = 1;
 if (mysqli_num_rows($query) == 0) {
 	echo "".$locale_no_player_has_played_for_this_team."";
 } else {
-	while ($data = mysqli_fetch_array($query)) {
+	while($data = mysqli_fetch_array($query)) {
 		echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>";
 		if ($i < mysqli_num_rows($query)) {
 			echo ", ";
@@ -112,7 +112,7 @@ $get_transfers = mysqli_query($db_connect, "SELECT
 	ORDER BY season_name
 ") or die(mysqli_error());
 $j = 1;
-while ($data = mysqli_fetch_array($get_transfers)) {
+while($data = mysqli_fetch_array($get_transfers)) {
 	if ($j % 2 == 0) {
 		$bg_color = BGCOLOR1;
 	} else {
@@ -145,7 +145,7 @@ echo "</table>\n";
 echo "<hr width='100%'>".$locale_match_type_filter.": \n";
 echo "<select name='match_type_player'>\n";
 echo "<option value='0'>".$locale_all."</option>\n";
-while ($data = mysqli_fetch_array($get_types)) {
+while($data = mysqli_fetch_array($get_types)) {
 	if ($data['MatchTypeID'] == $default_match_type_id) {
 		echo "<option value='".$data['MatchTypeID']."' selected>".$data['MatchTypeName']."</option>\n";
 	} else {
@@ -164,7 +164,7 @@ $query = mysqli_query($db_connect, "SELECT
 ") or die(mysqli_error());
 echo "<br>".$locale_change_opponent.": \n";
 echo "<select name='opponent_id'>\n";
-while ($data = mysqli_fetch_array($query)) {
+while($data = mysqli_fetch_array($query)) {
 	if ($data['opponent_id'] == $id) {
 		echo "<option value='".$data['opponent_id']."' selected>".$data['opponent_name']."</option>\n";
 	} else {
@@ -226,7 +226,7 @@ $total_draws = 0;
 $total_goals = 0;
 $total_goals_against = 0;
 $i = 0;
-while ($data = mysqli_fetch_array($get_matches)) {
+while($data = mysqli_fetch_array($get_matches)) {
 	$match_id[$i] = $data['match_id'];
 	$match_date[$i] = $data['match_date'];
 	$match_stadium[$i] = $data['match_stadium'];
@@ -392,7 +392,7 @@ if ($total_matches > 0) {
 	echo "<td align='center' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><b>".$locale_attendance."</b></td>\n";
 	echo "</tr>\n";
 	$j = 0;
-	while ($j < $i) {
+	while($j < $i) {
 		if ($j % 2 == 0) {
 			$bg_color = BGCOLOR1;
 		} else {

@@ -19,7 +19,7 @@ echo "<tr>\n";
 echo "<td align='left' valign='middle'>".$locale_match_type_filter.": \n";
 echo "<select name='match_type_player'>\n";
 echo "<option value='0'>".$locale_all."</option>\n";
-while ($data = mysqli_fetch_array($get_types)) {
+while($data = mysqli_fetch_array($get_types)) {
 	if ($data['MatchTypeID'] == $default_match_type_id) {
 		echo "<option value='".$data['MatchTypeID']."' selected>".$data['MatchTypeName']."</option>\n";
 	} else {
@@ -142,7 +142,7 @@ $query = mysqli_query($db_connect, "SELECT
 	ORDER BY match_date DESC
 ") or die(mysqli_error());
 $j = 1;
-while ($data = mysqli_fetch_array($query)) {
+while($data = mysqli_fetch_array($query)) {
 	if ($j % 2 == 0) {
 		$bg_color = BGCOLOR1;
 	} else {
@@ -214,7 +214,7 @@ $query = mysqli_query($db_connect, "SELECT
 	ORDER BY match_date DESC
 ") or die(mysqli_error());
 $j = 1;
-while ($data = mysqli_fetch_array($query)) {
+while($data = mysqli_fetch_array($query)) {
 	if ($j % 2 == 0) {
 		$bg_color = BGCOLOR1;
 	} else {
@@ -285,7 +285,7 @@ $query = mysqli_query($db_connect, "SELECT
 	ORDER BY match_date DESC
 ") or die(mysqli_error());
 $j = 1;
-while ($data = mysqli_fetch_array($query)) {
+while($data = mysqli_fetch_array($query)) {
 	if ($j % 2 == 0) {
 		$bg_color = BGCOLOR1;
 	} else {
@@ -358,7 +358,7 @@ $query = mysqli_query($db_connect, "SELECT
 	ORDER BY match_date DESC
 ") or die(mysqli_error());
 $j = 1;
-while ($data = mysqli_fetch_array($query)) {
+while($data = mysqli_fetch_array($query)) {
 	if ($j % 2 == 0) {
 		$bg_color = BGCOLOR1;
 	} else {
@@ -431,7 +431,7 @@ $query = mysqli_query($db_connect, "SELECT
 	ORDER BY match_date DESC
 ") or die(mysqli_error());
 $j = 1;
-while ($data = mysqli_fetch_array($query)) {
+while($data = mysqli_fetch_array($query)) {
 	if ($j % 2 == 0) {
 		$bg_color = BGCOLOR1;
 	} else {
@@ -504,7 +504,7 @@ $query = mysqli_query($db_connect, "SELECT
 	ORDER BY match_date DESC
 ") or die(mysqli_error());
 $j = 1;
-while ($data = mysqli_fetch_array($query)) {
+while($data = mysqli_fetch_array($query)) {
 	if ($j % 2 == 0) {
 		$bg_color = BGCOLOR1;
 	} else {
@@ -577,7 +577,7 @@ $query = mysqli_query($db_connect, "SELECT
 	ORDER BY match_date DESC
 ") or die(mysqli_error());
 $j = 1;
-while ($data = mysqli_fetch_array($query)) {
+while($data = mysqli_fetch_array($query)) {
 	if ($j % 2 == 0) {
 		$bg_color = BGCOLOR1;
 	} else {
@@ -650,7 +650,7 @@ $query = mysqli_query($db_connect, "SELECT
 	ORDER BY match_date DESC
 ") or die(mysqli_error());
 $j = 1;
-while ($data = mysqli_fetch_array($query)) {
+while($data = mysqli_fetch_array($query)) {
 	if ($j % 2 == 0) {
 		$bg_color = BGCOLOR1;
 	} else {
@@ -725,7 +725,7 @@ $query = mysqli_query($db_connect, "SELECT
 	ORDER BY match_date DESC
 ") or die(mysqli_error());
 $j = 1;
-while ($data = mysqli_fetch_array($query)) {
+while($data = mysqli_fetch_array($query)) {
 	if ($j % 2 == 0) {
 		$bg_color = BGCOLOR1;
 	} else {
@@ -800,7 +800,7 @@ $query = mysqli_query($db_connect, "SELECT
 	ORDER BY match_date DESC
 ") or die(mysqli_error());
 $j = 1;
-while ($data = mysqli_fetch_array($query)) {
+while($data = mysqli_fetch_array($query)) {
 	if ($j % 2 == 0) {
 		$bg_color = BGCOLOR1;
 	} else {
@@ -875,7 +875,7 @@ $query = mysqli_query($db_connect, "SELECT
 	ORDER BY match_date DESC
 ") or die(mysqli_error());
 $j = 1;
-while ($data = mysqli_fetch_array($query)) {
+while($data = mysqli_fetch_array($query)) {
 	if ($j % 2 == 0) {
 		$bg_color = BGCOLOR1;
 	} else {
@@ -951,7 +951,7 @@ $query = mysqli_query($db_connect, "SELECT
 ") or die(mysqli_error());
 $j = 1;
 $diff = 1000000;
-while ($data = mysqli_fetch_array($query)) {
+while($data = mysqli_fetch_array($query)) {
 	if ($j % 2 == 0) {
 		$bg_color = BGCOLOR1;
 	} else {

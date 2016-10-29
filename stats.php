@@ -18,7 +18,7 @@ echo "<tr>\n";
 echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORBOTTOM)."'>".$locale_match_type_filter.": \n";
 echo "<select name='match_type_player'>\n";
 echo "<option value='0'>".$locale_all."</option>\n";
-while ($data = mysqli_fetch_array($get_types)) {
+while($data = mysqli_fetch_array($get_types)) {
 	if ($data['MatchTypeID'] == $default_match_type_id) {
 		echo "<option value='".$data['MatchTypeID']."' selected>".$data['MatchTypeName']."</option>\n";
 	} else {
@@ -314,7 +314,7 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 	") or die(mysqli_error());
 }
 $i = 0;
-while ($data = mysqli_fetch_array($get_players)) {
+while($data = mysqli_fetch_array($get_players)) {
 	$players[$i] = $data['player_id'];
 	$minutes[$i] = 0;
 
@@ -342,7 +342,7 @@ while ($data = mysqli_fetch_array($get_players)) {
 		AND M.MatchID = S.SubstitutionMatchID
 		AND M.MatchTypeID LIKE '$tdefault_match_type_id'
 	") or die(mysqli_error());
-	while ($tdata = mysqli_fetch_array($query)) {
+	while($tdata = mysqli_fetch_array($query)) {
 		if ($tdata['match_overtime'] == 0) {
 			$match_minutes = 90;
 		} else {
@@ -359,7 +359,7 @@ while ($data = mysqli_fetch_array($get_players)) {
 		AND M.MatchID = A.AppearanceMatchID
 		AND M.MatchTypeID LIKE '$tdefault_match_type_id'
 	") or die(mysqli_error());
-	while ($tdata = mysqli_fetch_array($query)) {
+	while($tdata = mysqli_fetch_array($query)) {
 		if (isset($tdata['team_matches.MatchOvertime']) == 0) {
 			$match_minutes = 90;
 		} else {
@@ -378,7 +378,7 @@ while ($data = mysqli_fetch_array($get_players)) {
 		AND M.MatchID = S.SubstitutionMatchID
 		AND M.MatchTypeID LIKE '$tdefault_match_type_id'
 	") or die(mysqli_error());
-	while ($tdata = mysqli_fetch_array($query)) {
+	while($tdata = mysqli_fetch_array($query)) {
 		if ($tdata['match_overtime'] == 0) {
 			$match_minutes = 90;
 		} else {
@@ -397,7 +397,7 @@ while ($data = mysqli_fetch_array($get_players)) {
 		AND M.MatchID = R.RedCardMatchID
 		AND M.MatchTypeID LIKE '$tdefault_match_type_id'
 	") or die(mysqli_error());
-	while ($tdata = mysqli_fetch_array($query)) {
+	while($tdata = mysqli_fetch_array($query)) {
 		if ($tdata['match_overtime'] == 0) {
 			$match_minutes = 90;
 		} else {
@@ -416,35 +416,35 @@ $get_total = mysqli_num_rows($get_players);
 mysqli_free_result($get_players);
 
 $i = 0;
-while ($data = mysqli_fetch_array($get_assists)) {
+while($data = mysqli_fetch_array($get_assists)) {
 	$assists[$i] = $data['assists'];
 	$i++;
 }
 mysqli_free_result($get_assists);
 
 $i = 0;
-while ($data = mysqli_fetch_array($get_yellows)) {
+while($data = mysqli_fetch_array($get_yellows)) {
 	$yellows[$i] = $data['yellows'];
 	$i++;
 }
 mysqli_free_result($get_yellows);
 
 $i = 0;
-while ($data = mysqli_fetch_array($get_reds)) {
+while($data = mysqli_fetch_array($get_reds)) {
 	$reds[$i] = $data['reds'];
 	$i++;
 }
 mysqli_free_result($get_reds);
 
 $i = 0;
-while ($data = mysqli_fetch_array($get_apps)) {
+while($data = mysqli_fetch_array($get_apps)) {
 	$apps[$i] = $data['apps'];
 	$i++;
 }
 mysqli_free_result($get_apps);
 
 $i = 0;
-while ($data = mysqli_fetch_array($get_ins)) {
+while($data = mysqli_fetch_array($get_ins)) {
 	$ins[$i] = $data['ins'];
 	$i++;
 }
@@ -482,7 +482,7 @@ if ($get_total > 0) {
 	}
 	$i = 0;
 	$j = 1;
-	while ($i < $get_total) {
+	while($i < $get_total) {
 		if ($j % 2 == 0) {
 			$bg_color = '#'.BGCOLOR1;
 		} else {
@@ -724,7 +724,7 @@ if (SHOW_STAFF == 1) {
 		ORDER BY manager_last_name, manager_first_name
 	") or die(mysqli_error());
 	$j = 1;
-	while ($data = mysqli_fetch_array($query)) {
+	while($data = mysqli_fetch_array($query)) {
 		$id = $data['manager_id'];
 		if ($j % 2 == 0) {
 			$bg_color = '#'.BGCOLOR1;
@@ -750,7 +750,7 @@ if (SHOW_STAFF == 1) {
 		if ($y > 0) {
 			$temp_to_query = ' AND (';
 			$x = 1;
-			while ($macth_date = mysqli_fetch_array($get_timeline)) {
+			while($macth_date = mysqli_fetch_array($get_timeline)) {
 				$temp_to_query .= "(M.MatchDateTime <= '".$macth_date['end_date']." 00:00:00' AND M.MatchDateTime >= '".$macth_date['start_date']." 00:00:00')";
 				if ($x != $y) {
 					$temp_to_query .= ' OR ';
@@ -772,7 +772,7 @@ if (SHOW_STAFF == 1) {
 			ORDER BY M.MatchDateTime
 		") or die(mysqli_error());
 		$k = 0;
-		while ($data_m = mysqli_fetch_array($get_matches)) {
+		while($data_m = mysqli_fetch_array($get_matches)) {
 			if ($data_m['goals'] > $data_m['goals_o']) {
 				$wins = $wins + 1;
 				$streak++;
