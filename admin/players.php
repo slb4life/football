@@ -139,14 +139,14 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 
 	} else if (isset($delete_submit)) {
 		$player_id = $_POST['player_id'];
-		$query = mysqli_query($db_connect, "SELECT
+		$get_player_info = mysqli_query($db_connect, "SELECT
 			G.GoalID AS goal_id,
 			S.SubstituteID AS substitute_id
 			FROM team_goals AS G, team_substitutes AS S
 			WHERE G.GoalPlayerID = '$player_id' OR S.SubstitutePlayerID = '$player_id'
 		") or die(mysqli_error());
 
-		if (mysqli_num_rows($query) == 0) {
+		if (mysqli_num_rows($get_player_info) == 0) {
 			mysqli_query($db_connect, "DELETE FROM team_players WHERE PlayerID = '$player_id' LIMIT 1") or die(mysqli_error());
 			mysqli_query($db_connect, "DELETE FROM team_seasons WHERE SeasonPlayerID = '$player_id' LIMIT 1") or die(mysqli_error());
 		} else {
@@ -438,7 +438,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<table width='100%' cellspacing='3' cellpadding='3' border='0'>\n";
 		echo "<tr>\n";
 		echo "<td align='left' valign='top'><b>Already in Squad in Season(s):</b><br>";
-		$query = mysqli_query($db_connect, "SELECT
+		$get_seasons = mysqli_query($db_connect, "SELECT
 			team_season_names.SeasonName AS season_name,
 			team_seasons.SeasonID AS season_id
 			FROM team_season_names,team_seasons
@@ -450,9 +450,9 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		$check_player = mysqli_num_rows($all_seasons);
 		mysqli_free_result($all_seasons);
 
-		$check_players = mysqli_num_rows($query);
+		$check_players = mysqli_num_rows($get_seasons);
 		$check_seasons = "";
-		while($data = mysqli_fetch_array($query)) {
+		while($data = mysqli_fetch_array($get_seasons)) {
 			echo "".$data['season_name']."<br>\n";
 			$check_season[] = $data['season_id'];
 			$check_seasons .= "<option value='".$data['season_id']."'>".$data['season_name']."</option>\n";
@@ -460,15 +460,15 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		if ($check_player != $check_players) {
 			$i = 0;
 			echo "<br>Copy this Player to Season: <select name='copy_season'>";
-			$get_seasons = mysqli_query($db_connect, "SELECT * FROM team_season_names ORDER BY SeasonName") or die(mysqli_error());
-			while($data = mysqli_fetch_array($get_seasons)) {
+			$get_season = mysqli_query($db_connect, "SELECT * FROM team_season_names ORDER BY SeasonName") or die(mysqli_error());
+			while($data = mysqli_fetch_array($get_season)) {
 				if ($data['SeasonID'] != $check_season[$i]) {
 					echo "<option value='".$data['SeasonID']."'>".$data['SeasonName']."</option>\n";
 				} else {
 					$i++;
 				}
 			}
-			mysqli_free_result($get_seasons);
+			mysqli_free_result($get_season);
 
 			echo "</select>\n";
 			echo "<input type='submit' name='copy_season_submit' value='Copy'><br><br>\n";
@@ -482,28 +482,28 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			echo "<input type='hidden' name='player_id' value='".$player_id."'>\n";
 			echo "</form>\n";
 		}
-		mysqli_free_result($query);
+		mysqli_free_result($get_seasons);
 
 		echo "<hr width='100%'>\n";
 		echo "<form method='post' action='".$PHP_SELF."?session_id=".$session."'>\n";
 		echo "<input type='hidden' name='player_id' value='".$player_id."'>\n";
 		echo "<b>Add this Player to some Opponent Team</b><br><br>\n";
-		$query = mysqli_query($db_connect, "SELECT
+		$get_opponents = mysqli_query($db_connect, "SELECT
 			OpponentName AS opponent_name,
 			OpponentID AS opponent_id
 			FROM team_opponents
 			ORDER by opponent_name
 		") or die(mysqli_error());
 		echo "<select name='opponent_id'>";
-		while($data = mysqli_fetch_array($query)) {
+		while($data = mysqli_fetch_array($get_opponents)) {
 			echo "<option value='".$data['opponent_id']."'>".$data['opponent_name']."</option>\r\n";
 		}
-		mysqli_free_result($query);
+		mysqli_free_result($get_opponents);
 
 		echo "</select>\n";
 		echo "<input type='submit' name='add_opponent_player' value='Add'>\n";
 		echo "</form>\n";
-		$query = mysqli_query($db_connect, "SELECT
+		$get_opponents = mysqli_query($db_connect, "SELECT
 			O.OpponentID AS opponent_id,
 			O.OpponentName AS opponent_name
 			FROM team_opponents AS O, team_players_opponent AS OP
@@ -512,11 +512,11 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			ORDER BY opponent_name
 		") or die(mysqli_error());
 
-		if (mysqli_num_rows($query) == 0) {
+		if (mysqli_num_rows($get_opponents) == 0) {
 			echo "This Player has not played for any Opponent Team...<br>";
 		} else {
 			echo "This Player has been added to these Opponent Teams:<br><br>";
-			while($data = mysqli_fetch_array($query)) {
+			while($data = mysqli_fetch_array($get_opponents)) {
 				echo "".$data['opponent_name']." <a href='remove_opponent_player.php?session_id=".$session."&amp;player_id=".$player_id."&amp;opponent_id=".$data['opponent_id']."'><img src='../images/remove.png' border='0' alt='Remove'></a><br>\r\n";
 			}
 		}

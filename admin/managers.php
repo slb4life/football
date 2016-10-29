@@ -100,7 +100,6 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		mysqli_query($db_connect, "DELETE FROM team_managers WHERE ManagerID = '$manager_id' LIMIT 1") or die(mysqli_error());
 		mysqli_query($db_connect, "DELETE FROM team_seasons_managers WHERE SeasonManagerID = '$manager_id'") or die(mysqli_error());
 		mysqli_query($db_connect, "DELETE FROM team_managers_time WHERE ManagerID = '$manager_id'") or die(mysqli_error());
-	//	header("Location: $HTTP_REFERER");
 
 	} else if(isset($copy_season_submit)) {
 		$copy_season = $_POST['copy_season'];
@@ -198,16 +197,16 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<td align='left' valign='top'>\n";
 		echo "<select name='manager_player_id'>";
 		echo "<option value='0'>None</option>";
-		$query = mysqli_query($db_connect, "SELECT
+		$get_player = mysqli_query($db_connect, "SELECT
 			CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
 			P.PlayerID AS player_id
 			FROM team_players P
 			ORDER BY player_name
 		") or die(mysqli_error());
-		while($data = mysqli_fetch_array($query)) {
+		while($data = mysqli_fetch_array($get_player)) {
 			echo "<option value='".$data['player_id']."'>".$data['player_name']."</option>";
 		}
-		mysqli_free_result($query);
+		mysqli_free_result($get_player);
 
 		echo "</select>\n";
 		echo "</td>\n";
@@ -305,7 +304,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<td align='left' valign='top'>Link to Player Stats:</td>\n";
 		echo "<td align='left' valign='top'>";
 		echo "<select name='manager_player_id'>";
-		$query = mysqli_query($db_connect, "SELECT
+		$get_player = mysqli_query($db_connect, "SELECT
 			CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
 			P.PlayerID AS player_id
 			FROM team_players P
@@ -314,12 +313,12 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 
 		if ($pdata['manager_player_id'] == 0) {
 			echo "<option value='0' SELECTED>None</option>";
-			while($data = mysqli_fetch_array($query)) {
+			while($data = mysqli_fetch_array($get_player)) {
 				echo "<option value='".$data['player_id']."'>".$data['player_name']."</option>";
 			}
 		} else {
 			echo "<option value='0'>None</option>";
-			while($data = mysqli_fetch_array($query)) {
+			while($data = mysqli_fetch_array($get_player)) {
 				if ($data['player_id'] == $pdata['manager_player_id']) {
 					echo "<option value='".$data['player_id']."' SELECTED>".$data['player_name']."</option>";
 				} else {
@@ -327,13 +326,14 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 				}
 			}
 		}
-		mysqli_free_result($query);
+		mysqli_free_result($get_player);
 
 		echo "</select>\n";
 		echo "</td>\n";
 		echo "</tr><tr>\n";
-		echo "<td align='left' valign='top'>Published:</td>";
+		echo "<td align='left' valign='top'>Published:</td>\n";
 		echo "<td align='left' valign='top'>";
+
 		if ($pdata['publish'] == 1) {
 			echo "<input type='checkbox' name='publish' value='1' CHECKED>";
 		} else {
@@ -348,7 +348,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "</form>\n";
 		echo "<hr width='100%'>\n";
 		echo "<form method='post' action='".$PHP_SELF."?session_id=".$session."'>\n";
-		$query = mysqli_query($db_connect, "SELECT
+		$get_timeline = mysqli_query($db_connect, "SELECT
 			MT.ID AS id,
 			MT.StartDate AS start_date,
 			MT.EndDate AS end_date
@@ -357,15 +357,15 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			ORDER BY start_date
 		") or die(mysqli_error());
 
-		if (mysqli_num_rows($query) > 0) {
-			echo "<b>Current Timeline (YYYY-MM-DD):</b><br>\n";
-			while($data = mysqli_fetch_array($query)) {
+		if (mysqli_num_rows($get_timeline) > 0) {
+			echo "<b>Current Timeline (YYYY-MM-DD):</b><br>";
+			while($data = mysqli_fetch_array($get_timeline)) {
 				echo "".$data['start_date']." - ".$data['end_date']."<br>\n";
 			}
-			mysqli_data_seek($query, 0);
+			mysqli_data_seek($get_timeline, 0);
+			echo "<br>\n";
 		}
-		echo "<br>\n";
-		echo "<b>Add Timeline:</b><br>\n";
+		echo "<b>Add Timeline:</b><br>";
 		echo "Start: <select name='start_year'>";
 		for($i = 1950 ; $i < 2025 ; $i++) {
 			if ($i < 10) {
@@ -439,8 +439,8 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		}
 		echo "</select>\n";
 		echo "<input type='submit' name='add_timeline' value='Add'><br><br>\n";
-		while($data = mysqli_fetch_array($query)) {
-			echo "<b>Remove Timeline:</b>";
+		while($data = mysqli_fetch_array($get_timeline)) {
+			echo "<b>Remove Timeline:</b><br>";
 			echo "<select name='remove_timeline_select'>";
 			echo "<option value='".$data['id']."'>".$data['start_date']." - ".$data['end_date']."</option>\n";
 			echo "</select>\n";
@@ -448,14 +448,14 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		}
 		echo "<input type='hidden' name='manager_id' value='".$manager_id."'>\n";
 		echo "</form>\n";
-		mysqli_free_result($query);
+		mysqli_free_result($get_timeline);
 
 		echo "<hr width='100%'>\n";
 		echo "<form method='post' action='".$PHP_SELF."?session_id=".$session."'>\n";
-		echo "<table width='100%' cellspacing='3' cellpadding='3' border='0'>\n";
+		echo "<table width='100%' cellspacing='0' cellpadding='0' border='0'>\n";
 		echo "<tr>\n";
 		echo "<td align='left' valign='top'><b>Already in Squad in Season(s):</b><br>";
-		$query = mysqli_query($db_connect, "SELECT
+		$get_seasons = mysqli_query($db_connect, "SELECT
 			SN.SeasonName AS season_name,
 			SM.SeasonID AS season_id
 			FROM team_season_names SN, team_seasons_managers SM
@@ -467,9 +467,9 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		$check_manager = mysqli_num_rows($all_seasons);
 		mysqli_free_result($all_seasons);
 
-		$check_managers = mysqli_num_rows($query);
+		$check_managers = mysqli_num_rows($get_seasons);
 		$check_seasons = "";
-		while($data = mysqli_fetch_array($query)) {
+		while($data = mysqli_fetch_array($get_seasons)) {
 			echo "".$data['season_name']."<br>\n";
 			$check_season[] = $data['season_id'];
 			$check_seasons .= "<option value='".$data['season_id']."'>".$data['season_name']."</option>\n";
@@ -478,15 +478,15 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		if ($check_manager != $check_managers) {
 			$i = 0;
 			echo "<br>Copy this Manager to Season: <select name='copy_season'>";
-			$get_seasons = mysqli_query($db_connect, "SELECT * FROM team_season_names ORDER BY SeasonName") or die(mysqli_error());
-			while($data = mysqli_fetch_array($get_seasons)) {
+			$get_season = mysqli_query($db_connect, "SELECT * FROM team_season_names ORDER BY SeasonName") or die(mysqli_error());
+			while($data = mysqli_fetch_array($get_season)) {
 				if ($data['SeasonID'] != $check_season[$i]) {
 					echo "<option value='".$data['SeasonID']."'>".$data['SeasonName']."</option>\n";
 				} else {
 					$i++;
 				}
 			}
-			mysqli_free_result($get_seasons);
+			mysqli_free_result($get_season);
 
 			echo "</select>\n";
 			echo "<input type='submit' name='copy_season_submit' value='Copy'><br><br>\n";
@@ -500,7 +500,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			echo "<input type='hidden' name='manager_id' value='".$manager_id."'>\n";
 			echo "</form>\n";
 		}
-		mysqli_free_result($query);
+		mysqli_free_result($get_seasons);
 
 		echo "<hr width='100%'>\n";
 		echo "<form enctype='multipart/form-data' method='post' action='image_upload.php?session_id=".$session."'>\n";
