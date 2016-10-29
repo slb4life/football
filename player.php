@@ -801,7 +801,7 @@ if (!isset($season_id_page)) {
 			AND M.MatchOpponent = O.OpponentID
 			ORDER BY match_date DESC
 			LIMIT 10
-		") or die(mysqli_error($db_connect));
+		") or die(mysqli_error());
 		if (mysqli_num_rows($get_goals) == 0) {
 			$bg_color = '#'.BGCOLOR2;
 			echo "<td align='left' valign='middle' bgcolor='".$bg_color."' colspan='5'>".$locale_none."</td>\n";

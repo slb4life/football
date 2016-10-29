@@ -284,7 +284,7 @@ if (SHOW_TOP_ASSISTS == 1) {
 		GROUP BY player_id
 		ORDER BY goal_assists DESC, player_name
 		LIMIT $max_show
-	") or die(mysqli_error($db_connect));
+	") or die(mysqli_error());
 	$i = 1;
 	while ($data = mysqli_fetch_array($get_top_assists)) {
 		echo "<tr>\n";
