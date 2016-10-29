@@ -22,13 +22,11 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 
 	if (isset($add_submit)) {
 		$news_subject = trim($_POST['news_subject']);
-		$news_picture_text = trim($_POST['news_picture_text']);
 		$news_content = trim($_POST['news_content']);
 		$news_content = str_replace("\r\n", '<br>', $news_content);
 
 		if (!get_magic_quotes_gpc()) {
 			$news_subject = addslashes($news_subject);
-			$news_picture_text = addslashes($news_picture_text);
 			$news_content = addslashes($news_content);
 		}
 		if ($news_subject != '') {
@@ -104,6 +102,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<input type='submit' name='modify_submit' value='Modify News'>\n";
 		echo "<input type='submit' name='delete_submit' value='Delete News'>\n";
 		echo "</form>\n";
+		echo "<br>";
 		echo "<a href='".$PHP_SELF."?session_id=".$session."'>Add News</a>\n";
 		mysqli_free_result($get_news);
 
