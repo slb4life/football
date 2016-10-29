@@ -6,6 +6,7 @@ $locale_latest_match = 'Latest Match';
 $locale_quick_links = 'Quick Links';
 $locale_news = 'News';
 $locale_latest_news = 'Latest News';
+$locale_news = 'News';
 $locale_no_news = 'No News Add Yet.';
 $locale_player_stats = 'Player Stats';
 $locale_players = 'Players';

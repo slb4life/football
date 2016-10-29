@@ -22,15 +22,17 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 
 	if (isset($add_submit)) {
 		$news_subject = trim($_POST['news_subject']);
+		$news_picture_text = trim($_POST['news_picture_text']);
 		$news_content = trim($_POST['news_content']);
 		$news_content = str_replace("\r\n", '<br>', $news_content);
 
 		if (!get_magic_quotes_gpc()) {
 			$news_subject = addslashes($news_subject);
+			$news_picture_text = addslashes($news_picture_text);
 			$news_content = addslashes($news_content);
 		}
 		if ($news_subject != '') {
-			mysqli_query($db_connect, "INSERT INTO team_news SET news_subject = '$news_subject', news_content = '$news_content', news_date = CURRENT_TIMESTAMP()")or die(mysqli_error());
+			mysqli_query($db_connect, "INSERT INTO team_news SET news_subject = '$news_subject', news_content = '$news_content', news_picture_text = '$news_picture_text', news_date = CURRENT_TIMESTAMP()")or die(mysqli_error());
 			header("Location: $PHP_SELF?session_id=$session");
 		}
 	} else if (isset($modify_submit)) {

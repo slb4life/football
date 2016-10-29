@@ -249,12 +249,13 @@ if (!isset($news_id)) {
 	$data['news_content'] = str_replace('\r\n', '<br>', $data['news_content']);
 	mysqli_free_result($get_latest_news);
 
-	echo "<h3>".$data['news_subject']."</h3>\n";
 	echo "<table align='center' width='100%' cellspacing='0' cellpadding='0' border='0' bgcolor='#".(BORDERCOLOR)."'>\n";
 	echo "<tr>\n";
 	echo "<td>\n";
 	echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
 	echo "<tr>\n";
+	echo "<td bgcolor='#".(CELLBGCOLORTOP)."' align='left' valign='middle'><b><i>".$locale_news."</i></b></td>\n";
+	echo "</tr><tr>\n";
 	echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORBOTTOM)."'>\n";
 	echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
 	echo "<tr>\n";
@@ -274,12 +275,11 @@ if (!isset($news_id)) {
 		echo "</tr>\n";
 		echo "</table>\n";
 	}
-	echo "<i>".$data['news_date']."</i><br><br><b>".$data['news_subject']."</a></b><br>\n";
-	echo "".$data['news_content']."\n";
+	echo "<i>".$data['news_date']."</i><br><br><b>".$data['news_subject']."</a></b><br>";
+	echo "".$data['news_content']."";
 	echo "</td>\n";
-	echo "</tr>\n";
-	echo "<tr>\n";
-	echo "<td align='left' valign='top'><br><br><a href='news_archive.php'>".$locale_to_news_archive."</a></td>\n";
+	echo "</tr><tr>\n";
+	echo "<td align='left' valign='top'><br><br><a href='news_archive.php'>".$locale_news_archive."</a></td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
 	echo "</td>\n";
