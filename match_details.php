@@ -91,35 +91,31 @@ $image_url_4 = "images/opponent_logo_".$mdata['opponent_id'].".jpg";
 if ((file_exists($image_url_1) && file_exists($image_url_3)) || (file_exists($image_url_2) && file_exists($image_url_4)) || (file_exists($image_url_1) && file_exists($image_url_4)) || (file_exists($image_url_2) && file_exists($image_url_3))) {
 	$logos = 1;
 }
-if ($mdata['goal_scorers_opponent'] == '') {
-	$mdata['goal_scorers_opponent'] = "".$locale_none."";
-}
-if ($mdata['substitutions_opponent'] == '') {
-	$mdata['substitutions_opponent'] = "".$locale_none."";
-}
-if ($mdata['goal_assists_opponent'] == '') {
-	$mdata['goal_assists_opponent'] = "".$locale_none."";
-}
-if ($mdata['yellow_cards_opponent'] == '') {
-	$mdata['yellow_cards_opponent'] = "".$locale_none."";
-}
-if ($mdata['red_cards_opponent'] == '') {
-	$mdata['red_cards_opponent'] = "".$locale_none."";
-}
+if ($mdata['goal_scorers_opponent'] == ''){ $mdata['goal_scorers_opponent'] = "".$locale_none.""; }
+if ($mdata['opening_opponent'] == ''){ $mdata['opening_opponent'] = "".$locale_none.""; }
+if ($mdata['substitutes_opponent'] == ''){ $mdata['substitutes_opponent'] = "".$locale_none.""; }
+if ($mdata['substitutions_opponent'] == ''){ $mdata['substitutions_opponent'] = "".$locale_none.""; }
+if ($mdata['goal_assists_opponent'] == ''){ $mdata['goal_assists_opponent'] = "".$locale_none.""; }
+if ($mdata['yellow_cards_opponent'] == ''){ $mdata['yellow_cards_opponent'] = "".$locale_none.""; }
+if ($mdata['red_cards_opponent'] == ''){ $mdata['red_cards_opponent'] = "".$locale_none.""; }
+
 echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
 echo "<tr bgcolor='#".(CELLBGCOLORTOP)."'>\n";
 echo "<td align='left' valign='middle' width='50%'><b>".$mdata['match_date']." / ".$locale_stadium.": ".$mdata['match_stadium']."</b></td>\n";
 echo "<td align='right' valign='middle' width='50%'><b>".$locale_attendance.":</b> ".$mdata['match_attendance']."</td>\n";
 echo "</tr>\n";
 echo "</table>\n";
+
 if ($mdata['match_place_id'] == 1) { 
 	echo "<table width='100%' align='center' cellspacing='2' cellpadding='2' border='0'>\n";
 	echo "<tr>\n";
 	echo "<td align='left' valign='middle' width='45%'>\n";
+
 	if ($logos == 1) {
 		echo "<table width='100%' border='0' cellspacing='2' cellpadding='0'>\n";
 		echo "<tr>\n";
 		echo "<td width='5%' valign='middle' align='center'>";
+
 		if (file_exists($image_url_1)) {
 			echo "<img src='".$image_url_1."' alt=''>";
 		} else {
@@ -134,6 +130,7 @@ if ($mdata['match_place_id'] == 1) {
 	}
 	echo "</td>\n";
 	echo "<td align='center' valign='middle' width='10%' bgcolor='#".(BGCOLOR1)."'><font class='bigname'>";
+
 	if ($mdata['penalty_goals'] == NULL || $mdata['penalty_goals_opponent'] == NULL) {
 		echo "".$mdata['goals']." - ".$mdata['goals_opponent']."";
 		if ($mdata['match_overtime'] == 1) {
@@ -144,11 +141,13 @@ if ($mdata['match_place_id'] == 1) {
 	}
 	echo "</font></td>\n";
 	echo "<td align='right' valign='middle' width='45%'>\n";
+
 	if ($logos == 1) {
 		echo "<table width='100%' border='0' cellspacing='2' cellpadding='0'>\n";
 		echo "<tr>\n";
 		echo "<td width='95%' valign='middle' align='right'><font class='bigname'>".$mdata['opponent_name']."</font></td>\n";
 		echo "<td width='5%' valign='middle' align='center'>";
+
 		if (file_exists($image_url_3)) {
 			echo "<img src='".$image_url_3."' alt=''>";
 		} else {
@@ -167,6 +166,7 @@ if ($mdata['match_place_id'] == 1) {
 	echo "<tr bgcolor='#".(CELLBGCOLORTOP)."'>\n";
 	echo "<td align='left' valign='middle' width='50%'><b>".$locale_referee.":</b> ".$mdata['match_referee']."</td>\n";
 	echo "<td align='right' valign='middle' width='50%'>";
+
 	if ($mdata['match_additional_type'] == '') {
 		echo "".$mdata['match_type_name']."-".$locale_match."";
 	} else {
@@ -197,6 +197,7 @@ if ($mdata['match_place_id'] == 1) {
 		AND P.PlayerID = G.GoalPlayerID
 		ORDER BY goal_minute
 	") or die(mysqli_error());
+
 	if (mysqli_num_rows($get_goal_scorers) == 0) {
 		echo "".$locale_none."";
 	} else {
@@ -231,13 +232,14 @@ if ($mdata['match_place_id'] == 1) {
 	echo "</table>\n";
 	echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
 	echo "<tr align='left' bgcolor='#".(CELLBGCOLORTOP)."'>\n";
+	
 	echo "<td align='left' valign='middle'><b>".$locale_opening_squads."</b></td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
 	echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
 	echo "<tr>\n";
 	echo "<td align='left' valign='top' width='50%'>\n";
-	$get_apps = mysqli_query($db_connect, "SELECT
+	$get_appearances = mysqli_query($db_connect, "SELECT
 		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
 		P.PlayerID AS player_id,
 		P.PlayerPositionID AS player_position_id,
@@ -248,14 +250,19 @@ if ($mdata['match_place_id'] == 1) {
 		AND P.PlayerID = A.AppearancePlayerID
 		ORDER BY player_position_id, player_number
 	") or die(mysqli_error());
-	while ($data = mysqli_fetch_array($get_apps)) {
-		if ($data['publish'] == 1) {
-			echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a><br>\n";
-		} else {
-			echo "".$data['player_name']."<br>\n";
+
+	if (mysqli_num_rows($get_appearances) == 0) {
+		echo "".$locale_none."";
+	} else {
+		while ($data = mysqli_fetch_array($get_appearances)) {
+			if ($data['publish'] == 1) {
+				echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a><br>\n";
+			} else {
+				echo "".$data['player_name']."<br>\n";
+			}
 		}
 	}
-	mysqli_free_result($get_apps);
+	mysqli_free_result($get_appearances);
 
 	echo "</td>\n";
 	echo "<td align='right' valign='top' width='50%'>".$mdata['opening_opponent']."</td>\n";
@@ -280,11 +287,16 @@ if ($mdata['match_place_id'] == 1) {
 		AND P.PlayerID = S.SubstitutePlayerID
 		ORDER BY player_position_id, player_number
 	") or die(mysqli_error());
-	while ($data = mysqli_fetch_array($get_substitutes)) {
-		if ($data['publish'] == 1) {
-			echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a><br>\n";
-		} else {
-			echo "".$data['player_name']."<br>\n";
+
+	if (mysqli_num_rows($get_substitutes) == 0) {
+		echo "".$locale_none."";
+	} else {
+		while ($data = mysqli_fetch_array($get_substitutes)) {
+			if ($data['publish'] == 1) {
+				echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a><br>\n";
+			} else {
+				echo "".$data['player_name']."<br>\n";
+			}
 		}
 	}
 	mysqli_free_result($get_substitutes);
@@ -352,7 +364,7 @@ if ($mdata['match_place_id'] == 1) {
 	echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
 	echo "<tr>\n";
 	echo "<td align='left' valign='top' width='50%'>";
-	$get_assists = mysqli_query($db_connect, "SELECT
+	$get_goal_assists = mysqli_query($db_connect, "SELECT
 		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
 		P.PlayerID AS player_id,
 		P.PlayerPublish AS publish,
@@ -363,10 +375,10 @@ if ($mdata['match_place_id'] == 1) {
 		ORDER BY goal_assist_minute
 	") or die(mysqli_error());
 
-	if (mysqli_num_rows($get_assists) == 0) {
+	if (mysqli_num_rows($get_goal_assists) == 0) {
 		echo "".$locale_none."";
 	} else {
-		while ($data = mysqli_fetch_array($get_assists)) {
+		while ($data = mysqli_fetch_array($get_goal_assists)) {
 			if ($data['goal_assist_minute'] == 0) {
 				$check_minute = '';
 			} else {
@@ -379,7 +391,7 @@ if ($mdata['match_place_id'] == 1) {
 			}
 		}
 	}
-	mysqli_free_result($get_assists);
+	mysqli_free_result($get_goal_assists);
 
 	echo "</td>\n";
 	echo "<td align='right' valign='top' width='50%'>".$mdata['goal_assists_opponent']."</td>\n";
@@ -653,7 +665,7 @@ if ($mdata['match_place_id'] == 1) {
 	echo "<tr>\n";
 	echo "<td align='left' valign='top' width='50%'>".$mdata['opening_opponent']."</td>\n";
 	echo "<td align='right' valign='top' width='50%'>";
-	$get_apps = mysqli_query($db_connect, "SELECT
+	$get_appearances = mysqli_query($db_connect, "SELECT
 		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
 		P.PlayerID AS player_id,
 		P.PlayerPositionID AS player_position_id,
@@ -664,14 +676,19 @@ if ($mdata['match_place_id'] == 1) {
 		AND P.PlayerID = A.AppearancePlayerID
 		ORDER BY player_position_id, player_number
 	") or die(mysqli_error());
-	while ($data = mysqli_fetch_array($get_apps)) {
-		if ($data['publish'] == 1) {
-			echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a><br>\n";
-		} else {
-			echo "".$data['player_name']."<br>\n";
+
+	if (mysqli_num_rows($get_appearances) == 0) {
+		echo "".$locale_none."";
+	} else {
+		while ($data = mysqli_fetch_array($get_appearances)) {
+			if ($data['publish'] == 1) {
+				echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a><br>\n";
+			} else {
+				echo "".$data['player_name']."<br>\n";
+			}
 		}
 	}
-	mysqli_free_result($get_apps);
+	mysqli_free_result($get_appearances);
 
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -696,11 +713,16 @@ if ($mdata['match_place_id'] == 1) {
 		AND P.PlayerID = S.SubstitutePlayerID
 		ORDER BY player_position_id, player_number
 	") or die(mysqli_error());
-	while ($data = mysqli_fetch_array($get_substitutes)) {
-		if($data['publish'] == 1) {
-			echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a><br>\n";
-		} else {
-			echo "".$data['player_name']."<br>\n";
+
+	if (mysqli_num_rows($get_substitutes) == 0) {
+		echo "".$locale_none."";
+	} else {
+		while ($data = mysqli_fetch_array($get_substitutes)) {
+			if($data['publish'] == 1) {
+				echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a><br>\n";
+			} else {
+				echo "".$data['player_name']."<br>\n";
+			}
 		}
 	}
 	mysqli_free_result($get_substitutes);
@@ -768,7 +790,7 @@ if ($mdata['match_place_id'] == 1) {
 	echo "<tr>\n";
 	echo "<td align='left' valign='top' width='50%'>".$mdata['goal_assists_opponent']."</td>\n";
 	echo "<td align='right' valign='top' width='50%'>";
-	$get_assists = mysqli_query($db_connect, "SELECT
+	$get_goal_assists = mysqli_query($db_connect, "SELECT
 		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
 		P.PlayerID AS player_id,
 		P.PlayerPublish AS publish,
@@ -779,10 +801,10 @@ if ($mdata['match_place_id'] == 1) {
 		ORDER BY goal_assist_minute
 	") or die(mysqli_error());
 
-	if (mysqli_num_rows($get_assists) == 0) {
+	if (mysqli_num_rows($get_goal_assists) == 0) {
 		echo "".$locale_none."";
 	} else {
-		while ($data = mysqli_fetch_array($get_assists)) {
+		while ($data = mysqli_fetch_array($get_goal_assists)) {
 			if ($data['goal_assist_minute'] == 0) {
 				$check_minute = '';
 			} else {
@@ -795,7 +817,7 @@ if ($mdata['match_place_id'] == 1) {
 			}
 		}
 	}
-	mysqli_free_result($get_assists);
+	mysqli_free_result($get_goal_assists);
 
 	echo "</td>\n";
 	echo "</tr>\n";

@@ -61,7 +61,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			exit();
 		}
 
-		$query = mysqli_query($db_connect, "SELECT
+		$get_players = mysqli_query($db_connect, "SELECT
 			team_substitutes.SubstitutePlayerID AS substitute_player_id
 			FROM team_substitutes,team_appearances
 			WHERE (team_substitutes.SubstitutePlayerID = '$player_id'
@@ -72,7 +72,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			AND team_appearances.AppearanceSeasonID = '$season_id')
 		") or die(mysqli_error());
 
-		if (mysqli_num_rows($query) == 0) {
+		if (mysqli_num_rows($get_players) == 0) {
 			echo "Please Add Player to Open Line-up or Substitutions First.<br>Push Back Button to get Back.";
 			exit();
 		} else {
@@ -109,14 +109,14 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 				header("Location: $HTTP_REFERER");
 			}
 		}
-		mysqli_free_result($query);
+		mysqli_free_result($get_players);
 
 	} else if (isset($add_goal_assist_submit)) {
 		$player_id = $_POST['add_to_goal_assists'];
 		$match_id = $_POST['match_id'];
 		$season_id = $_POST['season_id'];
 		$goal_assist_minute = $_POST['add_goal_assist_minute'];
-		$query = mysqli_query($db_connect, "SELECT
+		$get_players = mysqli_query($db_connect, "SELECT
 			team_substitutes.SubstitutePlayerID AS substitute_player_id
 			FROM team_substitutes,team_appearances
 			WHERE (team_substitutes.SubstitutePlayerID = '$player_id'
@@ -127,8 +127,8 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			AND team_appearances.AppearanceSeasonID = '$season_id')
 		") or die(mysqli_error());
 
-		if (mysqli_num_rows($query) == 0) {
-			echo "Please Add Player to Open Line-up or Substitutions first.<br>Push Back Button to get Back.";
+		if (mysqli_num_rows($get_players) == 0) {
+			echo "Please Add Player to Open Line-up or Substitutions First.<br>Push Back Button to get Back.";
 			exit();
 		} else {
 			mysqli_query($db_connect, "INSERT INTO team_goal_assists SET
@@ -139,14 +139,14 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			") or die(mysqli_error($db_connect));
 			header("Location: $HTTP_REFERER");
 		}
-		mysqli_free_result($query);
+		mysqli_free_result($get_players);
 
 	} else if (isset($add_yellow_card_submit)) {
 		$player_id = $_POST['add_to_yellow_cards'];
 		$match_id = $_POST['match_id'];
 		$season_id = $_POST['season_id'];
 		$yellow_card_minute = $_POST['yellow_card_minute'];
-		$query = mysqli_query($db_connect, "SELECT
+		$get_players = mysqli_query($db_connect, "SELECT
 			team_substitutes.SubstitutePlayerID AS substitute_player_id
 			FROM team_substitutes,team_appearances
 			WHERE (team_substitutes.SubstitutePlayerID = '$player_id'
@@ -157,7 +157,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			AND team_appearances.AppearanceSeasonID = '$season_id')
 		") or die(mysqli_error());
 
-		if (mysqli_num_rows($query) == 0) {
+		if (mysqli_num_rows($get_players) == 0) {
 			echo "Please Add Player to Open Line-up or Substitutions first.<br>Push Back Button to get Back.";
 			exit();
 		} else {
@@ -169,14 +169,14 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			") or die(mysqli_error());
 			header("Location: $HTTP_REFERER");
 		}
-		mysqli_free_result($query);
+		mysqli_free_result($get_players);
 
 	} else if (isset($add_red_card_submit)) {
 		$player_id = $_POST['add_to_red_cards'];
 		$match_id = $_POST['match_id'];
 		$season_id = $_POST['season_id'];
 		$red_card_minute = $_POST['red_card_minute'];
-		$query = mysqli_query($db_connect, "SELECT
+		$get_players = mysqli_query($db_connect, "SELECT
 			team_substitutes.SubstitutePlayerID AS substitute_player_id
 			FROM team_substitutes,team_appearances
 			WHERE (team_substitutes.SubstitutePlayerID = '$player_id'
@@ -187,7 +187,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			AND team_appearances.AppearanceSeasonID = '$season_id')
 		") or die(mysqli_error());
 
-		if (mysqli_num_rows($query) == 0) {
+		if (mysqli_num_rows($get_players) == 0) {
 			echo "Please Add Player to Open Line-up or Substitutions first.<br>Push Back Button to get Back.";
 			exit();
 		} else {
@@ -199,7 +199,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			") or die(mysqli_error());
 			header("Location: $HTTP_REFERER");
 		}
-		mysqli_free_result($query);
+		mysqli_free_result($get_players);
 
 	} else if (isset($add_substitutes_submit)) {
 		$add_to_substitutes = $_POST['add_to_substitutes'];

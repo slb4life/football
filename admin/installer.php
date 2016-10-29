@@ -423,7 +423,7 @@ if (isset($submit)) {
 	mysqli_query($db_connect, "INSERT INTO team_opponents SET OpponentName = 'N/A'") or die(mysqli_error($db_connect));
 	mysqli_query($db_connect, "INSERT INTO team_match_types SET MatchTypeName = 'N/A'") or die(mysqli_error($db_connect));
 
-	echo "Installation is now complete.<br><br>Your user name: $db_username<br>Password: $db_password<br><br>Before heading to login-page, remove installer.php from your server.<br><br><a href='index.php'>Log in</a>";
+	echo "Installation is now Complete.<br><br>Your User Name: ".$db_username."<br>Password: ".$db_password."<br><br>Before heading to Login In Page, Remove installer.php from your Server.<br><br><a href='index.php'>Log In</a>";
 	exit();
 
 } else {

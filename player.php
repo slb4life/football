@@ -2,21 +2,19 @@
 include('top.php');
 $script_name = "player.php?".$_SERVER['QUERY_STRING'];
 
-mysqli_data_seek($get_types, 0);
-
 switch (PRINT_DATE) {
 	case 1: {
-		$how_to_print_in_report = "%d.%m.%Y $locale_at %H:%i";
+		$how_to_print_in_report = "%d.%m.%Y ".$locale_at." %H:%i";
 		$how_to_print_in_player = "%d.%m.%Y";
 	}
 	break;
 	case 2: {
-		$how_to_print_in_report = "%m.%d.%Y $locale_at %H:%i";
+		$how_to_print_in_report = "%m.%d.%Y ".$locale_at." %H:%i";
 		$how_to_print_in_player = "%m.%d.%Y";
 	}
 	break;
 	case 3: {
-		$how_to_print_in_report = "%b %D %Y $locale_at %H:%i";
+		$how_to_print_in_report = "%b %D %Y ".$locale_at." %H:%i";
 		$how_to_print_in_player = "%b %D %Y";
 	}
 	break;
@@ -228,7 +226,6 @@ if (!isset($season_id_page)) {
 		FROM (team_seasons S)
 		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID
 	";
-
 	if ($default_season_id == 0) {
 		$sql .= "WHERE P.PlayerID != ''
 			AND P.PlayerPublish = '1'

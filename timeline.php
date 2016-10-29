@@ -356,7 +356,7 @@ if (!isset($get_stats)) {
 	$get_appearances = mysqli_query($db_connect, "SELECT
 		P.PlayerID AS player_id,
 		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
-		COUNT(A.AppearancePlayerID) AS appearance_player_id
+		COUNT( A.AppearancePlayerID ) AS appearance_player_id
 		FROM team_seasons S
 		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID
 		AND S.SeasonID LIKE '%'
@@ -403,7 +403,7 @@ if (!isset($get_stats)) {
 	$get_goals = mysqli_query($db_connect, "SELECT
 		P.PlayerID AS player_id,
 		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
-		COUNT(G.GoalPlayerID) AS goal_player_id
+		COUNT( G.GoalPlayerID ) AS goal_player_id
 		FROM team_seasons S
 		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID
 		AND S.SeasonID LIKE '%'
@@ -497,7 +497,7 @@ if (!isset($get_stats)) {
 	$get_yellows = mysqli_query($db_connect, "SELECT
 		P.PlayerID AS player_id,
 		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
-		COUNT(Y.YellowCardPlayerID) AS yellow_card_player_id
+		COUNT( Y.YellowCardPlayerID ) AS yellow_card_player_id
 		FROM team_seasons S
 		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID
 		AND S.SeasonID LIKE '%'
