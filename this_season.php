@@ -24,7 +24,7 @@ switch (PRINT_DATE) {
 	}
 	break;
 }
-$default_season_id = DEFAULT_SEASON;
+//$default_season_id = DEFAULT_SEASON;
 $wins = 0;
 $draws = 0;
 $loses = 0;
@@ -34,6 +34,17 @@ $streak = 0;
 $streak2 = 0;
 $record = 0;
 $record2 = 0;
+
+if ($default_match_type_id == 0) {
+	$tdefault_match_type_id = '%';
+} else {
+	$tdefault_match_type_id = $default_match_type_id;
+}
+if ($default_season_id == 0) {
+	$tdefault_season_id = '%';
+} else {
+	$tdefault_season_id = $default_season_id;
+}
 $get_matches = mysqli_query($db_connect, "SELECT
 	M.MatchDateTime AS match_date,
 	M.MatchGoals AS goals,
@@ -270,8 +281,7 @@ while($data = mysqli_fetch_array($get_appearances)) {
 	$check = $data['appearance_player_id'];
 	$i++;
 }
-
-if ($data['appearance_player_id'] == 0) {
+if ($data['appearance_player_id'] == 1) {
 	echo " (".$most_appearances.")";
 } else {
 	echo " (0)";

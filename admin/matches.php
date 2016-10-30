@@ -349,11 +349,11 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<td align='left' valign='top'>*Match Type:</td>\n";
 		echo "<td align='left' valign='top'>";
 		echo "<select name='match_type_id'>";
-		$get_types = mysqli_query($db_connect, "SELECT * FROM team_match_types ORDER BY MatchTypeName") or die(mysqli_error());
-		while($data = mysqli_fetch_array($get_types)) {
+		$get_match_types = mysqli_query($db_connect, "SELECT * FROM team_match_types ORDER BY MatchTypeName") or die(mysqli_error());
+		while($data = mysqli_fetch_array($get_match_types)) {
 			echo "<option value='".$data['MatchTypeID']."'>".$data['MatchTypeName']."</option>\n";
 		}
-		mysqli_free_result($get_types);
+		mysqli_free_result($get_match_types);
 
 		echo "</select>";
 		echo "</td>\n";
@@ -529,6 +529,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top'>*Home or Away?</td>\n";
 		echo "<td align='left' valign='top'>";
+
 		if ($match_data['match_place_id'] == 1) {
 			echo "<input type='radio' name='match_place_id' value='1' CHECKED> Home Match<br>\n";
 			echo "<input type='radio' name='match_place_id' value='2'> Away Match<br>\n";
@@ -540,6 +541,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top'>Neutral ?</td>\n";
 		echo "<td align='left' valign='top'>";
+
 		if ($match_data['match_neutral'] == 1) {
 			echo "<input type='checkbox' name='match_neutral' value='1' CHECKED>";
 		} else {
@@ -566,15 +568,15 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<td align='left' valign='top'>*Match Type:</td>\n";
 		echo "<td align='left' valign='top'>";
 		echo "<select name='match_type_id'>";
-		$get_types = mysqli_query($db_connect, "SELECT * FROM team_match_types ORDER BY MatchTypeName") or die(mysqli_error());
-		while($data = mysqli_fetch_array($get_types)) {
+		$get_match_types = mysqli_query($db_connect, "SELECT * FROM team_match_types ORDER BY MatchTypeName") or die(mysqli_error());
+		while($data = mysqli_fetch_array($get_match_types)) {
 			if ($match_data['match_type_id'] == $data['MatchTypeID']) {
 				echo "<option value='".$data['MatchTypeID']."' SELECTED>".$data['MatchTypeName']."</option>\n";
 			} else {
 				echo "<option value='".$data['MatchTypeID']."'>".$data['MatchTypeName']."</option>\n";
 			}
 		}
-		mysqli_free_result($get_types);
+		mysqli_free_result($get_match_types);
 
 		echo "</select>\n";
 		echo "</td>\n";
@@ -590,6 +592,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top'>Overtime?</td>\n";
 		echo "<td align='left' valign='top'>";
+
 		if ($match_data['match_overtime'] == 1) {
 			echo "<input type='checkbox' name='match_overtime' value='1' CHECKED>";
 		} else {
@@ -599,6 +602,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top'>Penalty Shootout?</td>\n";
 		echo "<td align='left' valign='top'>";
+
 		if ($match_data['match_penalty_shootout'] == 1) {
 			echo "<input type='checkbox' name='match_penalty_shootout' value='1' CHECKED>";
 		} else {
@@ -625,6 +629,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top' colspan='2'>";
 		echo "<input type='hidden' name='match_id' value='".$match_id."'>Published:";
+
 		if ($match_data['publish'] == 1) {
 			echo "<input type='checkbox' name='publish' value='1' CHECKED>";
 		} else {
@@ -677,6 +682,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<td align='left' valign='top'><input type='text' name='penalties_opponent' value='".$match_data['penalties_opponent']."' size='3'></td>\n";
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top' colspan='2'>Published Optional Statistics:";
+
 		if ($match_data['publish_optional'] == 1) {
 			echo "<input type='checkbox' name='publish_optional' value='1' CHECKED>";
 		} else {

@@ -182,7 +182,7 @@ if (SHOW_TOP_APPS == 1) {
 		echo "</tr>\n";
 		$i++;
 	}
-	mysqli_free_result($get_top_apps);	
+	mysqli_free_result($get_top_apps);
 
 	echo "</table>\n";
 	echo "</td>\n";

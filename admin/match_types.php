@@ -13,6 +13,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 	$season_name = $_SESSION['season_name'];
 
 	$PHP_SELF = $_SERVER['PHP_SELF'];
+	$HTTP_REFERER = $_SERVER['HTTP_REFERER'];
 	
 	if (isset($_REQUEST['action'])){ $action = $_REQUEST['action']; }
 	if (isset($_POST['add_submit'])){ $add_submit = $_POST['add_submit']; }
@@ -46,7 +47,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		if ($match_type != '') {
 			mysqli_query($db_connect, "UPDATE team_match_types SET MatchTypeName = '$match_type' WHERE MatchTypeID = '$match_type_id'") or die(mysqli_error());
 		}
-		header("Location: $PHP_SELF?session_id=$session");
+		header("Location: $HTTP_REFERER");
 	
 	} else if (isset($delete_submit)) {
 		$match_type_id = $_POST['match_type_id'];

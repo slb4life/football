@@ -38,7 +38,7 @@ $get_manager_info = mysqli_query($db_connect, "SELECT
 	DATE_FORMAT(M.ManagerDOB, '$how_to_print_in_manager') AS manager_dob,
 	M.ManagerPOB AS manager_pob,
 	M.ManagerPlayerID AS manager_player_id
-	FROM team_managers M
+	FROM team_managers AS M
 	WHERE M.ManagerID = '$id'
 	LIMIT 1
 ") or die(mysqli_error());
@@ -116,7 +116,7 @@ if ($manager_data['manager_player_id'] != 0) {
 	$get_player_info = mysqli_query($db_connect, "SELECT
 		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
 		P.PlayerID AS player_id
-		FROM team_players P
+		FROM team_players AS P
 		WHERE P.PlayerID = '$id'
 		LIMIT 1
 	") or die(mysqli_error());
@@ -136,14 +136,14 @@ echo "<tr>\n";
 echo "<td align='left' valign='top'><br><br>".$locale_match_type_filter.": \n";
 echo "<select name='match_type_manager'>\n";
 echo "<option value='0'>".$locale_all."</option>\n";
-while($data = mysqli_fetch_array($get_types)) {
+while($data = mysqli_fetch_array($get_match_types)) {
 	if ($data['MatchTypeID'] == $default_match_type_id) {
 		echo "<option value='".$data['MatchTypeID']."' selected>".$data['MatchTypeName']."</option>\n";
 	} else {
 		echo "<option value='".$data['MatchTypeID']."'>".$data['MatchTypeName']."</option>\n";
 	}
 }
-mysqli_free_result($get_types);
+mysqli_free_result($get_match_types);
 
 echo "</select>\n";
 echo "<input type='submit' name='submit3' value='".$locale_change."'>";
@@ -151,10 +151,9 @@ $sql = "SELECT
 	M.ManagerID AS manager_id,
 	CONCAT(M.ManagerFirstName, ' ', M.ManagerLastName) AS manager_name,
 	M.ManagerPublish AS publish
-	FROM (team_seasons_managers S)
+	FROM team_seasons AS S
 	LEFT OUTER JOIN team_managers M ON M.ManagerID = S.SeasonManagerID
 ";
-
 if ($default_season_id == 0) {
 	$sql .= "WHERE M.ManagerID != ''
 		AND M.ManagerPublish = '1'
@@ -169,10 +168,10 @@ if ($default_season_id == 0) {
 		ORDER BY manager_name
 	";
 }
-$query = mysqli_query($db_connect, $sql) or die(mysqli_error());
-echo "<br>".$locale_change_manager.": \n";
+$get_managers = mysqli_query($db_connect, $sql) or die(mysqli_error());
+echo "<br>".$locale_change_manager.":";
 echo "<select name='manager_id'>\n";
-while($data = mysqli_fetch_array($query)) {
+while($data = mysqli_fetch_array($get_managers)) {
 	if ($data['manager_id'] == $id) {
 		echo "<option value='".$data['manager_id']."' SELECTED>".$data['manager_name']."</option>\n";
 	} else {
@@ -181,7 +180,7 @@ while($data = mysqli_fetch_array($query)) {
 }
 echo "</select>\n";
 echo "<input type='submit' name='change_manager' value='".$locale_change."'>\n";
-mysqli_free_result($query);
+mysqli_free_result($get_managers);
 
 echo "</td>\n";
 echo "</tr>\n";
@@ -196,12 +195,12 @@ echo "<td align='center' valign='middle'><b>".$locale_win_proc_short."</b></td>\
 echo "<td align='center' valign='middle'><b>".$locale_draw_proc_short."</b></td>\n";
 echo "<td align='center' valign='middle'><b>".$locale_lose_proc_short."</b></td>\n";
 echo "</tr>\n";
-$query = mysqli_query($db_connect, "SELECT
-	S.SeasonName AS season_name,
-	S.SeasonID AS season_id
-	FROM team_season_names S, team_seasons_managers SM
-	WHERE S.SeasonID = SM.SeasonID
-	AND SM.SeasonManagerID = '$id'
+$get_seasons = mysqli_query($db_connect, "SELECT
+	SN.SeasonName AS season_name,
+	SN.SeasonID AS season_id
+	FROM team_season_names AS SN, team_seasons AS S
+	WHERE SN.SeasonID = S.SeasonID
+	AND S.SeasonManagerID = '$id'
 	ORDER BY season_name
 ") or die(mysqli_error());
 
@@ -223,7 +222,7 @@ $total_win_pros = 0.00;
 $total_draw_pros = 0.00;
 $total_lose_pros = 0.00;
 $j = 1;
-while($data = mysqli_fetch_array($query)) {
+while($data = mysqli_fetch_array($get_seasons)) {
 	$season_id = $data['season_id'];
 
 	if ($j % 2 == 0) {
@@ -239,38 +238,39 @@ while($data = mysqli_fetch_array($query)) {
 	$record = 0;
 	$record2 = 0;
 	$get_timeline = mysqli_query($db_connect, "SELECT
-		T.StartDate AS start_date,
-		T.EndDate AS end_date
-		FROM team_managers_time T, team_managers M
-		WHERE T.ManagerID = M.ManagerID
+		MT.StartDate AS start_date,
+		MT.EndDate AS end_date
+		FROM team_managers_time AS MT, team_managers AS M
+		WHERE MT.ManagerID = M.ManagerID
 		AND M.ManagerID = '$id'
 		ORDER BY start_date
 	") or die(mysqli_error());
 	$y = mysqli_num_rows($get_timeline);
 
 	if ($y > 0) {
-		$temp_to_query = ' AND (';
+		$timeline = " AND ";
 		$x = 1;
 		while($date_time = mysqli_fetch_array($get_timeline)) {
-			$temp_to_query .= "(M.MatchDateTime <= '$date_time[end_date] 00:00:00' AND M.MatchDateTime >= '$date_time[start_date] 00:00:00')";
+			$timeline .= "(M.MatchDateTime <= '$date_time[end_date] 00:00:00' AND M.MatchDateTime >= '$date_time[start_date] 00:00:00')";
 			if ($x != $y) {
-				$temp_to_query .= ' OR ';
+				$timeline .= " OR ";
 			}
 			$x++;
 		}
 	}
 	mysqli_free_result($get_timeline);
-	
-	$temp_to_query = ' ';
+
+	$timeline = " ";
 	$get_matches = mysqli_query($db_connect, "SELECT
 		M.MatchGoals AS goals,
-		M.MatchGoalsOpponent AS goals_opponent
-		FROM team_matches M
+		M.MatchGoalsOpponent AS goals_opponent,
+		M.MatchDateTime AS match_date
+		FROM team_matches AS M
 		WHERE M.MatchSeasonID LIKE '$season_id'
-		AND M.MatchTypeID LIKE '$tdefault_match_type_id' $temp_to_query
+		AND M.MatchTypeID LIKE '$tdefault_match_type_id' $timeline
 		AND M.MatchGoals IS NOT NULL
 		AND M.MatchGoalsOpponent IS NOT NULL
-		ORDER BY M.MatchDateTime
+		ORDER BY match_date
 	") or die(mysqli_error());
 	$k = 0;
 	while($match_data = mysqli_fetch_array($get_matches)) {
@@ -337,7 +337,7 @@ while($data = mysqli_fetch_array($query)) {
 	echo "<td>".$lose_pros." %</td>\n";
 	echo "</tr>\n";
 }
-mysqli_free_result($query);
+mysqli_free_result($get_seasons);
 
 $total_win_pros = round(100*(isset($total_wins)/isset($total_all)), 2);
 $total_draw_pros = round(100*(isset($total_draws)/isset($total_all)), 2);

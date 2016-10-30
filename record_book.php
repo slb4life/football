@@ -19,14 +19,14 @@ echo "<tr>\n";
 echo "<td align='left' valign='middle'>".$locale_match_type_filter.": \n";
 echo "<select name='match_type_player'>\n";
 echo "<option value='0'>".$locale_all."</option>\n";
-while($data = mysqli_fetch_array($get_types)) {
+while($data = mysqli_fetch_array($get_match_types)) {
 	if ($data['MatchTypeID'] == $default_match_type_id) {
 		echo "<option value='".$data['MatchTypeID']."' selected>".$data['MatchTypeName']."</option>\n";
 	} else {
 		echo "<option value='".$data['MatchTypeID']."'>".$data['MatchTypeName']."</option>\n";
 	}
 }
-mysqli_free_result($get_types);
+mysqli_free_result($get_match_types);
 
 echo "</select>\n";
 echo "<input type='submit' name='submit2' value='".$locale_change."'>\n";

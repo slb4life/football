@@ -290,7 +290,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			P.PlayerDescription AS player_description,
 			P.PlayerID AS player_id,
 			P.PlayerInSquadList AS in_squad
-			FROM team_players P
+			FROM team_players AS P
 			WHERE PlayerID = '$player_id'
 			LIMIT 1
 		") or die(mysqli_error());
@@ -439,11 +439,11 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<tr>\n";
 		echo "<td align='left' valign='top'><b>Already in Squad in Season(s):</b><br>";
 		$get_seasons = mysqli_query($db_connect, "SELECT
-			team_season_names.SeasonName AS season_name,
-			team_seasons.SeasonID AS season_id
-			FROM team_season_names,team_seasons
-			WHERE team_seasons.SeasonID = team_season_names.SeasonID
-			AND team_seasons.SeasonPlayerID = '$player_id'
+			SN.SeasonName AS season_name,
+			S.SeasonID AS season_id
+			FROM team_season_names AS SN, team_seasons AS S
+			WHERE S.SeasonID = SN.SeasonID
+			AND S.SeasonPlayerID = '$player_id'
 			ORDER BY season_name
 		") or die(mysqli_error());
 		$all_seasons = mysqli_query($db_connect, "SELECT SeasonID FROM team_season_names") or die(mysqli_error());
@@ -506,9 +506,9 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		$get_opponents = mysqli_query($db_connect, "SELECT
 			O.OpponentID AS opponent_id,
 			O.OpponentName AS opponent_name
-			FROM team_opponents AS O, team_players_opponent AS OP
-			WHERE O.OpponentID = OP.OpponentID
-			AND OP.PlayerID = '$player_id'
+			FROM team_opponents AS O, team_players_opponent AS PO
+			WHERE O.OpponentID = PO.OpponentID
+			AND PO.PlayerID = '$player_id'
 			ORDER BY opponent_name
 		") or die(mysqli_error());
 
@@ -592,13 +592,13 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 	echo "</td>\n";
 	echo "<td align='left' valign='top'>";
 	$get_players = mysqli_query($db_connect, "SELECT
-		team_players.PlayerID AS player_id,
-		CONCAT(team_players.PlayerFirstName, ' ', team_players.PlayerLastName) AS player_name,
-		team_players.PlayerPublish AS publish,
-		team_players.PlayerNumber AS player_number
-		FROM team_players, team_seasons
-		WHERE team_players.PlayerID = team_seasons.SeasonPlayerID
-		AND team_seasons.SeasonID = '$season_id'
+		P.PlayerID AS player_id,
+		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
+		P.PlayerPublish AS publish,
+		P.PlayerNumber AS player_number
+		FROM team_players AS P, team_seasons AS S
+		WHERE P.PlayerID = S.SeasonPlayerID
+		AND S.SeasonID = '$season_id'
 		ORDER BY player_number
 	") or die(mysqli_error());
 	$get_total = mysqli_num_rows($get_players);

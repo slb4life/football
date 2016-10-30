@@ -147,7 +147,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 
 		echo "<tr>\n";
 		echo "<td align='left' valign='middle' colspan='2'>";
-		echo "<input type='submit' value='Save changes' name='submit'>";
+		echo "<input type='submit' value='Save Changes' name='submit'>";
 		echo "<input type='hidden' name='suspended_player_id' value='".$data['player_id']."'>";
 		echo "</td>\n";
 		echo "</tr>\n";

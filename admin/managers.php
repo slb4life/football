@@ -56,7 +56,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 				ManagerPlayerID = '$manager_player_id'
 			") or die(mysqli_error());
 			$manager_id = mysqli_insert_id($db_connect);
-			mysqli_query($db_connect, "INSERT INTO team_seasons_managers SET SeasonID = '$season_id', SeasonManagerID = '$manager_id'") or die(mysqli_error());
+			mysqli_query($db_connect, "INSERT INTO team_seasons SET SeasonID = '$season_id', SeasonManagerID = '$manager_id'") or die(mysqli_error());
 		}
 		header("Location: $HTTP_REFERER");
 		
@@ -98,19 +98,19 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 	} else if (isset($delete_submit)) {
 		$manager_id = $_POST['manager_id'];
 		mysqli_query($db_connect, "DELETE FROM team_managers WHERE ManagerID = '$manager_id' LIMIT 1") or die(mysqli_error());
-		mysqli_query($db_connect, "DELETE FROM team_seasons_managers WHERE SeasonManagerID = '$manager_id'") or die(mysqli_error());
+		mysqli_query($db_connect, "DELETE FROM team_seasons WHERE SeasonManagerID = '$manager_id'") or die(mysqli_error());
 		mysqli_query($db_connect, "DELETE FROM team_managers_time WHERE ManagerID = '$manager_id'") or die(mysqli_error());
 
 	} else if(isset($copy_season_submit)) {
 		$copy_season = $_POST['copy_season'];
 		$manager_id = $_POST['manager_id'];
-		mysqli_query($db_connect, "INSERT INTO team_seasons_managers SET SeasonID = '$copy_season', SeasonManagerID = '$manager_id'") or die(mysqli_error());
+		mysqli_query($db_connect, "INSERT INTO team_seasons SET SeasonID = '$copy_season', SeasonManagerID = '$manager_id'") or die(mysqli_error());
 		header("Location: $HTTP_REFERER");
 
 	} else if (isset($remove_season_submit)) {
 		$remove_season = $_POST['remove_season'];
 		$manager_id = $_POST['manager_id'];
-		mysqli_query($db_connect, "DELETE FROM team_seasons_managers WHERE SeasonID = '$remove_season' AND SeasonManagerID = '$manager_id' LIMIT 1") or die(mysqli_error());
+		mysqli_query($db_connect, "DELETE FROM team_seasons WHERE SeasonID = '$remove_season' AND SeasonManagerID = '$manager_id' LIMIT 1") or die(mysqli_error());
 		header("Location: $HTTP_REFERER");
 		
 	} else if (isset($add_timeline)) {
@@ -230,7 +230,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			M.ManagerPC AS manager_pc,
 			M.ManagerProfile AS manager_profile,
 			M.ManagerPlayerID AS manager_player_id
-			FROM team_managers M
+			FROM team_managers AS M
 			WHERE ManagerID = '$manager_id'
 			LIMIT 1
 		") or die(mysqli_error());
@@ -307,7 +307,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		$get_player = mysqli_query($db_connect, "SELECT
 			CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
 			P.PlayerID AS player_id
-			FROM team_players P
+			FROM team_players AS P
 			ORDER BY player_name
 		") or die(mysqli_error());
 
@@ -352,7 +352,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			MT.ID AS id,
 			MT.StartDate AS start_date,
 			MT.EndDate AS end_date
-			FROM team_managers_time MT
+			FROM team_managers_time AS MT
 			WHERE MT.ManagerID = '$manager_id'
 			ORDER BY start_date
 		") or die(mysqli_error());
@@ -457,10 +457,10 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<td align='left' valign='top'><b>Already in Squad in Season(s):</b><br>";
 		$get_seasons = mysqli_query($db_connect, "SELECT
 			SN.SeasonName AS season_name,
-			SM.SeasonID AS season_id
-			FROM team_season_names SN, team_seasons_managers SM
-			WHERE SM.SeasonID = SN.SeasonID
-			AND SM.SeasonManagerID = '$manager_id'
+			S.SeasonID AS season_id
+			FROM team_season_names AS SN, team_seasons AS S
+			WHERE S.SeasonID = SN.SeasonID
+			AND S.SeasonManagerID = '$manager_id'
 			ORDER BY season_name
 		") or die(mysqli_error());
 		$all_seasons = mysqli_query($db_connect, "SELECT SeasonID FROM team_season_names") or die(mysqli_error());
@@ -578,9 +578,9 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		CONCAT(M.ManagerFirstName, ' ', M.ManagerLastName) AS manager_name,
 		M.ManagerID AS manager_id,
 		M.ManagerPublish AS publish
-		FROM team_managers M,team_seasons_managers SM
-		WHERE M.ManagerID = SM.SeasonManagerID
-		AND SM.SeasonID = '$season_id'
+		FROM team_managers AS M, team_seasons AS S
+		WHERE M.ManagerID = S.SeasonManagerID
+		AND S.SeasonID = '$season_id'
 		ORDER BY manager_name
 	") or die(mysqli_error());
 	$get_total = mysqli_num_rows($get_managers);

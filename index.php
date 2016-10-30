@@ -191,7 +191,7 @@ if (!isset($news_id)) {
 	echo "</tr><tr>\n";
 	echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORBOTTOM)."'>\n";
 	echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
-	$get_latest_news = mysqli_query($db_connect, "SELECT
+	$get_news = mysqli_query($db_connect, "SELECT
 		N.news_id AS news_id,
 		N.news_subject AS news_subject,
 		N.news_content AS news_content,
@@ -201,11 +201,11 @@ if (!isset($news_id)) {
 		LIMIT 5
 	") or die(mysqli_error());
 	
-	if (mysqli_num_rows($get_latest_news) == 0) {
+	if (mysqli_num_rows($get_news) == 0) {
 		echo "".$locale_no_news."";
 	} else {
 		$i = 0;
-		while($data = mysqli_fetch_array($get_latest_news)) {
+		while($data = mysqli_fetch_array($get_news)) {
 			echo "<tr>\n";
 			echo "<td align='right' valign='top'><i>".$data['news_date']."</i></td>\n";
 			echo "<td align='left' valign='top' width='85%'><b><a href='index.php?news_id=".$data['news_id']."'>".$data['news_subject']."</a></b>";
@@ -219,7 +219,7 @@ if (!isset($news_id)) {
 			$i++;
 		}
 	}
-	mysqli_free_result($get_latest_news);
+	mysqli_free_result($get_news);
 
 	echo "<tr>\n";
 	echo "<td colspan='2' align='left' valign='top'><br><a href='news_archive.php'>".$locale_news_archive."</a></td>\n";
@@ -235,7 +235,7 @@ if (!isset($news_id)) {
 	if ($news_id == '' || !is_numeric($news_id)) {
 		$news_id = 1;
 	}
-	$get_latest_news = mysqli_query($db_connect, "SELECT
+	$get_news = mysqli_query($db_connect, "SELECT
 		N.news_id AS news_id,
 		N.news_subject AS news_subject,
 		N.news_content AS news_content,
@@ -245,9 +245,9 @@ if (!isset($news_id)) {
 		WHERE news_id = '$news_id'
 		LIMIT 1
 	") or die(mysqli_error());
-	$data = mysqli_fetch_array($get_latest_news);
+	$data = mysqli_fetch_array($get_news);
 	$data['news_content'] = str_replace('\r\n', '<br>', $data['news_content']);
-	mysqli_free_result($get_latest_news);
+	mysqli_free_result($get_news);
 
 	echo "<table align='center' width='100%' cellspacing='0' cellpadding='0' border='0' bgcolor='#".(BORDERCOLOR)."'>\n";
 	echo "<tr>\n";
@@ -260,18 +260,18 @@ if (!isset($news_id)) {
 	echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
 	echo "<tr>\n";
 	echo "<td align='left' valign='top'>\n";
-	$image_url = "images/news_picture".$data['news_id'].".jpg";
-	$image_url2 = "images/news_picture".$data['news_id'].".png";
+	$image_url_1 = "images/news_picture".$data['news_id'].".jpg";
+	$image_url_2 = "images/news_picture".$data['news_id'].".png";
 
-	if (file_exists($image_url) || file_exists($image_url2)) {
+	if (file_exists($image_url_1) || file_exists($image_url_2)) {
 		if (file_exists($image_url)) {
-			$news_picture = $image_url;
+			$image_url = $image_url_1;
 		} else {
-			$news_picture = $image_url2;
+			$image_url = $image_url_2;
 		}
 		echo "<table width='10%' align='right' cellspacing='10' cellpadding='10' border='0'>\n";
 		echo "<tr>\n";
-		echo "<td align='center' valign='top'><img src='".$news_picture."' alt=''><br><small>".$data['news_picture_text']."</small></td>\n";
+		echo "<td align='center' valign='top'><img src='".$image_url."' alt=''><br><small>".$data['news_picture_text']."</small></td>\n";
 		echo "</tr>\n";
 		echo "</table>\n";
 	}

@@ -62,18 +62,18 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		}
 
 		$get_players = mysqli_query($db_connect, "SELECT
-			team_substitutes.SubstitutePlayerID AS substitute_player_id
+			team_substitutes.SubstitutePlayerID AS player_id
 			FROM team_substitutes,team_appearances
-			WHERE (team_substitutes.SubstitutePlayerID = '$player_id'
+			WHERE team_substitutes.SubstitutePlayerID = '$player_id'
 			AND team_substitutes.SubstituteMatchID = '$match_id'
-			AND team_substitutes.SubstituteSeasonID = '$season_id')
-			OR (team_appearances.AppearancePlayerID = '$player_id'
+			AND team_substitutes.SubstituteSeasonID = '$season_id'
+			OR team_appearances.AppearancePlayerID = '$player_id'
 			AND team_appearances.AppearanceMatchID = '$match_id'
-			AND team_appearances.AppearanceSeasonID = '$season_id')
+			AND team_appearances.AppearanceSeasonID = '$season_id'
 		") or die(mysqli_error());
 
 		if (mysqli_num_rows($get_players) == 0) {
-			echo "Please Add Player to Open Line-up or Substitutions First.<br>Push Back Button to get Back.";
+			echo "Please Add Player To Open Line-up Or Substitutions First.<br>Push Back Button To Get Back.";
 			exit();
 		} else {
 			if (isset($penalty)) {
@@ -117,18 +117,18 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		$season_id = $_POST['season_id'];
 		$goal_assist_minute = $_POST['add_goal_assist_minute'];
 		$get_players = mysqli_query($db_connect, "SELECT
-			team_substitutes.SubstitutePlayerID AS substitute_player_id
+			team_substitutes.SubstitutePlayerID AS player_id
 			FROM team_substitutes,team_appearances
-			WHERE (team_substitutes.SubstitutePlayerID = '$player_id'
+			WHERE team_substitutes.SubstitutePlayerID = '$player_id'
 			AND team_substitutes.SubstituteMatchID = '$match_id'
-			AND team_substitutes.SubstituteSeasonID = '$season_id')
-			OR (team_appearances.AppearancePlayerID = '$player_id'
+			AND team_substitutes.SubstituteSeasonID = '$season_id'
+			OR team_appearances.AppearancePlayerID = '$player_id'
 			AND team_appearances.AppearanceMatchID = '$match_id'
-			AND team_appearances.AppearanceSeasonID = '$season_id')
+			AND team_appearances.AppearanceSeasonID = '$season_id'
 		") or die(mysqli_error());
 
 		if (mysqli_num_rows($get_players) == 0) {
-			echo "Please Add Player to Open Line-up or Substitutions First.<br>Push Back Button to get Back.";
+			echo "Please Add Player To Open Line-up Or Substitutions First.<br>Push Back Button To Get Back.";
 			exit();
 		} else {
 			mysqli_query($db_connect, "INSERT INTO team_goal_assists SET
@@ -147,18 +147,18 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		$season_id = $_POST['season_id'];
 		$yellow_card_minute = $_POST['yellow_card_minute'];
 		$get_players = mysqli_query($db_connect, "SELECT
-			team_substitutes.SubstitutePlayerID AS substitute_player_id
+			team_substitutes.SubstitutePlayerID AS player_id
 			FROM team_substitutes,team_appearances
-			WHERE (team_substitutes.SubstitutePlayerID = '$player_id'
+			WHERE team_substitutes.SubstitutePlayerID = '$player_id'
 			AND team_substitutes.SubstituteMatchID = '$match_id'
-			AND team_substitutes.SubstituteSeasonID = '$season_id')
-			OR (team_appearances.AppearancePlayerID = '$player_id'
+			AND team_substitutes.SubstituteSeasonID = '$season_id'
+			OR team_appearances.AppearancePlayerID = '$player_id'
 			AND team_appearances.AppearanceMatchID = '$match_id'
-			AND team_appearances.AppearanceSeasonID = '$season_id')
+			AND team_appearances.AppearanceSeasonID = '$season_id'
 		") or die(mysqli_error());
 
 		if (mysqli_num_rows($get_players) == 0) {
-			echo "Please Add Player to Open Line-up or Substitutions first.<br>Push Back Button to get Back.";
+			echo "Please Add Player To Open Line-up Or Substitutions First.<br>Push Back Button To Get Back.";
 			exit();
 		} else {
 			mysqli_query($db_connect, "INSERT INTO team_yellow_cards SET
@@ -177,18 +177,18 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		$season_id = $_POST['season_id'];
 		$red_card_minute = $_POST['red_card_minute'];
 		$get_players = mysqli_query($db_connect, "SELECT
-			team_substitutes.SubstitutePlayerID AS substitute_player_id
+			team_substitutes.SubstitutePlayerID AS player_id
 			FROM team_substitutes,team_appearances
-			WHERE (team_substitutes.SubstitutePlayerID = '$player_id'
+			WHERE team_substitutes.SubstitutePlayerID = '$player_id'
 			AND team_substitutes.SubstituteMatchID = '$match_id'
-			AND team_substitutes.SubstituteSeasonID = '$season_id')
-			OR (team_appearances.AppearancePlayerID = '$player_id'
+			AND team_substitutes.SubstituteSeasonID = '$season_id'
+			OR team_appearances.AppearancePlayerID = '$player_id'
 			AND team_appearances.AppearanceMatchID = '$match_id'
-			AND team_appearances.AppearanceSeasonID = '$season_id')
+			AND team_appearances.AppearanceSeasonID = '$season_id'
 		") or die(mysqli_error());
 
 		if (mysqli_num_rows($get_players) == 0) {
-			echo "Please Add Player to Open Line-up or Substitutions first.<br>Push Back Button to get Back.";
+			echo "Please Add Player To Open Line-up Or Substitutions First.<br>Push Back Button To Get Back.";
 			exit();
 		} else {
 			mysqli_query($db_connect, "INSERT INTO team_red_cards SET
@@ -207,14 +207,14 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		$season_id = $_POST['season_id'];
 		foreach($add_to_substitutes as $player_id) {
 			$get_substitutes = mysqli_query($db_connect, "SELECT
-				team_substitutes.SubstitutePlayerID AS substitute_player_id
+				team_substitutes.SubstitutePlayerID AS player_id
 				FROM team_substitutes,team_appearances
-				WHERE (team_substitutes.SubstitutePlayerID = '$player_id'
+				WHERE team_substitutes.SubstitutePlayerID = '$player_id'
 				AND team_substitutes.SubstituteMatchID = '$match_id'
-				AND team_substitutes.SubstituteSeasonID = '$season_id')
-				OR (team_appearances.AppearancePlayerID = '$player_id'
+				AND team_substitutes.SubstituteSeasonID = '$season_id'
+				OR team_appearances.AppearancePlayerID = '$player_id'
 				AND team_appearances.AppearanceMatchID = '$match_id'
-				AND team_appearances.AppearanceSeasonID = '$season_id')
+				AND team_appearances.AppearanceSeasonID = '$season_id'
 			") or die(mysqli_error());
 
 			if (mysqli_num_rows($get_substitutes) == 0) {
@@ -236,7 +236,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		$substitution_minute = $_POST['substitution_minute'];
 
 		if ($player_id_in == $player_id_out) {
-			echo "In and Out Player can't be the same.<br>Push Back Button to get Back.";
+			echo "In And Out Player Can't Be The Same.<br>Push Back Button To Get Back.";
 			exit();
 		}
 		mysqli_query($db_connect, "INSERT INTO team_substitutions SET

@@ -208,15 +208,15 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 	echo "<td align='left' valign='top'>";
 	echo "<select name='default_match_type'>";
 	echo "<option value='0'>All</option>\n";
-	$get_types = mysqli_query($db_connect, "SELECT * FROM team_match_types ORDER BY MatchTypeName") or die(mysqli_error());
-	while($data = mysqli_fetch_array($get_types)) {
+	$get_match_types = mysqli_query($db_connect, "SELECT * FROM team_match_types ORDER BY MatchTypeName") or die(mysqli_error());
+	while($data = mysqli_fetch_array($get_match_types)) {
 		if ($data['MatchTypeID'] == $pdata['default_match_type']) {
 			echo "<option value='".$data['MatchTypeID']."' SELECTED>".$data['MatchTypeName']."</option>\n";
 		} else {
 			echo "<option value='".$data['MatchTypeID']."'>".$data['MatchTypeName']."</option>\n";
 		}
 	}
-	mysqli_free_result($get_types);
+	mysqli_free_result($get_match_types);
 
 	echo "</select>\n";
 	echo "</td>\n";

@@ -18,14 +18,14 @@ echo "<tr>\n";
 echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORBOTTOM)."'>".$locale_match_type_filter.": \n";
 echo "<select name='match_type_player'>\n";
 echo "<option value='0'>".$locale_all."</option>\n";
-while($data = mysqli_fetch_array($get_types)) {
+while($data = mysqli_fetch_array($get_match_types)) {
 	if ($data['MatchTypeID'] == $default_match_type_id) {
 		echo "<option value='".$data['MatchTypeID']."' selected>".$data['MatchTypeName']."</option>\n";
 	} else {
 		echo "<option value='".$data['MatchTypeID']."'>".$data['MatchTypeName']."</option>\n";
 	}
 }
-mysqli_free_result($get_types);
+mysqli_free_result($get_match_types);
 
 echo "</select>\n";
 echo "<input type='submit' name='submit2' value='".$locale_change."'>\n";
@@ -53,7 +53,7 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 		P.PlayerPublish AS publish,
 		P.PlayerNumber AS player_number,
 		COUNT( G.GoalPlayerID ) AS goals
-		FROM team_seasons S
+		FROM team_seasons AS S
 		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID = '$default_season_id'
 		LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID = '$default_match_type_id'
 		LEFT OUTER JOIN team_goals G ON G.GoalPlayerID = S.SeasonPlayerID AND G.GoalMatchID = M.MatchID AND G.GoalOwn = '0'
@@ -64,7 +64,7 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 	$get_assists = mysqli_query($db_connect, "SELECT
 		P.PlayerID AS player_id,
 		COUNT(GA.GoalAssistPlayerID) AS assists
-		FROM team_seasons S
+		FROM team_seasons AS S
 		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID = '$default_season_id'
 		LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID = '$default_match_type_id'
 		LEFT OUTER JOIN team_goal_assists GA ON GA.GoalAssistPlayerID = S.SeasonPlayerID AND GA.GoalAssistMatchID = M.MatchID
@@ -74,22 +74,22 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 	") or die(mysqli_error());
 	$get_yellows = mysqli_query($db_connect, "SELECT
 		P.PlayerID AS player_id,
-		COUNT(Y.YellowCardPlayerID) AS yellows
-		FROM team_seasons S
+		COUNT(YC.YellowCardPlayerID) AS yellows
+		FROM team_seasons AS S
 		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID = '$default_season_id'
 		LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID = '$default_match_type_id'
-		LEFT OUTER JOIN team_yellow_cards Y ON Y.YellowCardPlayerID = S.SeasonPlayerID AND Y.YellowCardMatchID = M.MatchID
+		LEFT OUTER JOIN team_yellow_cards YC ON YC.YellowCardPlayerID = S.SeasonPlayerID AND YC.YellowCardMatchID = M.MatchID
 		WHERE P.PlayerID != '' AND P.PlayerPositionID != '5'
 		GROUP BY player_id
 		ORDER BY player_id
 	") or die(mysqli_error());
 	$get_reds = mysqli_query($db_connect, "SELECT
 		P.PlayerID AS player_id,
-		COUNT(R.RedCardPlayerID) AS reds
-		FROM team_seasons S
+		COUNT(RC.RedCardPlayerID) AS reds
+		FROM team_seasons AS S
 		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID = '$default_season_id'
 		LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID = '$default_match_type_id'
-		LEFT OUTER JOIN team_red_cards R ON R.RedCardPlayerID = S.SeasonPlayerID AND R.RedCardMatchID = M.MatchID
+		LEFT OUTER JOIN team_red_cards RC ON RC.RedCardPlayerID = S.SeasonPlayerID AND RC.RedCardMatchID = M.MatchID
 		WHERE P.PlayerID != '' AND P.PlayerPositionID != '5'
 		GROUP BY player_id
 		ORDER BY player_id
@@ -98,7 +98,7 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 	$get_apps = mysqli_query($db_connect, "SELECT
 		P.PlayerID AS player_id,
 		COUNT(A.AppearancePlayerID) AS apps
-		FROM team_seasons S
+		FROM team_seasons AS S
 		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID = '$default_season_id'
 		LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID = '$default_match_type_id'
 		LEFT OUTER JOIN team_appearances A ON A.AppearancePlayerID = S.SeasonPlayerID AND A.AppearanceMatchID = M.MatchID
@@ -109,7 +109,7 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 	$get_ins = mysqli_query($db_connect, "SELECT
 		P.PlayerID AS player_id,
 		COUNT(SU.SubstitutionPlayerIDIn) AS ins
-		FROM team_seasons S
+		FROM team_seasons AS S
 		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID = '$default_season_id'
 		LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID = '$default_match_type_id'
 		LEFT OUTER JOIN team_substitutions SU ON SU.SubstitutionPlayerIDIn = S.SeasonPlayerID AND SU.SubstitutionMatchID = M.MatchID
@@ -125,7 +125,7 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 		P.PlayerPublish AS publish,
 		P.PlayerNumber AS player_number,
 		COUNT( G.GoalPlayerID ) AS goals
-		FROM team_seasons S
+		FROM team_seasons AS S
 		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID
 		LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID = '$default_match_type_id'
 		LEFT OUTER JOIN team_goals G ON G.GoalPlayerID = S.SeasonPlayerID AND G.GoalMatchID = M.MatchID AND G.GoalOwn = '0'
@@ -136,7 +136,7 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 	$get_assists = mysqli_query($db_connect, "SELECT
 		P.PlayerID AS player_id,
 		COUNT(GA.GoalAssistPlayerID) AS assists
-		FROM team_seasons S
+		FROM team_seasons AS S
 		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID
 		LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID = '$default_match_type_id'
 		LEFT OUTER JOIN team_goal_assists GA ON GA.GoalAssistPlayerID = S.SeasonPlayerID AND GA.GoalAssistMatchID = M.MatchID
@@ -146,22 +146,22 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 	") or die(mysqli_error());
 	$get_yellows = mysqli_query($db_connect, "SELECT
 		P.PlayerID AS player_id,
-		COUNT(Y.YellowCardPlayerID) AS yellows
-		FROM team_seasons S
+		COUNT(YC.YellowCardPlayerID) AS yellows
+		FROM team_seasons AS S
 		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID
 		LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID = '$default_match_type_id'
-		LEFT OUTER JOIN team_yellow_cards Y ON Y.YellowCardPlayerID = S.SeasonPlayerID AND Y.YellowCardMatchID = M.MatchID
+		LEFT OUTER JOIN team_yellow_cards YC ON YC.YellowCardPlayerID = S.SeasonPlayerID AND YC.YellowCardMatchID = M.MatchID
 		WHERE P.PlayerID != '' AND P.PlayerPositionID != '5'
 		GROUP BY player_id
 		ORDER BY player_id
 	") or die(mysqli_error());
 	$get_reds = mysqli_query($db_connect, "SELECT
 		P.PlayerID AS player_id,
-		COUNT(R.RedCardPlayerID) AS reds
-		FROM team_seasons S
+		COUNT(RC.RedCardPlayerID) AS reds
+		FROM team_seasons AS S
 		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID
 		LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID = '$default_match_type_id'
-		LEFT OUTER JOIN team_red_cards R ON R.RedCardPlayerID = S.SeasonPlayerID AND R.RedCardMatchID = M.MatchID
+		LEFT OUTER JOIN team_red_cards RC ON RC.RedCardPlayerID = S.SeasonPlayerID AND RC.RedCardMatchID = M.MatchID
 		WHERE P.PlayerID != '' AND P.PlayerPositionID != '5'
 		GROUP BY player_id
 		ORDER BY player_id
@@ -169,7 +169,7 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 	$get_apps = mysqli_query($db_connect, "SELECT
 		P.PlayerID AS player_id,
 		COUNT(A.AppearancePlayerID) AS apps
-		FROM team_seasons S
+		FROM team_seasons AS S
 		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID
 		LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID = '$default_match_type_id'
 		LEFT OUTER JOIN team_appearances A ON A.AppearancePlayerID = S.SeasonPlayerID AND A.AppearanceMatchID = M.MatchID
@@ -180,7 +180,7 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 	$get_ins = mysqli_query($db_connect, "SELECT
 		P.PlayerID AS player_id,
 		COUNT(SU.SubstitutionPlayerIDIn) AS ins
-		FROM team_seasons S
+		FROM team_seasons AS S
 		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID
 		LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID = '$default_match_type_id'
 		LEFT OUTER JOIN team_substitutions SU ON SU.SubstitutionPlayerIDIn = S.SeasonPlayerID AND SU.SubstitutionMatchID = M.MatchID
@@ -196,7 +196,7 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 		P.PlayerPublish AS publish,
 		P.PlayerNumber AS player_number,
 		COUNT( G.GoalPlayerID ) AS goals
-		FROM team_seasons S
+		FROM team_seasons AS S
 		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID = '$default_season_id'
 		LEFT OUTER JOIN team_goals G ON G.GoalPlayerID = S.SeasonPlayerID AND G.GoalOwn = '0' AND G.GoalSeasonID = '$default_season_id'
 		WHERE P.PlayerID != '' AND P.PlayerPositionID != '5'
@@ -206,7 +206,7 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 	$get_assists = mysqli_query($db_connect, "SELECT
 		P.PlayerID AS player_id,
 		COUNT(GA.GoalAssistPlayerID) AS assists
-		FROM team_seasons S
+		FROM team_seasons AS S
 		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID = '$default_season_id'
 		LEFT OUTER JOIN team_goal_assists GA ON GA.GoalAssistPlayerID = S.SeasonPlayerID AND GA.GoalAssistSeasonID = '$default_season_id'
 		WHERE P.PlayerID != '' AND P.PlayerPositionID != '5'
@@ -215,20 +215,20 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 	") or die(mysqli_error());
 	$get_yellows = mysqli_query($db_connect, "SELECT
 		P.PlayerID AS player_id,
-		COUNT(Y.YellowCardPlayerID) AS yellows
-		FROM team_seasons S
+		COUNT(YC.YellowCardPlayerID) AS yellows
+		FROM team_seasons AS S
 		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID = '$default_season_id'
-		LEFT OUTER JOIN team_yellow_cards Y ON Y.YellowCardPlayerID = S.SeasonPlayerID AND Y.YellowCardSeasonID = '$default_season_id'
+		LEFT OUTER JOIN team_yellow_cards YC ON YC.YellowCardPlayerID = S.SeasonPlayerID AND YC.YellowCardSeasonID = '$default_season_id'
 		WHERE P.PlayerID != '' AND P.PlayerPositionID != '5'
 		GROUP BY player_id
 		ORDER BY player_id
 	") or die(mysqli_error());
 	$get_reds = mysqli_query($db_connect, "SELECT
 		P.PlayerID AS player_id,
-		COUNT(R.RedCardPlayerID) AS reds
-		FROM team_seasons S
+		COUNT(RC.RedCardPlayerID) AS reds
+		FROM team_seasons AS S
 		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID = '$default_season_id'
-		LEFT OUTER JOIN team_red_cards R ON R.RedCardPlayerID = S.SeasonPlayerID AND R.RedCardSeasonID = '$default_season_id'
+		LEFT OUTER JOIN team_red_cards RC ON RC.RedCardPlayerID = S.SeasonPlayerID AND RC.RedCardSeasonID = '$default_season_id'
 		WHERE P.PlayerID != '' AND P.PlayerPositionID != '5'
 		GROUP BY player_id
 		ORDER BY player_id
@@ -236,7 +236,7 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 	$get_apps = mysqli_query($db_connect, "SELECT
 		P.PlayerID AS player_id,
 		COUNT(A.AppearancePlayerID) AS apps
-		FROM team_seasons S
+		FROM team_seasons AS S
 		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID = '$default_season_id'
 		LEFT OUTER JOIN team_appearances A ON A.AppearancePlayerID = S.SeasonPlayerID AND A.AppearanceSeasonID = '$default_season_id'
 		WHERE P.PlayerID != '' AND P.PlayerPositionID != '5'
@@ -246,7 +246,7 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 	$get_ins = mysqli_query($db_connect, "SELECT
 		P.PlayerID AS player_id,
 		COUNT(SU.SubstitutionPlayerIDIn) AS ins
-		FROM team_seasons S
+		FROM team_seasons AS S
 		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID = '$default_season_id'
 		LEFT OUTER JOIN team_substitutions SU ON SU.SubstitutionPlayerIDIn = S.SeasonPlayerID AND SU.SubstitutionSeasonID = '$default_season_id'
 		WHERE P.PlayerID != '' AND P.PlayerPositionID != '5'
@@ -261,7 +261,7 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 		P.PlayerPublish AS publish,
 		P.PlayerNumber AS player_number,
 		COUNT( G.GoalPlayerID ) AS goals
-		FROM team_players P
+		FROM team_players AS P
 		LEFT OUTER JOIN team_goals G ON G.GoalPlayerID = P.PlayerID AND G.GoalOwn = '0'
 		WHERE P.PlayerID != '' AND P.PlayerPositionID != '5'
 		GROUP BY player_id
@@ -270,7 +270,7 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 	$get_assists = mysqli_query($db_connect, "SELECT
 		P.PlayerID AS player_id,
 		COUNT( GA.GoalAssistPlayerID ) AS assists
-		FROM team_players P
+		FROM team_players AS P
 		LEFT OUTER JOIN team_goal_assists GA ON GA.GoalAssistPlayerID = P.PlayerID
 		WHERE P.PlayerID != '' AND P.PlayerPositionID != '5'
 		GROUP BY player_id
@@ -278,18 +278,18 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 	") or die(mysqli_error());
 	$get_yellows = mysqli_query($db_connect, "SELECT
 		P.PlayerID AS player_id,
-		COUNT( Y.YellowCardPlayerID ) AS yellows
-		FROM team_players P
-		LEFT OUTER JOIN team_yellow_cards Y ON Y.YellowCardPlayerID = P.PlayerID
+		COUNT( YC.YellowCardPlayerID ) AS yellows
+		FROM team_players AS P
+		LEFT OUTER JOIN team_yellow_cards YC ON YC.YellowCardPlayerID = P.PlayerID
 		WHERE P.PlayerID != '' AND P.PlayerPositionID != '5'
 		GROUP BY player_id
 		ORDER BY player_id
 	") or die(mysqli_error());
 	$get_reds = mysqli_query($db_connect, "SELECT
 		P.PlayerID AS player_id,
-		COUNT( R.RedCardPlayerID ) AS reds
-		FROM team_players P
-		LEFT OUTER JOIN team_red_cards R ON R.RedCardPlayerID = P.PlayerID
+		COUNT( RC.RedCardPlayerID ) AS reds
+		FROM team_players AS P
+		LEFT OUTER JOIN team_red_cards RC ON RC.RedCardPlayerID = P.PlayerID
 		WHERE P.PlayerID != '' AND P.PlayerPositionID != '5'
 		GROUP BY player_id
 		ORDER BY player_id
@@ -297,7 +297,7 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 	$get_apps = mysqli_query($db_connect, "SELECT
 		P.PlayerID AS player_id,
 		COUNT( A.AppearancePlayerID ) AS apps
-		FROM team_players P
+		FROM team_players AS P
 		LEFT OUTER JOIN team_appearances A ON A.AppearancePlayerID = P.PlayerID
 		WHERE P.PlayerID != '' AND P.PlayerPositionID != '5'
 		GROUP BY player_id
@@ -306,7 +306,7 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 	$get_ins = mysqli_query($db_connect, "SELECT
 		P.PlayerID AS player_id,
 		COUNT( SU.SubstitutionPlayerIDIn ) AS ins
-		FROM team_players P
+		FROM team_players AS P
 		LEFT OUTER JOIN team_substitutions SU ON SU.SubstitutionPlayerIDIn = P.PlayerID
 		WHERE P.PlayerID != '' AND P.PlayerPositionID != '5'
 		GROUP BY player_id
@@ -336,7 +336,7 @@ while($data = mysqli_fetch_array($get_players)) {
 	$query = mysqli_query($db_connect, "SELECT
 		S.SubstitutionMinute AS minute,
 		M.MatchOvertime AS match_overtime
-		FROM team_substitutions S, team_matches M
+		FROM team_substitutions AS S, team_matches AS M
 		WHERE S.SubstitutionPlayerIDIn = '$players[$i]'
 		AND S.SubstitutionSeasonID LIKE '$tdefault_season_id'
 		AND M.MatchID = S.SubstitutionMatchID
@@ -353,7 +353,7 @@ while($data = mysqli_fetch_array($get_players)) {
 	mysqli_free_result($query);
 
 	$query = mysqli_query($db_connect, "SELECT *
-		FROM team_appearances A, team_matches M
+		FROM team_appearances AS A, team_matches AS M
 		WHERE A.AppearancePlayerID = '$players[$i]'
 		AND A.AppearanceSeasonID LIKE '$tdefault_season_id'
 		AND M.MatchID = A.AppearanceMatchID
@@ -372,7 +372,7 @@ while($data = mysqli_fetch_array($get_players)) {
 	$query = mysqli_query($db_connect, "SELECT
 		S.SubstitutionMinute AS minute,
 		M.MatchOvertime AS match_overtime
-		FROM team_substitutions S, team_matches M
+		FROM team_substitutions AS S, team_matches AS M
 		WHERE S.SubstitutionPlayerIDOut = '$players[$i]'
 		AND S.SubstitutionSeasonID LIKE '$tdefault_season_id'
 		AND M.MatchID = S.SubstitutionMatchID
@@ -389,12 +389,12 @@ while($data = mysqli_fetch_array($get_players)) {
 	mysqli_free_result($query);
 
 	$query = mysqli_query($db_connect, "SELECT
-		R.RedCardMinute AS minute,
+		RC.RedCardMinute AS minute,
 		M.MatchOvertime AS match_overtime
-		FROM team_red_cards R, team_matches M
-		WHERE R.RedCardPlayerID = '$players[$i]'
-		AND R.RedCardSeasonID LIKE '$tdefault_season_id'
-		AND M.MatchID = R.RedCardMatchID
+		FROM team_red_cards AS RC, team_matches AS M
+		WHERE RC.RedCardPlayerID = '$players[$i]'
+		AND RC.RedCardSeasonID LIKE '$tdefault_season_id'
+		AND M.MatchID = RC.RedCardMatchID
 		AND M.MatchTypeID LIKE '$tdefault_match_type_id'
 	") or die(mysqli_error());
 	while($tdata = mysqli_fetch_array($query)) {
@@ -715,11 +715,11 @@ if (SHOW_STAFF == 1) {
 		M.ManagerID AS manager_id,
 		M.ManagerLastName AS manager_last_name,
 		M.ManagerFirstName AS manager_first_name
-		FROM team_managers M, team_matches MA, team_seasons_managers SM
+		FROM team_managers M, team_matches MA, team_seasons S
 		WHERE MA.MatchSeasonID LIKE '$tdefault_season_id'
 		AND MA.MatchTypeID LIKE '$tdefault_match_type_id'
-		AND M.ManagerID = SM.SeasonManagerID
-		AND SM.SeasonID = MA.MatchSeasonID
+		AND M.ManagerID = S.SeasonManagerID
+		AND S.SeasonID = MA.MatchSeasonID
 		GROUP BY manager_id
 		ORDER BY manager_last_name, manager_first_name
 	") or die(mysqli_error());

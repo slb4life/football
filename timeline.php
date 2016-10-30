@@ -79,7 +79,7 @@ for ($i = 1 ; $i < 13 ; $i++) {
 }
 echo "</select>\n";
 echo "<select name='start_year'>\n";
-for ($i = 2000 ; $i < 2016 ; $i++) {
+for ($i = 2000 ; $i < 2051 ; $i++) {
 	if ($i < 10) {
 		$i = "0".$i;
 	}
@@ -144,7 +144,7 @@ for ($i = 1 ; $i < 13 ; $i++) {
 }
 echo "</select>\n";
 echo "<select name='end_year'>\n";
-for ($i = 2000 ; $i < 2016 ; $i++) {
+for ($i = 2000 ; $i < 2051 ; $i++) {
 	if ($i < 10) {
 		$i = "0".$i;
 	}
@@ -388,7 +388,7 @@ if (!isset($get_stats)) {
 		$check = $data['appearance_player_id'];
 		$i++;
 	}
-	if ($data['appearance_player_id'] == 0) {
+	if ($data['appearance_player_id'] == 1) {
 		echo " (".$most_appearances.")";
 	} else {
 		echo " (0)";

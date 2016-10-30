@@ -48,7 +48,7 @@ if (!isset($_SESSION['default_season_id_team']) || !isset($_SESSION['default_mat
 
 include('functions/get_language.php');
 include('functions/get_seasons.php');
-include('functions/get_types.php');
+include('functions/get_match_types.php');
 
 switch (PRINT_DATE) {
 	case 1: {
@@ -69,7 +69,7 @@ switch (PRINT_DATE) {
 }
 
 $get_seasons = mysqli_query($db_connect, "SELECT * FROM team_season_names WHERE SeasonPublish = '1' ORDER BY SeasonName DESC") or die(mysqli_error());
-$get_types = mysqli_query($db_connect, "SELECT * FROM team_match_types ORDER BY MatchTypeName") or die(mysqli_error());
+$get_match_types = mysqli_query($db_connect, "SELECT * FROM team_match_types ORDER BY MatchTypeName") or die(mysqli_error());
 echo "<!DOCTYPE html>\n";
 echo "<html>\n";
 echo "<head>\n";
@@ -116,7 +116,7 @@ echo "".GetSeasons($db_connect, $default_season_id)."";
 echo "</select>\n";
 echo "<select name='match_type'>\n";
 echo "<option value='0'>".$locale_all."</option>\n";
-echo "".GetTypes($db_connect, $default_match_type_id)."";
+echo "".GetMatchTypes($db_connect, $default_match_type_id)."";
 echo "</select>\n";
 echo "<input type='submit' name='submit' value='Change'>\n";
 echo "</td>\n";

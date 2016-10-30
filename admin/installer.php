@@ -333,14 +333,6 @@ if (isset($submit)) {
 		) ENGINE=MyISAM
 	") or die(mysqli_error($db_connect));
 
-	mysqli_query($db_connect, "CREATE TABLE `team_seasons_managers` (
-		`SeasonID` int(10) unsigned NOT NULL default '0',
-		`SeasonManagerID` int(10) unsigned NOT NULL default '0',
-		KEY `SeasonID` (`SeasonID`),
-		KEY `SeasonPlayerID` (`SeasonManagerID`)
-		) ENGINE=MyISAM
-	") or die(mysqli_error($db_connect));
-
 	mysqli_query($db_connect, "CREATE TABLE `team_substitutes` (
 		`SubstituteID` int(10) unsigned NOT NULL auto_increment,
 		`SubstitutePlayerID` int(10) unsigned NOT NULL default '0',
