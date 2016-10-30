@@ -145,20 +145,21 @@ if (SHOW_LATEST_MATCH == 1) {
 		M.MatchID AS match_id,
 		M.MatchGoals AS goals,
 		M.MatchGoalsOpponent AS goals_opponent,
+		M.MatchDateTime AS match_date,
 		MT.MatchTypeName AS match_type,
 		O.OpponentName AS opponent_name
-		FROM team_matches M, team_opponents O, team_match_types MT
+		FROM team_matches AS M, team_opponents AS O, team_match_types AS MT
 		WHERE M.MatchDateTime < CURRENT_TIMESTAMP
 		AND M.MatchGoals IS NOT NULL
 		AND M.MatchGoalsOpponent IS NOT NULL
 		AND M.MatchTypeID = MT.MatchTypeID
 		AND O.OpponentID = M.MatchOpponent
-		ORDER BY M.MatchDateTime DESC
+		ORDER BY match_date DESC
 		LIMIT 1
 	") or die(mysqli_error());
 
 	if (mysqli_num_rows($get_lastest_match) == 0) {
-		echo "<b>".$locale_start_of_season."</b>";
+		echo "".$locale_start_of_season."";
 	} else {
 		while($data = mysqli_fetch_array($get_lastest_match)) {
 			echo "".$locale_latest_match.": <a href='match_details.php?id=".$data['match_id']."'>VS. ".$data['opponent_name']."</a>";

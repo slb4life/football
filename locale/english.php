@@ -29,6 +29,7 @@ $locale_top_assists = 'Top Goal Assists';
 $locale_top_bookings = 'TOP Bookings';
 $locale_featured_player = 'Featured Player';
 $locale_contact = 'Contact';
+$locale_none = 'None';
 
 // Player Positions
 $locale_goalkeeper = 'Goalkeeper';
@@ -103,7 +104,6 @@ $locale_penalty_short = 'Pen.';
 $locale_opening_squads = 'Opening Squads';
 $locale_substitutes = 'Substitutes';
 $locale_substitutions = 'Substitutions';
-$locale_none = 'None';
 $locale_other_statistics = 'Other Statistics';
 $locale_shots = 'Shots';
 $locale_shots_on_goal = 'Shots On Goal';

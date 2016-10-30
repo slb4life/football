@@ -523,7 +523,6 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		} else {
 			echo "<img src='../images/no_image.png' alt='' width='100' height='100'>";
 		}
-
 		if (file_exists($image_url) || file_exists($image_url)) {
 			echo "<br><br>\n";
 			echo "<form enctype='multipart/form-data' method='post' action='image_upload.php?session_id=".$session."'>\n";

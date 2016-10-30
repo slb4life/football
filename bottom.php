@@ -21,7 +21,7 @@ if (SHOW_NEXT_MATCH == 1) {
 		MT.MatchTypeName AS match_type_name,
 		M.MatchAdditionalType AS match_additional_type,
 		DATE_FORMAT(M.MatchDateTime, '$how_to_print_in_report') AS match_date
-		FROM (team_matches M, team_match_types MT, team_opponents O)
+		FROM team_matches AS M, team_match_types AS MT, team_opponents AS O
 		WHERE M.MatchDateTime > CURRENT_TIMESTAMP
 		AND MT.MatchTypeID = M.MatchTypeID
 		AND O.OpponentID = M.MatchOpponent
@@ -31,7 +31,7 @@ if (SHOW_NEXT_MATCH == 1) {
 	$team_name = TEAM_NAME;
 
 	if (mysqli_num_rows($get_next_match) == 0) {
-		echo "<b>".$locale_end_of_season."</b>";
+		echo "".$locale_end_of_season."";
 	} else {
 		while($data = mysqli_fetch_array($get_next_match)) {
 			$logos = 0;
@@ -51,7 +51,7 @@ if (SHOW_NEXT_MATCH == 1) {
 			echo "<br>\n";
 			$get_preview = mysqli_query($db_connect, "SELECT							
 				P.PreviewText AS preview_text
-				FROM team_previews P
+				FROM team_previews AS P
 				WHERE P.PreviewMatchID = '$data[match_id]'
 				LIMIT 1
 			") or die(mysqli_error());
@@ -147,7 +147,7 @@ if (SHOW_TOP_APPS == 1) {
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORBOTTOM)."'>\n";
-	echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
+	echo "<table width='100%' cellspacing='0' cellpadding='1' border='0'>\n";
 
 	if ($default_match_type_id == 0) {
 		$tdefault_match_type_id = '%';
@@ -164,7 +164,7 @@ if (SHOW_TOP_APPS == 1) {
 		P.PlayerID AS player_id,
 		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
 		COUNT( A.AppearancePlayerID ) AS appearance_player_id
-		FROM team_seasons S
+		FROM team_seasons AS S
 		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID LIKE '$tdefault_season_id'
 		LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID LIKE '$tdefault_match_type_id'
 		LEFT OUTER JOIN team_appearances A ON A.AppearancePlayerID = S.SeasonPlayerID AND A.AppearanceMatchID = M.MatchID
@@ -181,6 +181,11 @@ if (SHOW_TOP_APPS == 1) {
 		echo "<td align='right' valign='top'>".$data['appearance_player_id']."</td>\n";
 		echo "</tr>\n";
 		$i++;
+	}
+	if ($i == 1) {
+		echo "<tr>\n";
+		echo "<td>".$locale_none."</td>\n";
+		echo "</tr>\n";
 	}
 	mysqli_free_result($get_top_apps);
 
@@ -203,7 +208,7 @@ if (SHOW_TOP_SCORERS == 1) {
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORBOTTOM)."'>\n";
-	echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
+	echo "<table width='100%' cellspacing='0' cellpadding='1' border='0'>\n";
 
 	if ($default_match_type_id == 0) {
 		$tdefault_match_type_id = '%';
@@ -220,7 +225,7 @@ if (SHOW_TOP_SCORERS == 1) {
 		P.PlayerID AS player_id,
 		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
 		COUNT( G.GoalPlayerID ) AS goals
-		FROM team_seasons S
+		FROM team_seasons AS S
 		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID LIKE '$tdefault_season_id'
 		LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID LIKE '$tdefault_match_type_id'
 		LEFT OUTER JOIN team_goals G ON G.GoalPlayerID = S.SeasonPlayerID AND G.GoalMatchID = M.MatchID AND G.GoalOwn = '0'
@@ -237,6 +242,11 @@ if (SHOW_TOP_SCORERS == 1) {
 		echo "<td align='right' valign='top'>".$data['goals']."</td>\n";
 		echo "</tr>\n";
 		$i++;
+	}
+	if ($i == 1) {
+		echo "<tr>\n";
+		echo "<td>".$locale_none."</td>\n";
+		echo "</tr>\n";
 	}
 	mysqli_free_result($get_top_scorers);
 
@@ -259,7 +269,7 @@ if (SHOW_TOP_ASSISTS == 1) {
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORBOTTOM)."'>\n";
-	echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
+	echo "<table width='100%' cellspacing='0' cellpadding='1' border='0'>\n";
 
 	if ($default_match_type_id == 0) {
 		$tdefault_match_type_id = '%';
@@ -276,7 +286,7 @@ if (SHOW_TOP_ASSISTS == 1) {
 		P.PlayerID AS player_id,
 		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
 		COUNT( GA.GoalAssistPlayerID ) AS goal_assists
-		FROM team_seasons S
+		FROM team_seasons AS S
 		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID LIKE '$tdefault_season_id'
 		LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID LIKE '$tdefault_match_type_id'
 		LEFT OUTER JOIN team_goal_assists GA ON GA.GoalAssistPlayerID = S.SeasonPlayerID AND GA.GoalAssistMatchID = M.MatchID
@@ -293,6 +303,11 @@ if (SHOW_TOP_ASSISTS == 1) {
 		echo "<td align='right' valign='top'>".$data['goal_assists']."</td>\n";
 		echo "</tr>\n";
 		$i++;
+	}
+	if ($i == 1) {
+		echo "<tr>\n";
+		echo "<td>".$locale_none."</td>\n";
+		echo "</tr>\n";
 	}
 	mysqli_free_result($get_top_assists);
 
@@ -315,7 +330,7 @@ if (SHOW_TOP_BOOKINGS == 1) {
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORBOTTOM)."'>\n";
-	echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
+	echo "<table width='100%' cellspacing='0' cellpadding='1' border='0'>\n";
 
 	if ($default_match_type_id == 0) {
 		$tdefault_match_type_id = '%';
@@ -332,7 +347,7 @@ if (SHOW_TOP_BOOKINGS == 1) {
 		P.PlayerID AS player_id,
 		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
 		COUNT( Y.YellowCardPlayerID ) AS yellows
-		FROM team_seasons S
+		FROM team_seasons AS S
 		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID LIKE '$tdefault_season_id'
 		LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID LIKE '$tdefault_match_type_id'
 		LEFT OUTER JOIN team_yellow_cards Y ON Y.YellowCardPlayerID = S.SeasonPlayerID AND Y.YellowCardMatchID = M.MatchID
@@ -349,6 +364,11 @@ if (SHOW_TOP_BOOKINGS == 1) {
 		echo "<td align='right' valign='top'>".$data['yellows']."</td>\n";
 		echo "</tr>\n";
 		$i++;
+	}
+	if ($i == 1) {
+		echo "<tr>\n";
+		echo "<td>".$locale_none."</td>\n";
+		echo "</tr>\n";
 	}
 	mysqli_free_result($get_top_bookings);
 
