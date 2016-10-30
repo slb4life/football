@@ -525,43 +525,43 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		}
 
 		if (file_exists($image_url) || file_exists($image_url)) {
-		echo "<br><br>\n";
-		echo "<form enctype='multipart/form-data' method='post' action='image_upload.php?session_id=".$session."'>\n";
-		echo "<b>Upload Second Manager Picture</b><br>\n";
-		echo "<input type='hidden' name='MAX_FILE_SIZE' value='8000000'>\n";
-		echo "<input name='image_file' type='file'>\n";
-		echo "<input name='action' type='hidden' value='8'>\n";
-		echo "<input type='submit' name='submit' value='Upload'>\n";
-		echo "<input type='hidden' name='manager_id' value='".$manager_id."'>\n";
-		echo "</form>\n";
-		$image_url3 = "../images/manager".$manager_id."_1.jpg";
-		$image_url4 = "../images/manager".$manager_id."_1.png";
+			echo "<br><br>\n";
+			echo "<form enctype='multipart/form-data' method='post' action='image_upload.php?session_id=".$session."'>\n";
+			echo "<b>Upload Second Manager Picture</b><br>\n";
+			echo "<input type='hidden' name='MAX_FILE_SIZE' value='8000000'>\n";
+			echo "<input name='image_file' type='file'>\n";
+			echo "<input name='action' type='hidden' value='8'>\n";
+			echo "<input type='submit' name='submit' value='Upload'>\n";
+			echo "<input type='hidden' name='manager_id' value='".$manager_id."'>\n";
+			echo "</form>\n";
+			$image_url3 = "../images/manager".$manager_id."_1.jpg";
+			$image_url4 = "../images/manager".$manager_id."_1.png";
 
-		if (file_exists($image_url3)) {
-			echo "<img src='".$image_url3."' alt=''>";
-			echo "<br><a href='delete_picture.php?session_id=".$session."&amp;manager_id=".$manager_id."&amp;action=8&amp;type=jpg'>Delete this Picture</a>";
-		} else if(file_exists($image_url4)) {
-			echo "<img src='".$image_url4."' alt=''>";
-			echo "<br><a href='delete_picture.php?session_id=".$session."&amp;manager_id=".$manager_id."&amp;action=8&amp;type=png'>Delete this Picture</a>";
-		} else {
-			echo "<img src='../images/no_image.png' alt='' width='100' height='100'>";
-		}
-		echo "<br><br>\n";
-		echo "<form enctype='multipart/form-data' method='post' action='image_upload.php?session_id=".$session."'>\n";
-		echo "<b>Upload Third Manager Picture</b><br>\n";
-		echo "<input type='hidden' name='MAX_FILE_SIZE' value='8000000'>\n";
-		echo "<input name='image_file' type='file'>\n";
-		echo "<input name='action' type='hidden' value='9'>\n";
-		echo "<input type='submit' name='submit' value='Upload'>\n";
-		echo "<input type='hidden' name='manager_id' value='".$manager_id."'>\n";
-		echo "</form>\n";
-		$image_url5 = "../images/manager".$manager_id."_2.jpg";
-		$image_url6 = "../images/manager".$manager_id."_2.png";
+			if (file_exists($image_url3)) {
+				echo "<img src='".$image_url3."' alt=''>";
+				echo "<br><a href='delete_picture.php?session_id=".$session."&amp;manager_id=".$manager_id."&amp;action=8&amp;type=jpg'>Delete this Picture</a>";
+			} else if(file_exists($image_url4)) {
+				echo "<img src='".$image_url4."' alt=''>";
+				echo "<br><a href='delete_picture.php?session_id=".$session."&amp;manager_id=".$manager_id."&amp;action=8&amp;type=png'>Delete this Picture</a>";
+			} else {
+				echo "<img src='../images/no_image.png' alt='' width='100' height='100'>";
+			}
+			echo "<br><br>\n";
+			echo "<form enctype='multipart/form-data' method='post' action='image_upload.php?session_id=".$session."'>\n";
+			echo "<b>Upload Third Manager Picture</b><br>\n";
+			echo "<input type='hidden' name='MAX_FILE_SIZE' value='8000000'>\n";
+			echo "<input name='image_file' type='file'>\n";
+			echo "<input name='action' type='hidden' value='9'>\n";
+			echo "<input type='submit' name='submit' value='Upload'>\n";
+			echo "<input type='hidden' name='manager_id' value='".$manager_id."'>\n";
+			echo "</form>\n";
+			$image_url5 = "../images/manager".$manager_id."_2.jpg";
+			$image_url6 = "../images/manager".$manager_id."_2.png";
 
-		if (file_exists($image_url5)) {
-				echo "<img src='".$image_url5."' alt=''>";
-				echo "<br><a href='delete_picture.php?session_id=".$session."&amp;manager_id=".$manager_id."&amp;action=9&amp;type=jpg'>Delete this Picture</a>";
-		} else if (file_exists($image_url6)) {
+			if (file_exists($image_url5)) {
+					echo "<img src='".$image_url5."' alt=''>";
+					echo "<br><a href='delete_picture.php?session_id=".$session."&amp;manager_id=".$manager_id."&amp;action=9&amp;type=jpg'>Delete this Picture</a>";
+			} else if (file_exists($image_url6)) {
 				echo "<img src='".$image_url6."' alt=''>";
 				echo "<br><a href='delete_picture.php?session_id=".$session."&amp;manager_id=".$manager_id."&amp;action=9&amp;type=png'>Delete this Picture</a>";
 			} else {
