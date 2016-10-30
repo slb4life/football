@@ -30,7 +30,7 @@ $id = $_REQUEST['id'];
 if ($id == '' || !is_numeric($id)) {
 	$id = 1;
 }
-$get_manager_info = mysqli_query($db_connect, "SELECT
+$get_manager = mysqli_query($db_connect, "SELECT
 	CONCAT(M.ManagerFirstName, ' ', M.ManagerLastName) AS manager_name,
 	M.ManagerID AS manager_id,
 	M.ManagerProfile AS manager_description,
@@ -42,8 +42,8 @@ $get_manager_info = mysqli_query($db_connect, "SELECT
 	WHERE M.ManagerID = '$id'
 	LIMIT 1
 ") or die(mysqli_error());
-$manager_data = mysqli_fetch_array($get_manager_info);
-mysqli_free_result($get_manager_info);
+$manager_data = mysqli_fetch_array($get_manager);
+mysqli_free_result($get_manager);
 
 echo "<form method='post' action='change.php'>\n";
 echo "<input name='script_name' type='hidden' value='".$script_name."'>\n";

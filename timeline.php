@@ -233,15 +233,16 @@ if (!isset($get_stats)) {
 	}
 	$get_matches = mysqli_query($db_connect, "SELECT
 		M.MatchGoals AS goals,
-		M.MatchGoalsOpponent AS goals_opponent
-		FROM team_matches M
+		M.MatchGoalsOpponent AS goals_opponent,
+		M.MatchDateTime AS match_date
+		FROM team_matches AS M
 		WHERE M.MatchTypeID LIKE '$tdefault_match_type_id'
 		AND M.MatchDateTime <= '$match_end_date'
 		AND M.MatchDateTime >= '$match_start_date'
 		AND M.MatchPlaceID LIKE '$match_place_id'
 		AND M.MatchGoals IS NOT NULL
 		AND M.MatchGoalsOpponent IS NOT NULL
-		ORDER BY M.MatchDateTime
+		ORDER BY match_date
 	") or die(mysqli_error());
 	$k = 0;
 	while($data = mysqli_fetch_array($get_matches)) {
@@ -357,7 +358,7 @@ if (!isset($get_stats)) {
 		P.PlayerID AS player_id,
 		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
 		COUNT( A.AppearancePlayerID ) AS appearance_player_id
-		FROM team_seasons S
+		FROM team_seasons AS S
 		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID
 		AND S.SeasonID LIKE '%'
 		LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID
@@ -387,11 +388,15 @@ if (!isset($get_stats)) {
 		}
 		$check = $data['appearance_player_id'];
 		$i++;
+
+		if ($data['appearance_player_id'] == 1) {
+			echo " (".$most_appearances.")";
+		} else {
+			echo " (0)";
+		}
 	}
-	if ($data['appearance_player_id'] == 1) {
-		echo " (".$most_appearances.")";
-	} else {
-		echo " (0)";
+	if ($i == 0) {
+		echo "0";
 	}
 	mysqli_free_result($get_appearances);
 
@@ -404,7 +409,7 @@ if (!isset($get_stats)) {
 		P.PlayerID AS player_id,
 		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
 		COUNT( G.GoalPlayerID ) AS goal_player_id
-		FROM team_seasons S
+		FROM team_seasons AS S
 		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID
 		AND S.SeasonID LIKE '%'
 		LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID
@@ -434,11 +439,15 @@ if (!isset($get_stats)) {
 		}
 		$check = $data['goal_player_id'];
 		$i++;
+
+		if ($data['goal_player_id'] == 1) {
+			echo " (".$most_goals.")";
+		} else {
+			echo " (0)";
+		}
 	}
-	if ($data['goal_player_id'] == 1) {
-		echo " (".$most_goals.")";
-	} else {
-		echo " (0)";
+	if ($i == 0) {
+		echo "0";
 	}
 	mysqli_free_result($get_goals);
 
@@ -451,7 +460,7 @@ if (!isset($get_stats)) {
 		P.PlayerID AS player_id,
 		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
 		COUNT( GA.GoalAssistPlayerID ) AS goal_assist_player_id
-		FROM team_seasons S
+		FROM team_seasons AS S
 		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID
 		AND S.SeasonID LIKE '%'
 		LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID
@@ -481,11 +490,15 @@ if (!isset($get_stats)) {
 		}
 		$check = $data['goal_assist_player_id'];
 		$i++;
+
+		if ($data['goal_assist_player_id'] == 1) {
+			echo " (".$most_assists.")";
+		} else {
+			echo " (0)";
+		}
 	}
-	if ($data['goal_assist_player_id'] == 1) {
-		echo " (".$most_assists.")";
-	} else {
-		echo " (0)";
+	if ($i == 0) {
+		echo "0";
 	}
 	mysqli_free_result($get_assists);
 
@@ -497,8 +510,8 @@ if (!isset($get_stats)) {
 	$get_yellows = mysqli_query($db_connect, "SELECT
 		P.PlayerID AS player_id,
 		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
-		COUNT( Y.YellowCardPlayerID ) AS yellow_card_player_id
-		FROM team_seasons S
+		COUNT( YC.YellowCardPlayerID ) AS yellow_card_player_id
+		FROM team_seasons AS S
 		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID
 		AND S.SeasonID LIKE '%'
 		LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID
@@ -506,8 +519,8 @@ if (!isset($get_stats)) {
 		AND M.MatchDateTime <= '$match_end_date'
 		AND M.MatchDateTime >= '$match_start_date'
 		AND M.MatchPlaceID LIKE '$match_place_id'
-		LEFT OUTER JOIN team_yellow_cards Y ON Y.YellowCardPlayerID = S.SeasonPlayerID
-		AND Y.YellowCardMatchID = M.MatchID
+		LEFT OUTER JOIN team_yellow_cards YC ON YC.YellowCardPlayerID = S.SeasonPlayerID
+		AND YC.YellowCardMatchID = M.MatchID
 		WHERE P.PlayerID != ''
 		GROUP BY player_id
 		ORDER BY yellow_card_player_id DESC, player_name
@@ -528,11 +541,15 @@ if (!isset($get_stats)) {
 		}
 		$check = $data['yellow_card_player_id'];
 		$i++;
+
+		if ($data['yellow_card_player_id'] == 1) {
+			echo " (".$most_yellows.")";
+		} else {
+			echo " (0)";
+		}
 	}
-	if ($data['yellow_card_player_id'] == 1) {
-		echo " (".$most_yellows.")";
-	} else {
-		echo " (0)";
+	if ($i == 0) {
+		echo "0";
 	}
 	mysqli_free_result($get_yellows);
 
