@@ -1,7 +1,7 @@
 <?php
 include('functions/get_settings.php');
-include('functions/get_date_time.php');
 include('functions/get_language.php');
+include('functions/get_date_time.php');
 include('functions/get_seasons.php');
 include('functions/get_match_types.php');
 
