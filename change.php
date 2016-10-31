@@ -8,14 +8,12 @@ if (isset($_POST['submit']) || isset($_POST['submit2']) || isset($_POST['submit3
     $submit2 = $_POST['submit2'];
     $submit3 = $_POST['submit3'];
 }
-
 if (isset($_POST['change_page']) || isset($_POST['change_opponent']) || isset($_POST['change_player']) || isset($_POST['change_manager'])) {
     $change_page = $_POST['change_page'];
     $change_opponent = $_POST['change_opponent'];
     $change_player = $_POST['change_player'];
     $change_manager = $_POST['change_manager'];
 }
-
 if (isset($submit)) {
 	$season = $_POST['season'];
 	$match_type = $_POST['match_type'];

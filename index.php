@@ -1,5 +1,6 @@
 <?php
 include('top.php');
+
 echo "<table align='center' width='100%' cellspacing='0' cellpadding='0' border='0' bgcolor='#".(BORDERCOLOR)."'>\n";
 echo "<tr>\n";
 echo "<td>\n";
@@ -21,7 +22,7 @@ $get_latest_match = mysqli_query($db_connect, "SELECT
 	M.MatchPenaltyShootout AS penalty_shootout,
 	M.MatchPlaceID AS match_place_id,
 	MT.MatchTypeName AS match_type_name
-	FROM (team_matches M, team_match_types MT, team_opponents O)
+	FROM (team_matches AS M, team_match_types AS MT, team_opponents AS O)
 	WHERE M.MatchDateTime < CURRENT_TIMESTAMP 
 	AND M.MatchGoals IS NOT NULL
 	AND M.MatchGoalsOpponent IS NOT NULL
@@ -35,6 +36,7 @@ if (mysqli_num_rows($get_latest_match) == 0) {
 	echo "<b>".$locale_start_of_season."</b>";
 } else {
 	while($data = mysqli_fetch_array($get_latest_match)) {
+		$team_name = TEAM_NAME;
 		$logos = 0;
 		$image_url_1 = "images/team_logo.png";
 		$image_url_2 = "images/team_logo.jpg";
@@ -46,12 +48,12 @@ if (mysqli_num_rows($get_latest_match) == 0) {
 		}
 		if ($data['match_place_id'] == 1) {
 			echo "<a href='match_details.php?id=".$data['match_id']."'>\n";
-			echo "<table width='100%' align='center' cellspacing='2' cellpadding='2' border='0'>\n";
+			echo "<table width='100%' align='center' cellspacing='0' cellpadding='0' border='0'>\n";
 			echo "<tr>\n";
 			echo "<td align='left' valign='middle' width='45%'>";
 
 			if ($logos == 1) {
-				echo "<table width='100%' border='0' cellspacing='2' cellpadding='0'>\n";
+				echo "<table width='100%' border='0' cellspacing='0' cellpadding='0'>\n";
 				echo "<tr>\n";
 				echo "<td width='5%' valign='middle' align='center'>";
 
@@ -61,11 +63,11 @@ if (mysqli_num_rows($get_latest_match) == 0) {
 					echo "<img src='".$image_url_2."' alt='' border='0'>";
 				}
 				echo "</td>\n";
-				echo "<td width='95%' valign='middle' align='left'><font class='bigname'>".(TEAM_NAME)."</font></td>\n";
+				echo "<td width='95%' valign='middle' align='left'><font class='bigname'>".$team_name."</font></td>\n";
 				echo "</tr>\n";
 				echo "</table>\n";
 			} else {
-				echo "<font class='bigname'>".(TEAM_NAME)."</font>\n";
+				echo "<font class='bigname'>".$team_name."</font>\n";
 			}
 			echo "</td>\n";
 			echo "<td align='center' valign='middle' width='10%'>";
@@ -85,7 +87,7 @@ if (mysqli_num_rows($get_latest_match) == 0) {
 			echo "<td align='right' valign='middle' width='45%'>\n";
 
 			if ($logos == 1) {
-				echo "<table width='100%' border='0' cellspacing='2' cellpadding='0'>\n";
+				echo "<table width='100%' border='0' cellspacing='0' cellpadding='0'>\n";
 				echo "<tr>\n";
 				echo "<td width='95%' valign='middle' align='right'><font class='bigname'>".$data['opponent_name']."</font></td>\n";
 				echo "<td width='5%' valign='middle' align='center'>";
@@ -107,12 +109,12 @@ if (mysqli_num_rows($get_latest_match) == 0) {
 			echo "</a>\n";
 		} else {
 			echo "<a href='match_details.php?id=".$data['match_id']."'>\n";
-			echo "<table width='100%' align='center' cellspacing='2' cellpadding='2' border='0'>\n";
+			echo "<table width='100%' align='center' cellspacing='0' cellpadding='0' border='0'>\n";
 			echo "<tr>\n";
 			echo "<td align='left' valign='middle' width='45%'>";
 
 			if ($logos == 1) {
-				echo "<table width='100%' border='0' cellspacing='2' cellpadding='0'>\n";
+				echo "<table width='100%' border='0' cellspacing='0' cellpadding='0'>\n";
 				echo "<tr>\n";
 				echo "<td width='5%' valign='middle' align='center'>";
 
@@ -146,9 +148,9 @@ if (mysqli_num_rows($get_latest_match) == 0) {
 			echo "<td align='right' valign='middle' width='45%'>\n";
 
 			if ($logos == 1) {
-				echo "<table width='100%' border='0' cellspacing='2' cellpadding='0'>\n";
+				echo "<table width='100%' border='0' cellspacing='0' cellpadding='0'>\n";
 				echo "<tr>\n";
-				echo "<td width='95%' valign='middle' align='right'><font class='bigname'>".(TEAM_NAME)."</font></td>\n";
+				echo "<td width='95%' valign='middle' align='right'><font class='bigname'>".$team_name."</font></td>\n";
 				echo "<td width='5%' valign='middle' align='center'>";
 
 				if (file_exists($image_url_1)) {
@@ -160,7 +162,7 @@ if (mysqli_num_rows($get_latest_match) == 0) {
 				echo "</tr>\n";
 				echo "</table>\n";
 			} else {
-				echo "<font class='bigname'>".(TEAM_NAME)."</font>";
+				echo "<font class='bigname'>".$team_name."</font>";
 			}
 			echo "</td>\n";
 			echo "</tr>\n";
@@ -196,7 +198,7 @@ if (!isset($news_id)) {
 		N.news_subject AS news_subject,
 		N.news_content AS news_content,
 		DATE_FORMAT(N.news_date, '$how_to_print') AS news_date
-		FROM team_news N
+		FROM team_news AS N
 		ORDER BY news_date DESC, news_id DESC
 		LIMIT 5
 	") or die(mysqli_error());
@@ -222,7 +224,7 @@ if (!isset($news_id)) {
 	mysqli_free_result($get_news);
 
 	echo "<tr>\n";
-	echo "<td colspan='2' align='left' valign='top'><br><a href='news_archive.php'>".$locale_news_archive."</a></td>\n";
+	echo "<td align='left' valign='top'><br><a href='news_archive.php'>".$locale_news_archive."</a></td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
 	echo "</td>\n";
@@ -241,7 +243,7 @@ if (!isset($news_id)) {
 		N.news_content AS news_content,
 		N.news_picture_text AS news_picture_text,
 		DATE_FORMAT(N.news_date, '$how_to_print') AS news_date
-		FROM team_news N
+		FROM team_news AS N
 		WHERE news_id = '$news_id'
 		LIMIT 1
 	") or die(mysqli_error());
@@ -269,7 +271,7 @@ if (!isset($news_id)) {
 		} else {
 			$image_url = $image_url_2;
 		}
-		echo "<table width='10%' align='right' cellspacing='10' cellpadding='10' border='0'>\n";
+		echo "<table width='10%' align='right' cellspacing='5' cellpadding='5' border='0'>\n";
 		echo "<tr>\n";
 		echo "<td align='center' valign='top'><img src='".$image_url."' alt=''><br><small>".$data['news_picture_text']."</small></td>\n";
 		echo "</tr>\n";

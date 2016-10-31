@@ -1,8 +1,6 @@
 <?php
 include('top.php');
 $script_name = "preview.php?".$_SERVER['QUERY_STRING'];
-
-$team_name = TEAM_NAME;
 $id = mysqli_real_escape_string($db_connect, $_REQUEST['id']);
 
 echo "<table align='center' width='100%' cellspacing='0' cellpadding='0' border='0' bgcolor='#".(BORDERCOLOR)."'>\n";
@@ -90,7 +88,6 @@ $get_squad = mysqli_query($db_connect, "SELECT
 	AND P.PlayerInSquadList = '1'
 	ORDER BY player_position
 ") or die(mysqli_error());
-
 $injured_query = mysqli_query($db_connect, "SELECT
 	CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
 	P.PlayerID AS player_id,
@@ -100,11 +97,9 @@ $injured_query = mysqli_query($db_connect, "SELECT
 	WHERE P.PlayerID = I.InjuredPlayerID
 	AND I.InjuredMatchID = '$id'
 ") or die(mysqli_error());
-
 while($data = mysqli_fetch_array($injured_query)) {
 	$check[] = $data['player_id'];
 }
-
 if ($current_time_unix < $match_time_unix) {
 	$suspended_query = mysqli_query($db_connect, "SELECT
 		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
@@ -115,7 +110,6 @@ if ($current_time_unix < $match_time_unix) {
 		WHERE P.PlayerID = S.SuspendedPlayerID
 		AND S.SuspendedMatchID = '$id'
 	") or die(mysqli_error());
-
 	while($data = mysqli_fetch_array($suspended_query)) {
 		$check[] = $data['player_id'];
 	}
@@ -149,13 +143,12 @@ if ($current_time_unix < $match_time_unix) {
 		echo "<b>".$locale_squad.":</b><br>".$locale_nobody."<br>";
 	}
 	mysqli_free_result($get_squad);
-	
+
 	echo "<br>";
 
 	if (mysqli_num_rows($injured_query) > 0) {
 		mysqli_data_seek($injured_query, 0);
 	}
-
 	if (mysqli_num_rows($injured_query) > 0) {
 		echo "<b>".$locale_injured.":</b><br>";
 		while($data = mysqli_fetch_array($injured_query)) {
@@ -179,7 +172,6 @@ if ($current_time_unix < $match_time_unix) {
 	if (mysqli_num_rows($suspended_query) > 0) {
 		mysqli_data_seek($suspended_query, 0);
 	}
-
 	if (mysqli_num_rows($suspended_query) > 0) {
 		echo "<b>".$locale_suspended.":</b><br>";
 		while($data = mysqli_fetch_array($suspended_query)) {
@@ -233,7 +225,6 @@ $get_matches = mysqli_query($db_connect, "SELECT
 	AND M.MatchTypeID = MT.MatchTypeID
 	ORDER BY match_date DESC
 ") or die(mysqli_error());
-
 $home_matches = 0;
 $home_wins = 0;
 $home_loses = 0;

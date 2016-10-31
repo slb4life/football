@@ -1,7 +1,6 @@
 <?php
 include('top.php');
 $script_name = "match_details.php?".$_SERVER['QUERY_STRING'];
-$team_name  = TEAM_NAME;
 
 echo "<form method='post' action='change.php'>\n";
 echo "<input name='script_name' type='hidden' value='".$script_name."'>\n";
@@ -11,26 +10,10 @@ echo "<td>\n";
 echo "<table width='100%' cellspacing='1' cellpadding='5' border='0'>\n";
 echo "<tr>\n";
 echo "<td align='center' bgcolor='#".(CELLBGCOLORBOTTOM)."'>\n";
-
 $id = $_REQUEST['id'];
 
 if ($id == '' || !is_numeric($id)) {
 	$id = 1;
-}
-
-switch (PRINT_DATE) {
-	case 1: {
-		$how_to_print_in_report = "%d.%m.%Y $locale_at %H:%i";
-	}
-	break;
-	case 2: {
-		$how_to_print_in_report = "%m.%d.%Y $locale_at %H:%i";
-	}
-	break;
-	case 3: {
-		$how_to_print_in_report = "%b %D %Y $locale_at %H:%i";
-	}
-	break;
 }
 $get_details = mysqli_query($db_connect, "SELECT
 	O.OpponentName AS opponent_name,
@@ -72,7 +55,7 @@ $get_details = mysqli_query($db_connect, "SELECT
 	MT.MatchTypeName AS match_type_name,
 	M.MatchPublishOptional AS publish_optional,
 	P.PreviewText AS preview_text
-	FROM (team_matches M, team_match_types MT, team_opponents O)
+	FROM (team_matches AS M, team_match_types AS MT, team_opponents AS O)
 	LEFT OUTER JOIN team_previews P ON M.MatchID = P.PreviewMatchID
 	WHERE M.MatchID = '$id'
 	AND M.MatchTypeID = MT.MatchTypeID

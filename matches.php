@@ -25,10 +25,6 @@ if (empty($get_match_types)) {
 }
 echo "</select>\n";
 echo "<input type='submit' name='submit2' value='".$locale_change."'>\n";
-
-if ($default_match_type_id == 0) {
-	$default_match_type_id = '%';
-}
 echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
 echo "<tr>\n";
 echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><b>".$locale_date_and_time."</b></td>\n";
@@ -37,20 +33,6 @@ echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><b>".$loc
 echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><b>".$locale_away_team."</b></td>\n";
 echo "<td align='center' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><b>".$locale_final_score."</b></td>\n";
 echo "</tr>\n";
-switch (PRINT_DATE) {
-	case 1: {
-		$how_to_print_in_report = "%d.%m.%Y ".$locale_at." %H:%i";
-	}
-	break;
-	case 2: {
-		$how_to_print_in_report = "%m.%d.%Y ".$locale_at." %H:%i";
-	}
-	break;
-	case 3: {
-		$how_to_print_in_report = "%b %D %Y ".$locale_at." %H:%i";
-	}
-	break;
-}
 
 if ($default_season_id != 0 && $default_match_type_id != 0) {
 	$get_matches = mysqli_query($db_connect, "SELECT

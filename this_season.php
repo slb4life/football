@@ -10,20 +10,6 @@ echo "<table width='100%' cellspacing='1' cellpadding='5' border='0'>\n";
 echo "<tr>\n";
 echo "<td align='center' bgcolor='#".(CELLBGCOLORBOTTOM)."'>\n";
 echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
-switch (PRINT_DATE) {
-	case 1: {
-		$how_to_print_in_report = "%d.%m.%Y";
-	}
-	break;
-	case 2: {
-		$how_to_print_in_report = "%m.%d.%Y";
-	}
-	break;
-	case 3: {
-		$how_to_print_in_report = "%b %D %Y";
-	}
-	break;
-}
 $wins = 0;
 $draws = 0;
 $loses = 0;
@@ -33,17 +19,6 @@ $streak = 0;
 $streak2 = 0;
 $record = 0;
 $record2 = 0;
-
-if ($default_match_type_id == 0) {
-	$tdefault_match_type_id = '%';
-} else {
-	$tdefault_match_type_id = $default_match_type_id;
-}
-if ($default_season_id == 0) {
-	$tdefault_season_id = '%';
-} else {
-	$tdefault_season_id = $default_season_id;
-}
 $get_matches = mysqli_query($db_connect, "SELECT
 	M.MatchGoals AS goals,
 	M.MatchGoalsOpponent AS goals_opponent,

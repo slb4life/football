@@ -1,24 +1,8 @@
 <?php
 include('top.php');
 $script_name = "picture_gallery.php?".$_SERVER['QUERY_STRING'];
-
-$team_name  = TEAM_NAME;
 $id = mysqli_real_escape_string($db_connect, $_REQUEST['id']);
 
-switch (PRINT_DATE) {
-	case 1: {
-		$how_to_print_in_report = "%d.%m.%Y $locale_at %H:%i";
-	}
-	break;
-	case 2: {
-		$how_to_print_in_report = "%m.%d.%Y $locale_at %H:%i";
-	}
-	break;
-	case 3: {
-		$how_to_print_in_report = "%b %D %Y $locale_at %H:%i";
-	}
-	break;
-}
 echo "<table align='center' width='100%' cellspacing='0' cellpadding='0' border='0' bgcolor='#".(BORDERCOLOR)."'>\n";
 echo "<tr>\n";
 echo "<td>\n";

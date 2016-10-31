@@ -27,8 +27,7 @@ if (SHOW_NEXT_MATCH == 1) {
 		AND O.OpponentID = M.MatchOpponent
 		ORDER BY match_date
 		LIMIT 1
-	") or die(mysqli_error());	
-	$team_name = TEAM_NAME;
+	") or die(mysqli_error());
 
 	if (mysqli_num_rows($get_next_match) == 0) {
 		echo "".$locale_end_of_season."";
@@ -148,17 +147,6 @@ if (SHOW_TOP_APPS == 1) {
 	echo "<tr>\n";
 	echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORBOTTOM)."'>\n";
 	echo "<table width='100%' cellspacing='0' cellpadding='1' border='0'>\n";
-
-	if ($default_match_type_id == 0) {
-		$tdefault_match_type_id = '%';
-	} else {
-		$tdefault_match_type_id = $default_match_type_id;
-	}
-	if ($default_season_id == 0) {
-		$tdefault_season_id = '%';
-	} else {
-		$tdefault_season_id = $default_season_id;
-	}
 	$max_show = 5;
 	$get_top_apps = mysqli_query($db_connect, "SELECT
 		P.PlayerID AS player_id,
@@ -209,17 +197,6 @@ if (SHOW_TOP_SCORERS == 1) {
 	echo "<tr>\n";
 	echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORBOTTOM)."'>\n";
 	echo "<table width='100%' cellspacing='0' cellpadding='1' border='0'>\n";
-
-	if ($default_match_type_id == 0) {
-		$tdefault_match_type_id = '%';
-	} else {
-		$tdefault_match_type_id = $default_match_type_id;
-	}
-	if ($default_season_id == 0) {
-		$tdefault_season_id = '%';
-	} else {
-		$tdefault_season_id = $default_season_id;
-	}
 	$max_show = 5;
 	$get_top_scorers = mysqli_query($db_connect, "SELECT
 		P.PlayerID AS player_id,
@@ -270,17 +247,6 @@ if (SHOW_TOP_ASSISTS == 1) {
 	echo "<tr>\n";
 	echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORBOTTOM)."'>\n";
 	echo "<table width='100%' cellspacing='0' cellpadding='1' border='0'>\n";
-
-	if ($default_match_type_id == 0) {
-		$tdefault_match_type_id = '%';
-	} else {
-		$tdefault_match_type_id = $default_match_type_id;
-	}
-	if ($default_season_id == 0) {
-		$tdefault_season_id = '%';
-	} else {
-		$tdefault_season_id = $default_season_id;
-	}
 	$max_show = 5;
 	$get_top_assists = mysqli_query($db_connect, "SELECT
 		P.PlayerID AS player_id,
@@ -331,17 +297,6 @@ if (SHOW_TOP_BOOKINGS == 1) {
 	echo "<tr>\n";
 	echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORBOTTOM)."'>\n";
 	echo "<table width='100%' cellspacing='0' cellpadding='1' border='0'>\n";
-
-	if ($default_match_type_id == 0) {
-		$tdefault_match_type_id = '%';
-	} else {
-		$tdefault_match_type_id = $default_match_type_id;
-	}
-	if ($default_season_id == 0) {
-		$tdefault_season_id = '%';
-	} else {
-		$tdefault_season_id = $default_season_id;
-	}
 	$max_show = 5;
 	$get_top_bookings = mysqli_query($db_connect, "SELECT
 		P.PlayerID AS player_id,

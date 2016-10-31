@@ -2,23 +2,6 @@
 include('top.php');
 $script_name = "manager.php?".$_SERVER['QUERY_STRING'];
 
-switch(PRINT_DATE) {
-	case 1: {
-		$how_to_print_in_report = "%d.%m.%Y ".$locale_at." %H:%i";
-		$how_to_print_in_manager = "%d.%m.%Y";
-	}
-	break;
-	case 2: {
-		$how_to_print_in_report = "%m.%d.%Y ".$locale_at." %H:%i";
-		$how_to_print_in_manager = "%m.%d.%Y";
-	}
-	break;
-	case 3: {
-		$how_to_print_in_report = "%b %D %Y ".$locale_at." %H:%i";
-		$how_to_print_in_manager = "%b %D %Y";
-	}
-	break;
-}
 if (isset($_REQUEST['sort'])) {
 	$sort = $_REQUEST['sort'];
 }

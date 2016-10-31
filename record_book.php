@@ -2,7 +2,6 @@
 include('top.php');
 $script_name = "record_book.php?".$_SERVER['QUERY_STRING'];
 
-$team_name = TEAM_NAME;
 echo "<form method='post' action='change.php'>\n";
 echo "<input name='script_name' type='hidden' value='".$script_name."'>\n";
 echo "<table align='center' width='100%' cellspacing='0' cellpadding='0' border='0' bgcolor='#".(BORDERCOLOR)."'>\n";
@@ -30,9 +29,6 @@ mysqli_free_result($get_match_types);
 
 echo "</select>\n";
 echo "<input type='submit' name='submit2' value='".$locale_change."'>\n";
-if ($default_match_type_id == 0) {
-	$default_match_type_id = '%';
-}
 echo "</td>\n";
 echo "</tr>\n";
 echo "</table>\n";

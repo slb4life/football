@@ -2,27 +2,10 @@
 include('top.php');
 $script_name = "comments.php?".$_SERVER['QUERY_STRING'];
 
-$team_name  = TEAM_NAME;
-
 if (isset($_REQUEST['id'])){ $id = $_REQUEST['id']; }
 
 if ($id == '' || !is_numeric($id)) {
 	$id = 1;
-}
-
-switch (PRINT_DATE) {
-	case 1: {
-		$how_to_print_in_report = "%d.%m.%Y $locale_at %H:%i";
-	}
-	break;
-	case 2: {
-		$how_to_print_in_report = "%m.%d.%Y $locale_at %H:%i";
-	}
-	break;
-	case 3: {
-		$how_to_print_in_report = "%b %D %Y $locale_at %H:%i";
-	}
-	break;
 }
 echo "<table align='center' width='100%' cellspacing='0' cellpadding='0' border='0' bgcolor='#".(BORDERCOLOR)."'>\n";
 echo "<tr>\n";
@@ -285,7 +268,7 @@ echo "</table>\n";
 echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
 echo "<tr bgcolor='".(CELLBGCOLORTOP)."'>\n";
 echo "<td align='left' valign='top'>";
-$query = mysqli_query($db_connect, "SELECT
+$get_comments = mysqli_query($db_connect, "SELECT
 	Name,
 	Comments,
 	DATE_FORMAT(Time, '$how_to_print_in_report') AS Time
@@ -294,14 +277,14 @@ $query = mysqli_query($db_connect, "SELECT
 	ORDER BY Time DESC
 ") or die(mysqli_error());
 
-if (mysqli_num_rows($query) == 0) {
+if (mysqli_num_rows($get_comments) == 0) {
 	echo "".$locale_no_comments_yet."";
 } else {
-	while($data = mysqli_fetch_array($query)) {
+	while($data = mysqli_fetch_array($get_comments)) {
 		echo "<b>- ".$data['Name']." -</b> ".$data['Time']."<br>".$data['Comments']."<br><br>";
 	}
 }
-mysqli_free_result($query);
+mysqli_free_result($get_comments);
 
 echo "</td>\n";
 echo "</tr>\n";

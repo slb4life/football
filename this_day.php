@@ -1,7 +1,6 @@
 <?php
 include('top.php');
 $script_name = "this_day.php?".$_SERVER['QUERY_STRING'];
-$team_name = TEAM_NAME;
 
 echo "<form method='post' action='change.php'>\n";
 echo "<input name='script_name' type='hidden' value='".$script_name."'>\n";

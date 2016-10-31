@@ -11,6 +11,7 @@ if ($submit) {
 	$comments = mysqli_real_escape_string($db_connect, str_replace("\r\n", '<br>', trim($_POST['comments'])));
 	$HTTP_REFERER = $_POST['script_name'];
 	$IP = $_SERVER['REMOTE_ADDR'];
+
 	if (!get_magic_quotes_gpc()) {
 		$name = addslashes($name);
 		$comments = addslashes($comments);

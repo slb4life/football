@@ -2,20 +2,6 @@
 include('top.php');
 $script_name = "players.php?".$_SERVER['QUERY_STRING'];
 
-switch (PRINT_DATE) {
-	case 1: {
-		$how_to_print_in_report = "%d.%m.%Y";
-	}
-	break;
-	case 2: {
-		$how_to_print_in_report = "%m.%d.%Y";
-	}
-	break;
-	case 3: {
-		$how_to_print_in_report = "%b %D %Y";
-	}
-	break;
-}
 echo "<form method='post' action='change.php'>\n";
 echo "<input name='script_name' type='hidden' value='".$script_name."'>\n";
 echo "<table align='center' width='100%' cellspacing='0' cellpadding='0' border='0' bgcolor='#".(BORDERCOLOR)."'>\n";
@@ -39,17 +25,17 @@ echo "<td align='center' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><b>".$l
 echo "<td align='center' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><b>".$locale_weight."</b></td>\n";
 echo "</tr>\n";
 $default_season = DEFAULT_SEASON;
-$query = mysqli_query($db_connect, "SELECT
+$get_players = mysqli_query($db_connect, "SELECT
 	CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
 	P.PlayerID AS player_id,
 	P.PlayerPublish AS publish,
 	P.PlayerPositionID AS player_position_id,
-	DATE_FORMAT(P.PlayerDOB, '$how_to_print_in_report') AS player_dob,
+	DATE_FORMAT(P.PlayerDOB, '$how_to_print_in_player') AS player_dob,
 	P.PlayerPOB AS player_pob,
 	P.PlayerHeight AS player_height,
 	P.PlayerWeight AS player_weight,
 	P.PlayerNumber AS player_number
-	FROM (team_players P, team_seasons S)
+	FROM (team_players AS P, team_seasons AS S)
 	WHERE P.PlayerID = S.SeasonPlayerID
 	AND S.SeasonID = '$default_season'
 	AND P.PlayerInSquadList = '1'
@@ -60,7 +46,7 @@ echo "<td colspan='5' align='left' bgcolor='".(CELLBGCOLORTOP)."'><b>".$locale_g
 echo "</tr>\n";
 $j = 1;
 $player_position_id = 1;
-while($data = mysqli_fetch_array($query)) {
+while($data = mysqli_fetch_array($get_players)) {
 	if ($j % 2 == 0) {
 		$bg_color = BGCOLOR1;
 	} else {
@@ -107,7 +93,7 @@ while($data = mysqli_fetch_array($query)) {
 	$j++;
 	$player_position_id = $data['player_position_id'];
 }
-mysqli_free_result($query);
+mysqli_free_result($get_players);
 
 echo "</table>\n";
 echo "</td>\n";

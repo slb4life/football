@@ -35,7 +35,6 @@ echo "<td align='center' bgcolor='#".(CELLBGCOLORBOTTOM)."'>\n";
 echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
 echo "<tr align='left'>\n";
 echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'>";
-$team_name = TEAM_NAME;
 echo "<font class='bigname'><b>".$locale_history.": ".$team_name." - ".$data['OpponentName']."</b></font>";
 
 if ($data['OpponentAllData'] == 0) {
