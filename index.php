@@ -36,7 +36,6 @@ if (mysqli_num_rows($get_latest_match) == 0) {
 	echo "<b>".$locale_start_of_season."</b>";
 } else {
 	while($data = mysqli_fetch_array($get_latest_match)) {
-		$team_name = TEAM_NAME;
 		$logos = 0;
 		$image_url_1 = "images/team_logo.png";
 		$image_url_2 = "images/team_logo.jpg";

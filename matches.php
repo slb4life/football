@@ -133,8 +133,6 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 }
 $i = 1;
 while($data = mysqli_fetch_array($get_matches)) {
-	$team_name = TEAM_NAME;
-
 	if ($i % 2 == 0) {
 		$bg_color = BGCOLOR1;
 	} else {

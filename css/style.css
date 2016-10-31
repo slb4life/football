@@ -27,7 +27,6 @@ input{
 	font-weight: normal;
 	text-decoration: none;
 }
-
 h1{
 	color: #000000;
 	font-size: 14px;
@@ -35,9 +34,8 @@ h1{
 	font-weight: bold;
 	text-decoration: none;
 }
-
 .bigname{
-	color: #000000;
+	color: #BB0000;
 	font-size: 14px;
 	font-family:  Verdana, Arial, Helvetica;
 	font-weight: bold;
@@ -50,26 +48,26 @@ a:link {
 	font-size: 11px;
 	font-family:  Verdana, Arial, Helvetica; 
 	font-weight: bold;
-	text-decoration: underline;
+	text-decoration: none;
 }
 a:visited {
 	color: #BB0000;
 	font-size: 11px;
 	font-family:  Verdana, Arial, Helvetica; 
 	font-weight: bold;
-	text-decoration: underline;
+	text-decoration: none;
 }
 a:active {
 	color: #BB0000;
 	font-size: 11px;
 	font-family:  Verdana, Arial, Helvetica; 
 	font-weight: bold;
-	text-decoration: underline;
+	text-decoration: none;
 }
 a:hover {
 	color: #BB0000;
 	font-size: 11px;
 	font-family:  Verdana, Arial, Helvetica; 
 	font-weight: bold;
-	text-decoration: none;
+	text-decoration: underline;
 }

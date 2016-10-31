@@ -716,12 +716,12 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top' colspan='2'>";
 		$get_players = mysqli_query($db_connect, "SELECT
-			CONCAT(team_players.PlayerFirstName, ' ', team_players.PlayerLastName) AS player_name,
-			team_players.PlayerID AS player_id
-			FROM team_players,team_seasons
-			WHERE team_players.PlayerID = team_seasons.SeasonPlayerID
-			AND team_seasons.SeasonID = '$season_id'
-			AND team_players.PlayerPositionID != '5'
+			CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
+			P.PlayerID AS player_id
+			FROM team_players AS P, team_seasons AS S
+			WHERE P.PlayerID = S.SeasonPlayerID
+			AND S.SeasonID = '$season_id'
+			AND P.PlayerPositionID != '5'
 			ORDER BY player_name
 		") or die(mysqli_error());
 		echo "<form method='post' action='match_data.php?session_id=".$session."'>\n";
@@ -736,13 +736,13 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<input type='hidden' name='match_id' value='".$match_id."'>\n";
 		echo "<input type='hidden' name='season_id' value='".$season_id."'>\n";
 		$get_squad = mysqli_query($db_connect, "SELECT
-			CONCAT(team_players.PlayerFirstName, ' ', team_players.PlayerLastName) AS player_name,
-			team_players.PlayerNumber AS player_number,
-			team_appearances.AppearanceID AS appearance_id
-			FROM team_players, team_appearances
-			WHERE team_players.PlayerID = team_appearances.AppearancePlayerID
-			AND team_appearances.AppearanceMatchID = '$match_id'
-			AND team_appearances.AppearanceSeasonID = '$season_id'
+			CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
+			P.PlayerNumber AS player_number,
+			A.AppearanceID AS appearance_id
+			FROM team_players AS P, team_appearances AS A
+			WHERE P.PlayerID = A.AppearancePlayerID
+			AND A.AppearanceMatchID = '$match_id'
+			AND A.AppearanceSeasonID = '$season_id'
 			ORDER BY player_number
 		") or die(mysqli_error());
 
@@ -779,13 +779,13 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		mysqli_free_result($get_players);
 
 		$get_substitutes = mysqli_query($db_connect, "SELECT
-			CONCAT(team_players.PlayerFirstName, ' ', team_players.PlayerLastName) AS player_name,
-			team_players.PlayerNumber AS player_number,
-			team_substitutes.SubstituteID AS substitute_id
-			FROM team_players, team_substitutes
-			WHERE team_players.PlayerID = team_substitutes.SubstitutePlayerID
-			AND team_substitutes.SubstituteMatchID = '$match_id'
-			AND team_substitutes.SubstituteSeasonID = '$season_id'
+			CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
+			P.PlayerNumber AS player_number,
+			S.SubstituteID AS substitute_id
+			FROM team_players AS P, team_substitutes AS S
+			WHERE P.PlayerID = S.SubstitutePlayerID
+			AND S.SubstituteMatchID = '$match_id'
+			AND S.SubstituteSeasonID = '$season_id'
 			ORDER BY player_number
 		") or die(mysqli_error());
 
@@ -805,30 +805,30 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top' colspan='2'>";
 		$get_opening = mysqli_query($db_connect, "SELECT
-			CONCAT(team_players.PlayerFirstName, ' ', team_players.PlayerLastName) AS player_name,
-			team_players.PlayerID AS player_id
-			FROM team_players, team_appearances
-			WHERE team_players.PlayerID = team_appearances.AppearancePlayerID
-			AND team_appearances.AppearanceMatchID = '$match_id'
-			AND team_appearances.AppearanceSeasonID = '$season_id'
+			CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
+			P.PlayerID AS player_id
+			FROM team_players AS P, team_appearances AS A
+			WHERE P.PlayerID = A.AppearancePlayerID
+			AND A.AppearanceMatchID = '$match_id'
+			AND A.AppearanceSeasonID = '$season_id'
 			ORDER BY player_name
 		") or die(mysqli_error());
 		$get_sub = mysqli_query($db_connect, "SELECT
-			CONCAT(team_players.PlayerFirstName, ' ', team_players.PlayerLastName) AS player_name,
-			team_players.PlayerID AS player_id
-			FROM team_players, team_substitutes
-			WHERE team_players.PlayerID = team_substitutes.SubstitutePlayerID
-			AND team_substitutes.SubstituteMatchID = '$match_id'
-			AND team_substitutes.SubstituteSeasonID = '$season_id'
+			CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
+			P.PlayerID AS player_id
+			FROM team_players AS P, team_substitutes AS S
+			WHERE P.PlayerID = S.SubstitutePlayerID
+			AND S.SubstituteMatchID = '$match_id'
+			AND S.SubstituteSeasonID = '$season_id'
 			ORDER BY player_name
 		") or die(mysqli_error());
 		$get_sub_in = mysqli_query($db_connect, "SELECT
-			CONCAT(team_players.PlayerFirstName, ' ', team_players.PlayerLastName) AS player_name,
-			team_players.PlayerID AS player_id
-			FROM team_players, team_substitutions
-			WHERE team_players.PlayerID = team_substitutions.SubstitutionPlayerIDIn
-			AND team_substitutions.SubstitutionMatchID = '$match_id'
-			AND team_substitutions.SubstitutionSeasonID = '$season_id'
+			CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
+			P.PlayerID AS player_id
+			FROM team_players AS P, team_substitutions AS S
+			WHERE P.PlayerID = S.SubstitutionPlayerIDIn
+			AND S.SubstitutionMatchID = '$match_id'
+			AND S.SubstitutionSeasonID = '$season_id'
 			ORDER BY player_name
 		") or die(mysqli_error());
 		echo "<form method='post' action='match_data.php?session_id=".$session."'>\n";
@@ -912,16 +912,16 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<input type='hidden' name='match_id' value='".$match_id."'>\n";
 		echo "<input type='hidden' name='season_id' value='".$season_id."'>\n";
 		$get_goal_scorers = mysqli_query($db_connect, "SELECT
-			CONCAT(team_players.PlayerFirstName, ' ', team_players.PlayerLastName) AS player_name,
-			team_goals.GoalMinute AS goal_minute,
-			team_goals.GoalID AS goal_id,
-			team_goals.GoalPenalty AS goal_penalty,
-			team_goals.GoalOwn AS goal_own,
-			team_goals.GoalOwnScorer AS goal_own_scorer
-			FROM team_players, team_goals
-			WHERE team_players.PlayerID = team_goals.GoalPlayerID
-			AND team_goals.GoalMatchID = '$match_id'
-			AND team_goals.GoalSeasonID = '$season_id'
+			CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
+			G.GoalMinute AS goal_minute,
+			G.GoalID AS goal_id,
+			G.GoalPenalty AS goal_penalty,
+			G.GoalOwn AS goal_own,
+			G.GoalOwnScorer AS goal_own_scorer
+			FROM team_players P, team_goals AS G
+			WHERE P.PlayerID = G.GoalPlayerID
+			AND G.GoalMatchID = '$match_id'
+			AND G.GoalSeasonID = '$season_id'
 			ORDER BY goal_minute
 		") or die(mysqli_error());
 
@@ -950,16 +950,16 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<form method='post' action='match_data.php?session_id=".$session."'>\n";
 		echo "<input type='hidden' name='script_name' value='".$script_name."'>\n";
 		$get_goal_scorers = mysqli_query($db_connect, "SELECT
-			CONCAT(team_players.PlayerFirstName, ' ', team_players.PlayerLastName) AS player_name,
-			team_players.PlayerID AS player_id,
-			team_goals.GoalID AS goal_id,
-			team_goals.GoalMinute AS goal_minute
-			FROM team_players, team_goals
-			WHERE team_players.PlayerID = team_goals.GoalPlayerID
-			AND team_goals.GoalMatchID = '$match_id'
-			AND team_goals.GoalSeasonID = '$season_id'
-			AND team_goals.GoalOwn = 0
-			AND team_goals.GoalPenalty = 0
+			CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
+			P.PlayerID AS player_id,
+			G.GoalID AS goal_id,
+			G.GoalMinute AS goal_minute
+			FROM team_players AS P, team_goals AS G
+			WHERE P.PlayerID = G.GoalPlayerID
+			AND G.GoalMatchID = '$match_id'
+			AND G.GoalSeasonID = '$season_id'
+			AND G.GoalOwn = 0
+			AND G.GoalPenalty = 0
 			ORDER BY goal_minute
 		") or die(mysqli_error());
 
@@ -991,13 +991,13 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			echo "<input type='hidden' name='match_id' value='".$match_id."'>\n";
 			echo "<input type='hidden' name='season_id' value='".$season_id."'>\n";
 			$get_goal_assists = mysqli_query($db_connect, "SELECT
-				CONCAT(team_players.PlayerFirstName, ' ', team_players.PlayerLastName) AS player_name,
-				team_goal_assists.GoalAssistID AS goal_assist_id,
-				team_goal_assists.GoalAssistMinute AS goal_assist_minute
-				FROM team_players, team_goal_assists
-				WHERE team_players.PlayerID = team_goal_assists.GoalAssistPlayerID
-				AND team_goal_assists.GoalAssistMatchID = '$match_id'
-				AND team_goal_assists.GoalAssistSeasonID = '$season_id'
+				CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
+				GA.GoalAssistID AS goal_assist_id,
+				GA.GoalAssistMinute AS goal_assist_minute
+				FROM team_players AS P, team_goal_assists AS GA
+				WHERE P.PlayerID = GA.GoalAssistPlayerID
+				AND GA.GoalAssistMatchID = '$match_id'
+				AND GA.GoalAssistSeasonID = '$season_id'
 				ORDER BY goal_assist_minute
 			") or die(mysqli_error());
 
@@ -1047,13 +1047,13 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<input type='hidden' name='match_id' value='".$match_id."'>\n";
 		echo "<input type='hidden' name='season_id' value='".$season_id."'>";
 		$get_yellow_cards = mysqli_query($db_connect, "SELECT
-			CONCAT(team_players.PlayerFirstName, ' ', team_players.PlayerLastName) AS player_name,
-			team_yellow_cards.YellowCardID AS yellow_card_id,
-			team_yellow_cards.YellowCardMinute AS yellow_card_minute
-			FROM team_players, team_yellow_cards
-			WHERE team_players.PlayerID = team_yellow_cards.YellowCardPlayerID
-			AND team_yellow_cards.YellowCardMatchID = '$match_id'
-			AND team_yellow_cards.YellowCardSeasonID = '$season_id'
+			CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
+			YC.YellowCardID AS yellow_card_id,
+			YC.YellowCardMinute AS yellow_card_minute
+			FROM team_players AS P, team_yellow_cards AS YC
+			WHERE P.PlayerID = YC.YellowCardPlayerID
+			AND YC.YellowCardMatchID = '$match_id'
+			AND YC.YellowCardSeasonID = '$season_id'
 			ORDER BY yellow_card_minute
 		") or die(mysqli_error());
 
@@ -1100,13 +1100,13 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<input type='hidden' name='match_id' value='".$match_id."'>\n";
 		echo "<input type='hidden' name='season_id' value='".$season_id."'>\n";
 		$get_red_cards = mysqli_query($db_connect, "SELECT
-			CONCAT(team_players.PlayerFirstName, ' ', team_players.PlayerLastName) AS player_name,
-			team_red_cards.RedCardID as red_card_id,
-			team_red_cards.RedCardMinute AS red_card_minute
-			FROM team_players, team_red_cards
-			WHERE team_players.PlayerID = team_red_cards.RedCardPlayerID
-			AND team_red_cards.RedCardMatchID = '$match_id'
-			AND team_red_cards.RedCardSeasonID = '$season_id'
+			CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
+			RC.RedCardID as red_card_id,
+			RC.RedCardMinute AS red_card_minute
+			FROM team_players AS P, team_red_cards AS RC
+			WHERE P.PlayerID = RC.RedCardPlayerID
+			AND RC.RedCardMatchID = '$match_id'
+			AND RC.RedCardSeasonID = '$season_id'
 			ORDER BY red_card_minute
 		") or die(mysqli_error());
 
@@ -1127,19 +1127,19 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 	echo "</td>\n";
 	echo "<td align='left' valign='top' width='50%'>";
 	$get_matches = mysqli_query($db_connect, "SELECT
-		DATE_FORMAT(team_matches.MatchDateTime, '%b %D %Y at %H:%i') AS match_date,
-		team_opponents.OpponentName AS opponent_name,
-		team_matches.MatchID AS match_id,
-		team_match_types.MatchTypeName AS match_type_name,
-		team_matches.MatchStadium AS match_stadium,
-		team_match_places.MatchPlaceName AS match_place_name,
-		team_matches.MatchPublish AS publish,
-		team_matches.MatchNeutral AS match_neutral
-		FROM team_matches, team_match_types, team_match_places, team_opponents
+		DATE_FORMAT(M.MatchDateTime, '%b %D %Y at %H:%i') AS match_date,
+		O.OpponentName AS opponent_name,
+		M.MatchID AS match_id,
+		MT.MatchTypeName AS match_type_name,
+		M.MatchStadium AS match_stadium,
+		MP.MatchPlaceName AS match_place_name,
+		M.MatchPublish AS publish,
+		M.MatchNeutral AS match_neutral
+		FROM team_matches AS M, team_match_types AS MT, team_match_places AS MP, team_opponents AS O
 		WHERE MatchSeasonID = '$season_id'
-		AND team_matches.MatchTypeID = team_match_types.MatchTypeID
-		AND team_matches.MatchPlaceID = team_match_places.MatchPlaceID
-		AND team_matches.MatchOpponent = team_opponents.OpponentID
+		AND M.MatchTypeID = MT.MatchTypeID
+		AND M.MatchPlaceID = MP.MatchPlaceID
+		AND M.MatchOpponent = O.OpponentID
 		ORDER BY match_date
 	") or die(mysqli_error());
 

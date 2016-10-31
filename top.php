@@ -237,4 +237,4 @@ if (SHOW_SEARCH == 1) {
 }
 echo "</td>\n";
 echo "<td align='left' valign='top' width='60%'>\n";
-?>>
+?>

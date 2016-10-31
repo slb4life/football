@@ -200,7 +200,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		$get_player = mysqli_query($db_connect, "SELECT
 			CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
 			P.PlayerID AS player_id
-			FROM team_players P
+			FROM team_players AS P
 			ORDER BY player_name
 		") or die(mysqli_error());
 		while($data = mysqli_fetch_array($get_player)) {
