@@ -49,9 +49,9 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 		P.PlayerNumber AS player_number,
 		COUNT( G.GoalPlayerID ) AS goals
 		FROM team_seasons AS S
-		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID = '$default_season_id'
-		LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID = '$default_match_type_id'
-		LEFT OUTER JOIN team_goals G ON G.GoalPlayerID = S.SeasonPlayerID AND G.GoalMatchID = M.MatchID AND G.GoalOwn = '0'
+		LEFT OUTER JOIN team_players AS P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID = '$default_season_id'
+		LEFT OUTER JOIN team_matches AS M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID = '$default_match_type_id'
+		LEFT OUTER JOIN team_goals AS G ON G.GoalPlayerID = S.SeasonPlayerID AND G.GoalMatchID = M.MatchID AND G.GoalOwn = '0'
 		WHERE P.PlayerID != '' AND P.PlayerPositionID != '5'
 		GROUP BY player_id
 		ORDER BY player_id
@@ -60,9 +60,9 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 		P.PlayerID AS player_id,
 		COUNT(GA.GoalAssistPlayerID) AS assists
 		FROM team_seasons AS S
-		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID = '$default_season_id'
-		LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID = '$default_match_type_id'
-		LEFT OUTER JOIN team_goal_assists GA ON GA.GoalAssistPlayerID = S.SeasonPlayerID AND GA.GoalAssistMatchID = M.MatchID
+		LEFT OUTER JOIN team_players AS P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID = '$default_season_id'
+		LEFT OUTER JOIN team_matches AS M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID = '$default_match_type_id'
+		LEFT OUTER JOIN team_goal_assists AS GA ON GA.GoalAssistPlayerID = S.SeasonPlayerID AND GA.GoalAssistMatchID = M.MatchID
 		WHERE P.PlayerID != '' AND P.PlayerPositionID != '5'
 		GROUP BY player_id
 		ORDER BY player_id
@@ -71,9 +71,9 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 		P.PlayerID AS player_id,
 		COUNT(YC.YellowCardPlayerID) AS yellows
 		FROM team_seasons AS S
-		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID = '$default_season_id'
-		LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID = '$default_match_type_id'
-		LEFT OUTER JOIN team_yellow_cards YC ON YC.YellowCardPlayerID = S.SeasonPlayerID AND YC.YellowCardMatchID = M.MatchID
+		LEFT OUTER JOIN team_players AS P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID = '$default_season_id'
+		LEFT OUTER JOIN team_matches AS M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID = '$default_match_type_id'
+		LEFT OUTER JOIN team_yellow_cards AS YC ON YC.YellowCardPlayerID = S.SeasonPlayerID AND YC.YellowCardMatchID = M.MatchID
 		WHERE P.PlayerID != '' AND P.PlayerPositionID != '5'
 		GROUP BY player_id
 		ORDER BY player_id
@@ -82,9 +82,9 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 		P.PlayerID AS player_id,
 		COUNT(RC.RedCardPlayerID) AS reds
 		FROM team_seasons AS S
-		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID = '$default_season_id'
-		LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID = '$default_match_type_id'
-		LEFT OUTER JOIN team_red_cards RC ON RC.RedCardPlayerID = S.SeasonPlayerID AND RC.RedCardMatchID = M.MatchID
+		LEFT OUTER JOIN team_players AS P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID = '$default_season_id'
+		LEFT OUTER JOIN team_matches AS M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID = '$default_match_type_id'
+		LEFT OUTER JOIN team_red_cards AS RC ON RC.RedCardPlayerID = S.SeasonPlayerID AND RC.RedCardMatchID = M.MatchID
 		WHERE P.PlayerID != '' AND P.PlayerPositionID != '5'
 		GROUP BY player_id
 		ORDER BY player_id
@@ -94,9 +94,9 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 		P.PlayerID AS player_id,
 		COUNT(A.AppearancePlayerID) AS apps
 		FROM team_seasons AS S
-		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID = '$default_season_id'
-		LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID = '$default_match_type_id'
-		LEFT OUTER JOIN team_appearances A ON A.AppearancePlayerID = S.SeasonPlayerID AND A.AppearanceMatchID = M.MatchID
+		LEFT OUTER JOIN team_players AS P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID = '$default_season_id'
+		LEFT OUTER JOIN team_matches AS M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID = '$default_match_type_id'
+		LEFT OUTER JOIN team_appearances AS A ON A.AppearancePlayerID = S.SeasonPlayerID AND A.AppearanceMatchID = M.MatchID
 		WHERE P.PlayerID != '' AND P.PlayerPositionID != '5'
 		GROUP BY player_id
 		ORDER BY player_id
@@ -105,9 +105,9 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 		P.PlayerID AS player_id,
 		COUNT(SU.SubstitutionPlayerIDIn) AS ins
 		FROM team_seasons AS S
-		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID = '$default_season_id'
-		LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID = '$default_match_type_id'
-		LEFT OUTER JOIN team_substitutions SU ON SU.SubstitutionPlayerIDIn = S.SeasonPlayerID AND SU.SubstitutionMatchID = M.MatchID
+		LEFT OUTER JOIN team_players AS P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID = '$default_season_id'
+		LEFT OUTER JOIN team_matches AS M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID = '$default_match_type_id'
+		LEFT OUTER JOIN team_substitutions AS SU ON SU.SubstitutionPlayerIDIn = S.SeasonPlayerID AND SU.SubstitutionMatchID = M.MatchID
 		WHERE P.PlayerID != '' AND P.PlayerPositionID != '5'
 		GROUP BY player_id
 		ORDER BY player_id
@@ -121,9 +121,9 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 		P.PlayerNumber AS player_number,
 		COUNT( G.GoalPlayerID ) AS goals
 		FROM team_seasons AS S
-		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID
-		LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID = '$default_match_type_id'
-		LEFT OUTER JOIN team_goals G ON G.GoalPlayerID = S.SeasonPlayerID AND G.GoalMatchID = M.MatchID AND G.GoalOwn = '0'
+		LEFT OUTER JOIN team_players AS P ON P.PlayerID = S.SeasonPlayerID
+		LEFT OUTER JOIN team_matches AS M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID = '$default_match_type_id'
+		LEFT OUTER JOIN team_goals AS G ON G.GoalPlayerID = S.SeasonPlayerID AND G.GoalMatchID = M.MatchID AND G.GoalOwn = '0'
 		WHERE P.PlayerID != '' AND P.PlayerPositionID != '5'
 		GROUP BY player_id
 		ORDER BY player_id
@@ -132,9 +132,9 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 		P.PlayerID AS player_id,
 		COUNT(GA.GoalAssistPlayerID) AS assists
 		FROM team_seasons AS S
-		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID
-		LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID = '$default_match_type_id'
-		LEFT OUTER JOIN team_goal_assists GA ON GA.GoalAssistPlayerID = S.SeasonPlayerID AND GA.GoalAssistMatchID = M.MatchID
+		LEFT OUTER JOIN team_players AS P ON P.PlayerID = S.SeasonPlayerID
+		LEFT OUTER JOIN team_matches AS M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID = '$default_match_type_id'
+		LEFT OUTER JOIN team_goal_assists AS GA ON GA.GoalAssistPlayerID = S.SeasonPlayerID AND GA.GoalAssistMatchID = M.MatchID
 		WHERE P.PlayerID != '' AND P.PlayerPositionID != '5'
 		GROUP BY player_id
 		ORDER BY player_id
@@ -143,9 +143,9 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 		P.PlayerID AS player_id,
 		COUNT(YC.YellowCardPlayerID) AS yellows
 		FROM team_seasons AS S
-		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID
-		LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID = '$default_match_type_id'
-		LEFT OUTER JOIN team_yellow_cards YC ON YC.YellowCardPlayerID = S.SeasonPlayerID AND YC.YellowCardMatchID = M.MatchID
+		LEFT OUTER JOIN team_players AS P ON P.PlayerID = S.SeasonPlayerID
+		LEFT OUTER JOIN team_matches AS M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID = '$default_match_type_id'
+		LEFT OUTER JOIN team_yellow_cards AS YC ON YC.YellowCardPlayerID = S.SeasonPlayerID AND YC.YellowCardMatchID = M.MatchID
 		WHERE P.PlayerID != '' AND P.PlayerPositionID != '5'
 		GROUP BY player_id
 		ORDER BY player_id
@@ -154,9 +154,9 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 		P.PlayerID AS player_id,
 		COUNT(RC.RedCardPlayerID) AS reds
 		FROM team_seasons AS S
-		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID
-		LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID = '$default_match_type_id'
-		LEFT OUTER JOIN team_red_cards RC ON RC.RedCardPlayerID = S.SeasonPlayerID AND RC.RedCardMatchID = M.MatchID
+		LEFT OUTER JOIN team_players AS P ON P.PlayerID = S.SeasonPlayerID
+		LEFT OUTER JOIN team_matches AS M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID = '$default_match_type_id'
+		LEFT OUTER JOIN team_red_cards AS RC ON RC.RedCardPlayerID = S.SeasonPlayerID AND RC.RedCardMatchID = M.MatchID
 		WHERE P.PlayerID != '' AND P.PlayerPositionID != '5'
 		GROUP BY player_id
 		ORDER BY player_id
@@ -165,9 +165,9 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 		P.PlayerID AS player_id,
 		COUNT(A.AppearancePlayerID) AS apps
 		FROM team_seasons AS S
-		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID
-		LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID = '$default_match_type_id'
-		LEFT OUTER JOIN team_appearances A ON A.AppearancePlayerID = S.SeasonPlayerID AND A.AppearanceMatchID = M.MatchID
+		LEFT OUTER JOIN team_players AS P ON P.PlayerID = S.SeasonPlayerID
+		LEFT OUTER JOIN team_matches AS M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID = '$default_match_type_id'
+		LEFT OUTER JOIN team_appearances AS A ON A.AppearancePlayerID = S.SeasonPlayerID AND A.AppearanceMatchID = M.MatchID
 		WHERE P.PlayerID != '' AND P.PlayerPositionID != '5'
 		GROUP BY player_id
 		ORDER BY player_id
@@ -176,9 +176,9 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 		P.PlayerID AS player_id,
 		COUNT(SU.SubstitutionPlayerIDIn) AS ins
 		FROM team_seasons AS S
-		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID
-		LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID = '$default_match_type_id'
-		LEFT OUTER JOIN team_substitutions SU ON SU.SubstitutionPlayerIDIn = S.SeasonPlayerID AND SU.SubstitutionMatchID = M.MatchID
+		LEFT OUTER JOIN team_players AS P ON P.PlayerID = S.SeasonPlayerID
+		LEFT OUTER JOIN team_matches AS M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID = '$default_match_type_id'
+		LEFT OUTER JOIN team_substitutions AS SU ON SU.SubstitutionPlayerIDIn = S.SeasonPlayerID AND SU.SubstitutionMatchID = M.MatchID
 		WHERE P.PlayerID != '' AND P.PlayerPositionID != '5'
 		GROUP BY player_id
 		ORDER BY player_id
@@ -192,8 +192,8 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 		P.PlayerNumber AS player_number,
 		COUNT( G.GoalPlayerID ) AS goals
 		FROM team_seasons AS S
-		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID = '$default_season_id'
-		LEFT OUTER JOIN team_goals G ON G.GoalPlayerID = S.SeasonPlayerID AND G.GoalOwn = '0' AND G.GoalSeasonID = '$default_season_id'
+		LEFT OUTER JOIN team_players AS P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID = '$default_season_id'
+		LEFT OUTER JOIN team_goals AS G ON G.GoalPlayerID = S.SeasonPlayerID AND G.GoalOwn = '0' AND G.GoalSeasonID = '$default_season_id'
 		WHERE P.PlayerID != '' AND P.PlayerPositionID != '5'
 		GROUP BY player_id
 		ORDER BY player_id
@@ -202,8 +202,8 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 		P.PlayerID AS player_id,
 		COUNT(GA.GoalAssistPlayerID) AS assists
 		FROM team_seasons AS S
-		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID = '$default_season_id'
-		LEFT OUTER JOIN team_goal_assists GA ON GA.GoalAssistPlayerID = S.SeasonPlayerID AND GA.GoalAssistSeasonID = '$default_season_id'
+		LEFT OUTER JOIN team_players AS P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID = '$default_season_id'
+		LEFT OUTER JOIN team_goal_assists AS GA ON GA.GoalAssistPlayerID = S.SeasonPlayerID AND GA.GoalAssistSeasonID = '$default_season_id'
 		WHERE P.PlayerID != '' AND P.PlayerPositionID != '5'
 		GROUP BY player_id
 		ORDER BY player_id
@@ -212,8 +212,8 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 		P.PlayerID AS player_id,
 		COUNT(YC.YellowCardPlayerID) AS yellows
 		FROM team_seasons AS S
-		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID = '$default_season_id'
-		LEFT OUTER JOIN team_yellow_cards YC ON YC.YellowCardPlayerID = S.SeasonPlayerID AND YC.YellowCardSeasonID = '$default_season_id'
+		LEFT OUTER JOIN team_players AS P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID = '$default_season_id'
+		LEFT OUTER JOIN team_yellow_cards AS YC ON YC.YellowCardPlayerID = S.SeasonPlayerID AND YC.YellowCardSeasonID = '$default_season_id'
 		WHERE P.PlayerID != '' AND P.PlayerPositionID != '5'
 		GROUP BY player_id
 		ORDER BY player_id
@@ -222,8 +222,8 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 		P.PlayerID AS player_id,
 		COUNT(RC.RedCardPlayerID) AS reds
 		FROM team_seasons AS S
-		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID = '$default_season_id'
-		LEFT OUTER JOIN team_red_cards RC ON RC.RedCardPlayerID = S.SeasonPlayerID AND RC.RedCardSeasonID = '$default_season_id'
+		LEFT OUTER JOIN team_players AS P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID = '$default_season_id'
+		LEFT OUTER JOIN team_red_cards AS RC ON RC.RedCardPlayerID = S.SeasonPlayerID AND RC.RedCardSeasonID = '$default_season_id'
 		WHERE P.PlayerID != '' AND P.PlayerPositionID != '5'
 		GROUP BY player_id
 		ORDER BY player_id
@@ -232,8 +232,8 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 		P.PlayerID AS player_id,
 		COUNT(A.AppearancePlayerID) AS apps
 		FROM team_seasons AS S
-		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID = '$default_season_id'
-		LEFT OUTER JOIN team_appearances A ON A.AppearancePlayerID = S.SeasonPlayerID AND A.AppearanceSeasonID = '$default_season_id'
+		LEFT OUTER JOIN team_players AS P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID = '$default_season_id'
+		LEFT OUTER JOIN team_appearances AS A ON A.AppearancePlayerID = S.SeasonPlayerID AND A.AppearanceSeasonID = '$default_season_id'
 		WHERE P.PlayerID != '' AND P.PlayerPositionID != '5'
 		GROUP BY player_id
 		ORDER BY player_id
@@ -242,8 +242,8 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 		P.PlayerID AS player_id,
 		COUNT(SU.SubstitutionPlayerIDIn) AS ins
 		FROM team_seasons AS S
-		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID = '$default_season_id'
-		LEFT OUTER JOIN team_substitutions SU ON SU.SubstitutionPlayerIDIn = S.SeasonPlayerID AND SU.SubstitutionSeasonID = '$default_season_id'
+		LEFT OUTER JOIN team_players AS P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID = '$default_season_id'
+		LEFT OUTER JOIN team_substitutions AS SU ON SU.SubstitutionPlayerIDIn = S.SeasonPlayerID AND SU.SubstitutionSeasonID = '$default_season_id'
 		WHERE P.PlayerID != '' AND P.PlayerPositionID != '5'
 		GROUP BY player_id
 		ORDER BY player_id
@@ -257,7 +257,7 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 		P.PlayerNumber AS player_number,
 		COUNT( G.GoalPlayerID ) AS goals
 		FROM team_players AS P
-		LEFT OUTER JOIN team_goals G ON G.GoalPlayerID = P.PlayerID AND G.GoalOwn = '0'
+		LEFT OUTER JOIN team_goals AS G ON G.GoalPlayerID = P.PlayerID AND G.GoalOwn = '0'
 		WHERE P.PlayerID != '' AND P.PlayerPositionID != '5'
 		GROUP BY player_id
 		ORDER BY player_id
@@ -266,7 +266,7 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 		P.PlayerID AS player_id,
 		COUNT( GA.GoalAssistPlayerID ) AS assists
 		FROM team_players AS P
-		LEFT OUTER JOIN team_goal_assists GA ON GA.GoalAssistPlayerID = P.PlayerID
+		LEFT OUTER JOIN team_goal_assists AS GA ON GA.GoalAssistPlayerID = P.PlayerID
 		WHERE P.PlayerID != '' AND P.PlayerPositionID != '5'
 		GROUP BY player_id
 		ORDER BY player_id
@@ -275,7 +275,7 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 		P.PlayerID AS player_id,
 		COUNT( YC.YellowCardPlayerID ) AS yellows
 		FROM team_players AS P
-		LEFT OUTER JOIN team_yellow_cards YC ON YC.YellowCardPlayerID = P.PlayerID
+		LEFT OUTER JOIN team_yellow_cards AS YC ON YC.YellowCardPlayerID = P.PlayerID
 		WHERE P.PlayerID != '' AND P.PlayerPositionID != '5'
 		GROUP BY player_id
 		ORDER BY player_id
@@ -284,7 +284,7 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 		P.PlayerID AS player_id,
 		COUNT( RC.RedCardPlayerID ) AS reds
 		FROM team_players AS P
-		LEFT OUTER JOIN team_red_cards RC ON RC.RedCardPlayerID = P.PlayerID
+		LEFT OUTER JOIN team_red_cards AS RC ON RC.RedCardPlayerID = P.PlayerID
 		WHERE P.PlayerID != '' AND P.PlayerPositionID != '5'
 		GROUP BY player_id
 		ORDER BY player_id
@@ -293,7 +293,7 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 		P.PlayerID AS player_id,
 		COUNT( A.AppearancePlayerID ) AS apps
 		FROM team_players AS P
-		LEFT OUTER JOIN team_appearances A ON A.AppearancePlayerID = P.PlayerID
+		LEFT OUTER JOIN team_appearances AS A ON A.AppearancePlayerID = P.PlayerID
 		WHERE P.PlayerID != '' AND P.PlayerPositionID != '5'
 		GROUP BY player_id
 		ORDER BY player_id
@@ -302,7 +302,7 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 		P.PlayerID AS player_id,
 		COUNT( SU.SubstitutionPlayerIDIn ) AS ins
 		FROM team_players AS P
-		LEFT OUTER JOIN team_substitutions SU ON SU.SubstitutionPlayerIDIn = P.PlayerID
+		LEFT OUTER JOIN team_substitutions AS SU ON SU.SubstitutionPlayerIDIn = P.PlayerID
 		WHERE P.PlayerID != '' AND P.PlayerPositionID != '5'
 		GROUP BY player_id
 		ORDER BY player_id
@@ -329,7 +329,7 @@ while($data = mysqli_fetch_array($get_players)) {
 		$tdefault_match_type_id = $default_match_type_id;
 	}
 	$query = mysqli_query($db_connect, "SELECT
-		S.SubstitutionMinute AS minute,
+		S.SubstitutionMinute AS substitution_minute,
 		M.MatchOvertime AS match_overtime
 		FROM team_substitutions AS S, team_matches AS M
 		WHERE S.SubstitutionPlayerIDIn = '$players[$i]'
@@ -343,7 +343,7 @@ while($data = mysqli_fetch_array($get_players)) {
 		} else {
 			$match_minutes = 120;
 		}
-		$minutes[$i] = $minutes[$i] + ($match_minutes-$tdata['minute']);
+		$minutes[$i] = $minutes[$i] + ($match_minutes-$tdata['substitution_minute']);
 	}
 	mysqli_free_result($query);
 
@@ -365,7 +365,7 @@ while($data = mysqli_fetch_array($get_players)) {
 	mysqli_free_result($query);
 
 	$query = mysqli_query($db_connect, "SELECT
-		S.SubstitutionMinute AS minute,
+		S.SubstitutionMinute AS substitution_minute,
 		M.MatchOvertime AS match_overtime
 		FROM team_substitutions AS S, team_matches AS M
 		WHERE S.SubstitutionPlayerIDOut = '$players[$i]'
@@ -379,12 +379,12 @@ while($data = mysqli_fetch_array($get_players)) {
 		} else {
 			$match_minutes = 120;
 		}
-		$minutes[$i] = $minutes[$i] - ($match_minutes-$tdata['minute']);
+		$minutes[$i] = $minutes[$i] - ($match_minutes-$tdata['substitution_minute']);
 	}
 	mysqli_free_result($query);
 
 	$query = mysqli_query($db_connect, "SELECT
-		RC.RedCardMinute AS minute,
+		RC.RedCardMinute AS red_card_minute,
 		M.MatchOvertime AS match_overtime
 		FROM team_red_cards AS RC, team_matches AS M
 		WHERE RC.RedCardPlayerID = '$players[$i]'
@@ -398,7 +398,7 @@ while($data = mysqli_fetch_array($get_players)) {
 		} else {
 			$match_minutes = 120;
 		}
-		$minutes[$i] = $minutes[$i] - ($match_minutes-$tdata['minute']);
+		$minutes[$i] = $minutes[$i] - ($match_minutes-$tdata['red_card_minute']);
 	}
 	mysqli_free_result($query);
 

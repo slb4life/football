@@ -244,14 +244,14 @@ if (!isset($season_id_page)) {
 	if ($player_data['show_stats'] == 1 && $player_data['player_position'] != 5) {
 		echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
 		echo "<tr>\n";
-		echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><a href='?sort=season_name&amp;id=".$id."'>".$locale_season_short."</a></td>\n";
-		echo "<td align='center' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><a href='?sort=minutes&amp;id=".$id."'>".$locale_minutes_short."</a></td>\n";
-		echo "<td align='center' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><a href='?sort=apps&amp;id=".$id."'>".$locale_openings_short."</a></td>\n";
-		echo "<td align='center' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><a href='?sort=ins&amp;id=".$id."'>".$locale_to_the_field_short."</a></td>\n";
-		echo "<td align='center' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><a href='?sort=goals&amp;id=".$id."'>".$locale_goals_short."</a></td>\n";
-		echo "<td align='center' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><a href='?sort=assists&amp;id=".$id."'>".$locale_goal_assists_short."</a></td>\n";
-		echo "<td align='center' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><a href='?sort=yellows&amp;id=".$id."'>".$locale_yellow_cards_short."</a></td>\n";
-		echo "<td align='center' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><a href='?sort=reds&amp;id=".$id."'>".$locale_red_cards_short."</a></td>\n";
+		echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><a href='?id=".$id."&amp;sort=season_name'>".$locale_season_short."</a></td>\n";
+		echo "<td align='center' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><a href='?id=".$id."&amp;sort=minutes'>".$locale_minutes_short."</a></td>\n";
+		echo "<td align='center' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><a href='?id=".$id."&amp;sort=apps'>".$locale_openings_short."</a></td>\n";
+		echo "<td align='center' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><a href='?id=".$id."&amp;sort=ins'>".$locale_to_the_field_short."</a></td>\n";
+		echo "<td align='center' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><a href='?id=".$id."&amp;sort=goals'>".$locale_goals_short."</a></td>\n";
+		echo "<td align='center' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><a href='?id=".$id."&amp;sort=assists'>".$locale_goal_assists_short."</a></td>\n";
+		echo "<td align='center' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><a href='?id=".$id."&amp;sort=yellows'>".$locale_yellow_cards_short."</a></td>\n";
+		echo "<td align='center' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><a href='?id=".$id."&amp;sort=reds'>".$locale_red_cards_short."</a></td>\n";
 		echo "</tr>\n";
 
 		if ($default_match_type_id != 0) {

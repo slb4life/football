@@ -25,7 +25,7 @@ $query = mysqli_query($db_connect, "SELECT
 	M.MatchStadium AS match_stadium,
 	M.MatchPlaceID AS match_place_id,
 	M.MatchSeasonID AS match_season_id
-	FROM team_matches M, team_opponents O, team_previews P, team_match_types MT
+	FROM team_matches AS M, team_opponents AS O, team_previews AS P, team_match_types AS MT
 	WHERE O.OpponentID = M.MatchOpponent
 	AND MT.MatchTypeID = M.MatchTypeID
 	AND M.MatchID = P.PreviewMatchID
@@ -81,7 +81,7 @@ $get_squad = mysqli_query($db_connect, "SELECT
 	P.PlayerID AS player_id,
 	P.PlayerPublish AS publish,
 	P.PlayerPositionID AS player_position
-	FROM team_players P, team_seasons S
+	FROM team_players AS P, team_seasons AS S
 	WHERE P.PlayerID = S.SeasonPlayerID
 	AND S.SeasonID = '$id'
 	AND P.PlayerPositionID != '5'
@@ -93,7 +93,7 @@ $injured_query = mysqli_query($db_connect, "SELECT
 	P.PlayerID AS player_id,
 	P.PlayerPublish AS publish,
 	I.InjuredReason AS injured_reason
-	FROM team_players P, team_injured I
+	FROM team_players AS P, team_injured AS I
 	WHERE P.PlayerID = I.InjuredPlayerID
 	AND I.InjuredMatchID = '$id'
 ") or die(mysqli_error());
@@ -106,7 +106,7 @@ if ($current_time_unix < $match_time_unix) {
 		P.PlayerID AS player_id,
 		P.PlayerPublish AS publish,
 		S.SuspendedReason AS suspended_reason
-		FROM team_players P, team_suspended S
+		FROM team_players AS P, team_suspended AS S
 		WHERE P.PlayerID = S.SuspendedPlayerID
 		AND S.SuspendedMatchID = '$id'
 	") or die(mysqli_error());
@@ -218,7 +218,7 @@ $get_matches = mysqli_query($db_connect, "SELECT
 	MT.MatchTypeName AS match_type_name,
 	M.MatchGoals AS goals,
 	M.MatchGoalsOpponent AS goals_opponent
-	FROM team_matches M, team_match_types MT
+	FROM team_matches AS M, team_match_types AS MT
 	WHERE MatchOpponent = '$opponent_id'
 	AND MatchGoals IS NOT NULL
 	AND MatchGoalsOpponent IS NOT NULL
