@@ -1,7 +1,6 @@
 <?php
 include('top.php');
 $script_name = "matches.php?".$_SERVER['QUERY_STRING'];
-$team_name = TEAM_NAME;
 
 echo "<form method='post' action='change.php'>\n";
 echo "<input name='script_name' type='hidden' value='".$script_name."'>\n";
@@ -55,23 +54,23 @@ switch (PRINT_DATE) {
 
 if ($default_season_id != 0 && $default_match_type_id != 0) {
 	$get_matches = mysqli_query($db_connect, "SELECT
-		 M.MatchID AS match_id,
-		 M.MatchAdditionalType AS match_additional_type,
-		 O.OpponentName AS opponent_name,
-		 O.OpponentID AS opponent_id,
-		 M.MatchGoals AS goals,
-		 M.MatchGoalsOpponent AS goals_opponent,
-		 M.MatchPenaltyGoals AS penalty_goals,
-		 M.MatchPenaltyGoalsOpponent AS penalty_goals_opponent,
-		 M.MatchOvertime AS match_overtime,
-		 M.MatchPenaltyShootout AS penalty_shootout,
-		 DATE_FORMAT(M.MatchDateTime, '$how_to_print_in_report') AS match_date,
-		 M.MatchPlaceID AS match_place_id,
-		 M.MatchPublish AS publish,
-		 MT.MatchTypeName AS match_type_name,
-		 P.PreviewText AS preview_text
-		FROM (team_matches M, team_match_types MT, team_opponents O)
-		LEFT OUTER JOIN team_previews P ON M.MatchID = P.PreviewMatchID
+		M.MatchID AS match_id,
+		M.MatchAdditionalType AS match_additional_type,
+		O.OpponentName AS opponent_name,
+		O.OpponentID AS opponent_id,
+		M.MatchGoals AS goals,
+		M.MatchGoalsOpponent AS goals_opponent,
+		M.MatchPenaltyGoals AS penalty_goals,
+		M.MatchPenaltyGoalsOpponent AS penalty_goals_opponent,
+		M.MatchOvertime AS match_overtime,
+		M.MatchPenaltyShootout AS penalty_shootout,
+		DATE_FORMAT(M.MatchDateTime, '$how_to_print_in_report') AS match_date,
+		M.MatchPlaceID AS match_place_id,
+		M.MatchPublish AS publish,
+		MT.MatchTypeName AS match_type_name,
+		P.PreviewText AS preview_text
+		FROM (team_matches AS M, team_match_types AS MT, team_opponents AS O)
+		LEFT OUTER JOIN team_previews AS P ON M.MatchID = P.PreviewMatchID
 		WHERE M.MatchTypeID = '$default_match_type_id'
 		AND M.MatchSeasonID = '$default_season_id'
 		AND M.MatchTypeID = MT.MatchTypeID
@@ -90,13 +89,13 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 		M.MatchPenaltyGoalsOpponent AS penalty_goals_opponent,
 		M.MatchOvertime AS match_overtime,
 		M.MatchPenaltyShootout AS penalty_shootout,
-		DATE_FORMAT(M.MatchDateTime, '$how_to_print') AS match_date,
+		DATE_FORMAT(M.MatchDateTime, '$how_to_print_in_report') AS match_date,
 		M.MatchPlaceID AS match_place_id,
 		M.MatchPublish AS publish,
 		MT.MatchTypeName AS match_type_name,
 		P.PreviewText AS preview_text
-		FROM (team_matches M, team_match_types MT, team_opponents O)
-		LEFT OUTER JOIN team_previews P ON M.MatchID = P.PreviewMatchID
+		FROM (team_matches AS M, team_match_types AS MT, team_opponents AS O)
+		LEFT OUTER JOIN team_previews AS P ON M.MatchID = P.PreviewMatchID
 		WHERE M.MatchTypeID = '$default_match_type_id'
 		AND M.MatchTypeID = MT.MatchTypeID
 		AND M.MatchOpponent = O.OpponentID
@@ -114,13 +113,13 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 		M.MatchPenaltyGoalsOpponent AS penalty_goals_opponent,
 		M.MatchOvertime AS match_overtime,
 		M.MatchPenaltyShootout AS penalty_shootout,
-		DATE_FORMAT(M.MatchDateTime, '$how_to_print') AS match_date,
+		DATE_FORMAT(M.MatchDateTime, '$how_to_print_in_report') AS match_date,
 		M.MatchPlaceID AS match_place_id,
 		M.MatchPublish AS publish,
 		MT.MatchTypeName AS match_type_name,
 		P.PreviewText AS preview_text
-		FROM (team_matches M, team_match_types MT, team_opponents O)
-		LEFT OUTER JOIN team_previews P ON M.MatchID = P.PreviewMatchID
+		FROM (team_matches AS M, team_match_types AS MT, team_opponents AS O)
+		LEFT OUTER JOIN team_previews AS P ON M.MatchID = P.PreviewMatchID
 		WHERE M.MatchSeasonID = '$default_season_id'
 		AND M.MatchTypeID = MT.MatchTypeID
 		AND M.MatchOpponent = O.OpponentID
@@ -138,13 +137,13 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 		M.MatchPenaltyGoalsOpponent AS penalty_goals_opponent,
 		M.MatchOvertime AS match_overtime,
 		M.MatchPenaltyShootout AS penalty_shootout,
-		DATE_FORMAT(M.MatchDateTime, '$how_to_print') AS match_date,
+		DATE_FORMAT(M.MatchDateTime, '$how_to_print_in_report') AS match_date,
 		M.MatchPlaceID AS match_place_id,
 		M.MatchPublish AS publish,
 		MT.MatchTypeName AS match_type_name,
 		P.PreviewText AS preview_text
-		FROM (team_matches M, team_match_types MT, team_opponents O)
-		LEFT OUTER JOIN team_previews P ON M.MatchID = P.PreviewMatchID
+		FROM (team_matches AS M, team_match_types AS MT, team_opponents AS O)
+		LEFT OUTER JOIN team_previews AS P ON M.MatchID = P.PreviewMatchID
 		WHERE M.MatchTypeID = MT.MatchTypeID
 		AND M.MatchOpponent = O.OpponentID
 		ORDER BY match_date
@@ -152,6 +151,8 @@ if ($default_season_id != 0 && $default_match_type_id != 0) {
 }
 $i = 1;
 while($data = mysqli_fetch_array($get_matches)) {
+	$team_name = TEAM_NAME;
+
 	if ($i % 2 == 0) {
 		$bg_color = BGCOLOR1;
 	} else {
@@ -169,7 +170,7 @@ while($data = mysqli_fetch_array($get_matches)) {
 		echo "<td align='left' valign='middle' bgcolor='".$bg_color."'>".$team_name."</td>\n";
 		echo "<td align='left' valign='middle' bgcolor='".$bg_color."'>";
 
-		if ($data['opponent_id'] == 1) {
+		if ($data['opponent_id'] == '') {
 			echo "".$data['opponent_name']."";
 		} else {
 			echo "<a href='opponent.php?id=".$data['opponent_id']."'>".$data['opponent_name']."</a>";
@@ -229,7 +230,7 @@ while($data = mysqli_fetch_array($get_matches)) {
 		echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>";
 
 		if ($data['goals'] == NULL || $data['goals_opponent'] == NULL) {
-			if($data['preview_text'] == '') {
+			if ($data['preview_text'] == '') {
 				echo "&nbsp;";
 			} else {
 				echo "<a href='preview.php?id=".$data['match_id']."'>".$locale_preview."</a>";

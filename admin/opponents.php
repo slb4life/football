@@ -124,10 +124,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top' colspan='2'>";
 		echo "<input type='submit' name='modify_submit' value='Modify Opponent'>";
-
-		if ($opponent_id != 1) {
-			echo " <input type='submit' name='delete_submit' value='Delete Opponent'>";
-		}
+		echo " <input type='submit' name='delete_submit' value='Delete Opponent'>";
 		echo "</form>";
 		echo "</td>\n";
 		echo "</tr><tr>\n";

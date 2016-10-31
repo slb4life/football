@@ -346,11 +346,11 @@ if (SHOW_TOP_BOOKINGS == 1) {
 	$get_top_bookings = mysqli_query($db_connect, "SELECT
 		P.PlayerID AS player_id,
 		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
-		COUNT( Y.YellowCardPlayerID ) AS yellows
+		COUNT( YC.YellowCardPlayerID ) AS yellows
 		FROM team_seasons AS S
 		LEFT OUTER JOIN team_players P ON P.PlayerID = S.SeasonPlayerID AND S.SeasonID LIKE '$tdefault_season_id'
 		LEFT OUTER JOIN team_matches M ON M.MatchSeasonID = S.SeasonID AND M.MatchTypeID LIKE '$tdefault_match_type_id'
-		LEFT OUTER JOIN team_yellow_cards Y ON Y.YellowCardPlayerID = S.SeasonPlayerID AND Y.YellowCardMatchID = M.MatchID
+		LEFT OUTER JOIN team_yellow_cards YC ON YC.YellowCardPlayerID = S.SeasonPlayerID AND YC.YellowCardMatchID = M.MatchID
 		WHERE P.PlayerID != ''
 		GROUP BY player_id
 		ORDER BY yellows DESC, player_name
