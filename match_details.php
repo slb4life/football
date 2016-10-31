@@ -56,7 +56,7 @@ $get_details = mysqli_query($db_connect, "SELECT
 	M.MatchPublishOptional AS publish_optional,
 	P.PreviewText AS preview_text
 	FROM (team_matches AS M, team_match_types AS MT, team_opponents AS O)
-	LEFT OUTER JOIN team_previews P ON M.MatchID = P.PreviewMatchID
+	LEFT OUTER JOIN team_previews AS P ON M.MatchID = P.PreviewMatchID
 	WHERE M.MatchID = '$id'
 	AND M.MatchTypeID = MT.MatchTypeID
 	AND M.MatchOpponent = O.OpponentID
@@ -175,7 +175,7 @@ if ($mdata['match_place_id'] == 1) {
 		G.GoalOwnScorer AS goal_own_scorer,
 		G.GoalPlayerID AS player_id,
 		G.GoalPenalty AS goal_penalty
-		FROM team_players P, team_goals G
+		FROM team_players AS P, team_goals AS G
 		WHERE G.GoalMatchID = '$id'
 		AND P.PlayerID = G.GoalPlayerID
 		ORDER BY goal_minute
@@ -228,7 +228,7 @@ if ($mdata['match_place_id'] == 1) {
 		P.PlayerPositionID AS player_position_id,
 		P.PlayerNumber AS player_number,
 		P.PlayerPublish AS publish
-		FROM team_players P, team_appearances A
+		FROM team_players AS P, team_appearances AS A
 		WHERE A.AppearanceMatchID = '$id'
 		AND P.PlayerID = A.AppearancePlayerID
 		ORDER BY player_position_id, player_number
@@ -265,7 +265,7 @@ if ($mdata['match_place_id'] == 1) {
 		P.PlayerPositionID AS player_position_id,
 		P.PlayerNumber AS player_number,
 		P.PlayerPublish AS publish
-		FROM team_players P, team_substitutes S
+		FROM team_players AS P, team_substitutes AS S
 		WHERE S.SubstituteMatchID = '$id'
 		AND P.PlayerID = S.SubstitutePlayerID
 		ORDER BY player_position_id, player_number
@@ -304,7 +304,7 @@ if ($mdata['match_place_id'] == 1) {
 		P.PlayerPublish AS publish,
 		PL.PlayerPublish AS publish2,
 		S.SubstitutionMinute AS substitution_minute
-		FROM team_players P, team_players PL, team_substitutions S
+		FROM team_players AS P, team_players AS PL, team_substitutions AS S
 		WHERE S.SubstitutionMatchID = '$id'
 		AND P.PlayerID = S.SubstitutionPlayerIDIn
 		AND PL.PlayerID = S.SubstitutionPlayerIDOut
@@ -352,7 +352,7 @@ if ($mdata['match_place_id'] == 1) {
 		P.PlayerID AS player_id,
 		P.PlayerPublish AS publish,
 		GA.GoalAssistMinute AS goal_assist_minute
-		FROM team_players P, team_goal_assists GA
+		FROM team_players AS P, team_goal_assists AS GA
 		WHERE GA.GoalAssistMatchID = '$id'
 		AND P.PlayerID = GA.GoalAssistPlayerID
 		ORDER BY goal_assist_minute
@@ -392,10 +392,10 @@ if ($mdata['match_place_id'] == 1) {
 		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
 		P.PlayerID AS player_id,
 		P.PlayerPublish AS publish,
-		Y.YellowCardMinute AS yellow_card_minute
-		FROM team_players P, team_yellow_cards Y
-		WHERE Y.YellowCardMatchID = '$id'
-		AND P.PlayerID = Y.YellowCardPlayerID
+		YC.YellowCardMinute AS yellow_card_minute
+		FROM team_players AS P, team_yellow_cards YC
+		WHERE YC.YellowCardMatchID = '$id'
+		AND P.PlayerID = YC.YellowCardPlayerID
 		ORDER BY yellow_card_minute
 	") or die(mysqli_error());
 
@@ -433,10 +433,10 @@ if ($mdata['match_place_id'] == 1) {
 		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
 		P.PlayerID AS player_id,
 		P.PlayerPublish AS publish,
-		R.RedCardMinute AS red_card_minute
-		FROM team_players P, team_red_cards R
-		WHERE R.RedCardMatchID = '$id'
-		AND P.PlayerID = R.RedCardPlayerID
+		RC.RedCardMinute AS red_card_minute
+		FROM team_players AS P, team_red_cards AS RC
+		WHERE RC.RedCardMatchID = '$id'
+		AND P.PlayerID = RC.RedCardPlayerID
 		ORDER BY red_card_minute
 	") or die(mysqli_error());
 
@@ -602,7 +602,7 @@ if ($mdata['match_place_id'] == 1) {
 		G.GoalOwn AS goal_own,
 		G.GoalOwnScorer AS goal_own_scorer,
 		G.GoalPenalty AS goal_penalty
-		FROM team_players P, team_goals G
+		FROM team_players AS P, team_goals AS G
 		WHERE G.GoalMatchID = '$id'
 		AND P.PlayerID = G.GoalPlayerID
 		ORDER BY goal_minute
@@ -654,7 +654,7 @@ if ($mdata['match_place_id'] == 1) {
 		P.PlayerPositionID AS player_position_id,
 		P.PlayerNumber AS player_number,
 		P.PlayerPublish AS publish
-		FROM team_players P, team_appearances A
+		FROM team_players AS P, team_appearances AS A
 		WHERE A.AppearanceMatchID = '$id'
 		AND P.PlayerID = A.AppearancePlayerID
 		ORDER BY player_position_id, player_number
@@ -691,7 +691,7 @@ if ($mdata['match_place_id'] == 1) {
 		P.PlayerPositionID AS player_position_id,
 		P.PlayerNumber AS player_number,
 		P.PlayerPublish AS publish
-		FROM team_players P, team_substitutes S
+		FROM team_players AS P, team_substitutes AS S
 		WHERE S.SubstituteMatchID = '$id'
 		AND P.PlayerID = S.SubstitutePlayerID
 		ORDER BY player_position_id, player_number
@@ -730,7 +730,7 @@ if ($mdata['match_place_id'] == 1) {
 		P.PlayerPublish AS publish,
 		PL.PlayerPublish AS publish2,
 		S.SubstitutionMinute AS substitution_minute
-		FROM team_players P, team_players PL, team_substitutions S
+		FROM team_players AS P, team_players AS PL, team_substitutions AS S
 		WHERE S.SubstitutionMatchID = '$id'
 		AND P.PlayerID = S.SubstitutionPlayerIDIn
 		AND PL.PlayerID = S.SubstitutionPlayerIDOut
@@ -778,7 +778,7 @@ if ($mdata['match_place_id'] == 1) {
 		P.PlayerID AS player_id,
 		P.PlayerPublish AS publish,
 		GA.GoalAssistMinute AS goal_assist_minute
-		FROM team_players P, team_goal_assists GA
+		FROM team_players AS P, team_goal_assists AS GA
 		WHERE GA.GoalAssistMatchID = '$id'
 		AND P.PlayerID = GA.GoalAssistPlayerID
 		ORDER BY goal_assist_minute
@@ -818,10 +818,10 @@ if ($mdata['match_place_id'] == 1) {
 		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
 		P.PlayerID AS player_id,
 		P.PlayerPublish AS publish,
-		Y.YellowCardMinute AS yellow_card_minute
-		FROM team_players P, team_yellow_cards Y
-		WHERE Y.YellowCardMatchID = '$id'
-		AND P.PlayerID = Y.YellowCardPlayerID
+		YC.YellowCardMinute AS yellow_card_minute
+		FROM team_players AS P, team_yellow_cards AS YC
+		WHERE YC.YellowCardMatchID = '$id'
+		AND P.PlayerID = YC.YellowCardPlayerID
 		ORDER BY yellow_card_minute
 	") or die(mysqli_error());
 
@@ -860,10 +860,10 @@ if ($mdata['match_place_id'] == 1) {
 		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
 		P.PlayerID AS player_id,
 		P.PlayerPublish AS publish,
-		R.RedCardMinute AS red_card_minute
-		FROM team_players P, team_red_cards R
-		WHERE R.RedCardMatchID = '$id'
-		AND P.PlayerID = R.RedCardPlayerID
+		RC.RedCardMinute AS red_card_minute
+		FROM team_players AS P, team_red_cards AS RC
+		WHERE RC.RedCardMatchID = '$id'
+		AND P.PlayerID = RC.RedCardPlayerID
 		ORDER BY red_card_minute
 	") or die(mysqli_error());
 
