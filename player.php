@@ -1061,7 +1061,7 @@ if (!isset($season_id_page)) {
 	if ($season_name_page == '') {
 		exit();
 	}
-	$get_matchs = mysqli_query($db_connect, "(SELECT
+	$get_matches = mysqli_query($db_connect, "(SELECT
 		DISTINCT M.MatchID AS match_id,
 		M.MatchGoals AS goals,
 		M.MatchGoalsOpponent AS goals_opponent,
@@ -1110,7 +1110,7 @@ if (!isset($season_id_page)) {
 	echo "<td align='center' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><b>".$locale_cards."</b></td>\n";
 	echo "</tr>\n";
 	$j = 0;
-	while($data = mysqli_fetch_array($get_matchs)) {
+	while($data = mysqli_fetch_array($get_matches)) {
 		if ($j % 2 == 0) {
 			$bg_color = '#'.BGCOLOR1;
 		} else {
@@ -1181,7 +1181,7 @@ if (!isset($season_id_page)) {
 		echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>".$cards."></td>\n";
 		echo "</tr>\n";
 	}
-	mysqli_free_result($get_matchs);
+	mysqli_free_result($get_matches);
 
 	echo "</table>\n";
 }
