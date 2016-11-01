@@ -535,11 +535,11 @@ if (!isset($season_id_page)) {
 		}
 		$get_total = mysqli_num_rows($get_seasons);
 		mysqli_free_result($get_seasons);
+		mysqli_free_result($get_goals);
+		mysqli_free_result($get_ins);
 		mysqli_free_result($get_assists);
 		mysqli_free_result($get_yellows);
 		mysqli_free_result($get_reds);
-		mysqli_free_result($get_goals);
-		mysqli_free_result($get_ins);
 
 		switch ($sort) {
 			case 'season_name':

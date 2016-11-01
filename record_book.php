@@ -99,7 +99,7 @@ $query = mysqli_query($db_connect, "SELECT
 	AND MatchTypeID LIKE '$default_match_type_id'
 ") or die(mysqli_error());
 $data = mysqli_fetch_array($query);
-$maxhomeatt = $data['max_atts'];
+$max_home_atts = $data['max_atts'];
 $min_home_atts = $data['min_atts'];
 mysqli_free_result($query);
 
@@ -129,7 +129,7 @@ $query = mysqli_query($db_connect, "SELECT
 	O.OpponentID AS opponent_id,
 	M.MatchPlaceID AS match_place_id,
 	M.MatchNeutral AS neutral
-	FROM team_matches M, team_match_types MT, team_opponents O
+	FROM team_matches AS M, team_match_types AS MT, team_opponents AS O
 	WHERE M.MatchTypeID = MT.MatchTypeID
 	AND (M.MatchGoals - M.MatchGoalsOpponent) = '$max_wins'
 	AND M.MatchTypeID LIKE '$default_match_type_id'
@@ -201,7 +201,7 @@ $query = mysqli_query($db_connect, "SELECT
 	O.OpponentID AS opponent_id,
 	M.MatchPlaceID AS match_place_id,
 	M.MatchNeutral AS neutral
-	FROM team_matches M, team_match_types MT, team_opponents O
+	FROM team_matches AS M, team_match_types AS MT, team_opponents AS O
 	WHERE M.MatchTypeID = MT.MatchTypeID
 	AND (M.MatchGoalsOpponent - M.MatchGoals) = '$max_losses'
 	AND M.MatchTypeID LIKE '$default_match_type_id'
@@ -273,7 +273,7 @@ $query = mysqli_query($db_connect, "SELECT
 	O.OpponentID AS opponent_id,
 	M.MatchPlaceID AS match_place_id,
 	M.MatchNeutral AS neutral
-	FROM team_matches M, team_match_types MT, team_opponents O
+	FROM team_matches AS M, team_match_types AS MT, team_opponents AS O
 	WHERE M.MatchTypeID = MT.MatchTypeID
 	AND M.MatchTypeID LIKE '$default_match_type_id'
 	AND M.MatchOpponent = O.OpponentID
@@ -344,11 +344,12 @@ $query = mysqli_query($db_connect, "SELECT
 	O.OpponentID AS opponent_id,
 	M.MatchPlaceID AS match_place_id,
 	M.MatchNeutral AS neutral
-	FROM team_matches M, team_match_types MT, team_opponents O
+	FROM team_matches AS M, team_match_types AS MT, team_opponents AS O
 	WHERE M.MatchTypeID = MT.MatchTypeID
 	AND (M.MatchGoals - M.MatchGoalsOpponent) = '$max_home_wins'
 	AND M.MatchTypeID LIKE '$default_match_type_id'
-	AND M.MatchPlaceID = '1' AND M.MatchNeutral = '0'
+	AND M.MatchPlaceID = '1'
+	AND M.MatchNeutral = '0'
 	AND M.MatchOpponent = O.OpponentID
 	AND M.MatchGoals > M.MatchGoalsOpponent
 	ORDER BY match_date DESC
@@ -417,11 +418,12 @@ $query = mysqli_query($db_connect, "SELECT
 	O.OpponentID AS opponent_id,
 	M.MatchPlaceID AS match_place_id,
 	M.MatchNeutral AS neutral
-	FROM team_matches M, team_match_types MT, team_opponents O
+	FROM team_matches AS M, team_match_types AS MT, team_opponents AS O
 	WHERE M.MatchTypeID = MT.MatchTypeID
 	AND (M.MatchGoalsOpponent - M.MatchGoals) = 'max_home_losses'
 	AND M.MatchTypeID LIKE '$default_match_type_id'
-	AND M.MatchPlaceID = '1' AND M.MatchNeutral = '0'
+	AND M.MatchPlaceID = '1'
+	AND M.MatchNeutral = '0'
 	AND M.MatchOpponent = O.OpponentID
 	AND M.MatchGoals < M.MatchGoalsOpponent
 	ORDER BY match_date DESC
@@ -490,11 +492,12 @@ $query = mysqli_query($db_connect, "SELECT
 	O.OpponentID AS opponent_id,
 	M.MatchPlaceID AS match_place_id,
 	M.MatchNeutral AS neutral
-	FROM team_matches M, team_match_types MT, team_opponents O
+	FROM team_matches AS M, team_match_types AS MT, team_opponents AS O
 	WHERE M.MatchTypeID = MT.MatchTypeID
 	AND (M.MatchGoals - M.MatchGoalsOpponent) = '$max_away_wins'
 	AND M.MatchTypeID LIKE '$default_match_type_id'
-	AND M.MatchPlaceID = '2' AND M.MatchNeutral = '0'
+	AND M.MatchPlaceID = '2'
+	AND M.MatchNeutral = '0'
 	AND M.MatchOpponent = O.OpponentID
 	AND M.MatchGoals > M.MatchGoalsOpponent
 	ORDER BY match_date DESC
@@ -563,11 +566,12 @@ $query = mysqli_query($db_connect, "SELECT
 	O.OpponentID AS opponent_id,
 	M.MatchPlaceID AS match_place_id,
 	M.MatchNeutral AS neutral
-	FROM team_matches M, team_match_types MT, team_opponents O
+	FROM team_matches AS M, team_match_types AS MT, team_opponents AS O
 	WHERE M.MatchTypeID = MT.MatchTypeID
 	AND (M.MatchGoalsOpponent - M.MatchGoals) = '$max_away_losses'
 	AND M.MatchTypeID LIKE '$default_match_type_id'
-	AND M.MatchPlaceID = '2' AND M.MatchNeutral = '0'
+	AND M.MatchPlaceID = '2'
+	AND M.MatchNeutral = '0'
 	AND M.MatchOpponent = O.OpponentID
 	AND M.MatchGoals < M.MatchGoalsOpponent
 	ORDER BY match_date DESC
@@ -636,7 +640,7 @@ $query = mysqli_query($db_connect, "SELECT
 	O.OpponentID AS opponent_id,
 	M.MatchPlaceID AS match_place_id,
 	M.MatchNeutral AS neutral
-	FROM team_matches M, team_match_types MT, team_opponents O
+	FROM team_matches AS M, team_match_types AS MT, team_opponents AS O
 	WHERE M.MatchTypeID = MT.MatchTypeID
 	AND M.MatchGoals = M.MatchGoalsOpponent
 	AND (M.MatchGoals + M.MatchGoalsOpponent) = '$max_draws'
@@ -710,14 +714,14 @@ $query = mysqli_query($db_connect, "SELECT
 	O.OpponentID AS opponent_id,
 	M.MatchPlaceID AS match_place_id,
 	M.MatchNeutral AS neutral
-	FROM team_matches M, team_match_types MT, team_opponents O
-	WHERE M.MatchTypeID = MT.MatchTypeID AND
-	M.MatchTypeID LIKE '$default_match_type_id' AND
-	M.MatchPlaceID = '1' AND
-	M.MatchNeutral = '0' AND
-	M.MatchAttendance != '' AND
-	M.MatchAttendance = '".$maxhomeatt."' AND
-	M.MatchOpponent = O.OpponentID
+	FROM team_matches AS M, team_match_types AS MT, team_opponents AS O
+	WHERE M.MatchTypeID = MT.MatchTypeID
+	AND M.MatchTypeID LIKE '$default_match_type_id'
+	AND M.MatchPlaceID = '1'
+	AND M.MatchNeutral = '0'
+	AND M.MatchAttendance != ''
+	AND M.MatchAttendance = '$max_home_atts'
+	AND M.MatchOpponent = O.OpponentID
 	ORDER BY match_date DESC
 ") or die(mysqli_error());
 $j = 1;
@@ -785,9 +789,9 @@ $query = mysqli_query($db_connect, "SELECT
 	O.OpponentID AS opponent_id,
 	M.MatchPlaceID AS match_place_id,
 	M.MatchNeutral AS neutral
-	FROM team_matches M, team_match_types MT, team_opponents O
-	WHERE M.MatchTypeID = MT.MatchTypeID AND
-	M.MatchTypeID LIKE '$default_match_type_id'
+	FROM team_matches AS M, team_match_types AS MT, team_opponents AS O
+	WHERE M.MatchTypeID = MT.MatchTypeID
+	AND M.MatchTypeID LIKE '$default_match_type_id'
 	AND M.MatchPlaceID = '2'
 	AND M.MatchNeutral = '0'
 	AND M.MatchAttendance != ''
@@ -860,7 +864,7 @@ $query = mysqli_query($db_connect, "SELECT
 	O.OpponentID AS opponent_id,
 	M.MatchPlaceID AS match_place_id,
 	M.MatchNeutral AS neutral
-	FROM team_matches M, team_match_types MT, team_opponents O
+	FROM team_matches AS M, team_match_types AS MT, team_opponents AS O
 	WHERE M.MatchTypeID = MT.MatchTypeID
 	AND M.MatchTypeID LIKE '$default_match_type_id'
 	AND M.MatchPlaceID = '1'
@@ -935,7 +939,7 @@ $query = mysqli_query($db_connect, "SELECT
 	O.OpponentID AS opponent_id,
 	M.MatchPlaceID AS match_place_id,
 	M.MatchNeutral AS neutral
-	FROM team_matches M, team_match_types MT, team_opponents O
+	FROM team_matches AS M, team_match_types AS MT, team_opponents AS O
 	WHERE M.MatchTypeID = MT.MatchTypeID
 	AND M.MatchTypeID LIKE '$default_match_type_id'
 	AND M.MatchPlaceID = '2'

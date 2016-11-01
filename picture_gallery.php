@@ -27,7 +27,7 @@ $get_details = mysqli_query($db_connect, "SELECT
 	M.MatchAdditionalType AS match_additional_type,
 	MT.MatchTypeName AS match_type_name,
 	M.MatchPublishOptional AS publish_optional
-	FROM team_matches M, team_match_types MT, team_opponents O
+	FROM team_matches AS M, team_match_types AS MT, team_opponents AS O
 	WHERE M.MatchID = '$id'
 	AND M.MatchTypeID = MT.MatchTypeID
 	AND M.MatchOpponent = O.OpponentID
