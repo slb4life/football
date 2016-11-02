@@ -318,17 +318,7 @@ while($data = mysqli_fetch_array($get_players)) {
 	} else {
 		$names[$i] = $data['player_last_name'] . ', ' . $data['player_first_name'];
 	}
-	if ($default_season_id == 0) {
-		$tdefault_season_id = '%';
-	} else {
-		$tdefault_season_id = $default_season_id;
-	}
-	if ($default_match_type_id == 0) {
-		$tdefault_match_type_id = '%';
-	} else {
-		$tdefault_match_type_id = $default_match_type_id;
-	}
-	$query = mysqli_query($db_connect, "SELECT
+	$get_substitutions = mysqli_query($db_connect, "SELECT
 		S.SubstitutionMinute AS substitution_minute,
 		M.MatchOvertime AS match_overtime
 		FROM team_substitutions AS S, team_matches AS M
@@ -337,7 +327,7 @@ while($data = mysqli_fetch_array($get_players)) {
 		AND M.MatchID = S.SubstitutionMatchID
 		AND M.MatchTypeID LIKE '$tdefault_match_type_id'
 	") or die(mysqli_error());
-	while($tdata = mysqli_fetch_array($query)) {
+	while($tdata = mysqli_fetch_array($get_substitutions)) {
 		if ($tdata['match_overtime'] == 0) {
 			$match_minutes = 90;
 		} else {
@@ -345,16 +335,16 @@ while($data = mysqli_fetch_array($get_players)) {
 		}
 		$minutes[$i] = $minutes[$i] + ($match_minutes-$tdata['substitution_minute']);
 	}
-	mysqli_free_result($query);
+	mysqli_free_result($get_substitutions);
 
-	$query = mysqli_query($db_connect, "SELECT *
+	$get_appearances = mysqli_query($db_connect, "SELECT *
 		FROM team_appearances AS A, team_matches AS M
 		WHERE A.AppearancePlayerID = '$players[$i]'
 		AND A.AppearanceSeasonID LIKE '$tdefault_season_id'
 		AND M.MatchID = A.AppearanceMatchID
 		AND M.MatchTypeID LIKE '$tdefault_match_type_id'
 	") or die(mysqli_error());
-	while($tdata = mysqli_fetch_array($query)) {
+	while($tdata = mysqli_fetch_array($get_appearances)) {
 		if (isset($tdata['team_matches.MatchOvertime']) == 0) {
 			$match_minutes = 90;
 		} else {
@@ -362,9 +352,9 @@ while($data = mysqli_fetch_array($get_players)) {
 		}
 		$minutes[$i] = $minutes[$i] + $match_minutes;
 	}
-	mysqli_free_result($query);
+	mysqli_free_result($get_appearances);
 
-	$query = mysqli_query($db_connect, "SELECT
+	$get_substitutions = mysqli_query($db_connect, "SELECT
 		S.SubstitutionMinute AS substitution_minute,
 		M.MatchOvertime AS match_overtime
 		FROM team_substitutions AS S, team_matches AS M
@@ -373,7 +363,7 @@ while($data = mysqli_fetch_array($get_players)) {
 		AND M.MatchID = S.SubstitutionMatchID
 		AND M.MatchTypeID LIKE '$tdefault_match_type_id'
 	") or die(mysqli_error());
-	while($tdata = mysqli_fetch_array($query)) {
+	while($tdata = mysqli_fetch_array($get_substitutions)) {
 		if ($tdata['match_overtime'] == 0) {
 			$match_minutes = 90;
 		} else {
@@ -381,9 +371,9 @@ while($data = mysqli_fetch_array($get_players)) {
 		}
 		$minutes[$i] = $minutes[$i] - ($match_minutes-$tdata['substitution_minute']);
 	}
-	mysqli_free_result($query);
+	mysqli_free_result($get_substitutions);
 
-	$query = mysqli_query($db_connect, "SELECT
+	$get_red_cards = mysqli_query($db_connect, "SELECT
 		RC.RedCardMinute AS red_card_minute,
 		M.MatchOvertime AS match_overtime
 		FROM team_red_cards AS RC, team_matches AS M
@@ -392,7 +382,7 @@ while($data = mysqli_fetch_array($get_players)) {
 		AND M.MatchID = RC.RedCardMatchID
 		AND M.MatchTypeID LIKE '$tdefault_match_type_id'
 	") or die(mysqli_error());
-	while($tdata = mysqli_fetch_array($query)) {
+	while($tdata = mysqli_fetch_array($get_red_cards)) {
 		if ($tdata['match_overtime'] == 0) {
 			$match_minutes = 90;
 		} else {
@@ -400,7 +390,7 @@ while($data = mysqli_fetch_array($get_players)) {
 		}
 		$minutes[$i] = $minutes[$i] - ($match_minutes-$tdata['red_card_minute']);
 	}
-	mysqli_free_result($query);
+	mysqli_free_result($get_red_cards);
 
 	$publish[$i] = $data['publish'];
 	$numbers[$i] = $data['player_number'];
@@ -682,7 +672,7 @@ if ($get_total > 0) {
 }
 echo "</table>\n";
 if (SHOW_STAFF == 1) {
-	echo "<br><br>\n";
+	echo "<br>\n";
 	echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
 	echo "<tr align='left' bgcolor='#".(CELLBGCOLORTOP)."'>\n";
 	echo "<td align='left' valign='middle'><b>".$locale_managers."</b></td>\n";
@@ -695,22 +685,11 @@ if (SHOW_STAFF == 1) {
 	echo "<td align='center' valign='middle'><b>".$locale_draw_proc_short."</b></td>\n";
 	echo "<td align='center' valign='middle'><b>".$locale_lose_proc_short."</b></td>\n";
 	echo "</tr>\n";
-
-	if ($default_season_id == 0) {
-		$tdefault_season_id = '%';
-	} else {
-		$tdefault_season_id = $default_season_id;
-	}
-	if ($default_match_type_id == 0) {
-		$tdefault_match_type_id = '%';
-	} else {
-		$tdefault_match_type_id = $default_match_type_id;
-	}
-	$query = mysqli_query($db_connect, "SELECT
+	$get_managers = mysqli_query($db_connect, "SELECT
 		M.ManagerID AS manager_id,
 		M.ManagerLastName AS manager_last_name,
 		M.ManagerFirstName AS manager_first_name
-		FROM team_managers M, team_matches MA, team_seasons S
+		FROM team_managers AS M, team_matches AS MA, team_seasons AS S
 		WHERE MA.MatchSeasonID LIKE '$tdefault_season_id'
 		AND MA.MatchTypeID LIKE '$tdefault_match_type_id'
 		AND M.ManagerID = S.SeasonManagerID
@@ -719,7 +698,7 @@ if (SHOW_STAFF == 1) {
 		ORDER BY manager_last_name, manager_first_name
 	") or die(mysqli_error());
 	$j = 1;
-	while($data = mysqli_fetch_array($query)) {
+	while($data = mysqli_fetch_array($get_managers)) {
 		$id = $data['manager_id'];
 		if ($j % 2 == 0) {
 			$bg_color = '#'.BGCOLOR1;
@@ -743,32 +722,32 @@ if (SHOW_STAFF == 1) {
 		") or die(mysqli_error());
 		$y = mysqli_num_rows($get_timeline);
 		if ($y > 0) {
-			$temp_to_query = ' AND (';
+			$timeline = ' AND (';
 			$x = 1;
 			while($macth_date = mysqli_fetch_array($get_timeline)) {
-				$temp_to_query .= "(M.MatchDateTime <= '".$macth_date['end_date']." 00:00:00' AND M.MatchDateTime >= '".$macth_date['start_date']." 00:00:00')";
+				$timeline .= "(M.MatchDateTime <= '".$macth_date['end_date']." 00:00:00' AND M.MatchDateTime >= '".$macth_date['start_date']." 00:00:00')";
 				if ($x != $y) {
-					$temp_to_query .= ' OR ';
+					$timeline .= ' OR ';
 				}
 				$x++;
 			}
 		}
 		mysqli_free_result($get_timeline);
 
-		$temp_to_query = " ";
+		$timeline = " ";
 		$get_matches = mysqli_query($db_connect, "SELECT
 			M.MatchGoals AS goals,
-			M.MatchGoalsOpponent AS goals_o
+			M.MatchGoalsOpponent AS goals_opponent
 			FROM team_matches M
 			WHERE M.MatchSeasonID LIKE '$tdefault_season_id'
-			AND M.MatchTypeID LIKE '$tdefault_match_type_id' $temp_to_query
+			AND M.MatchTypeID LIKE '$tdefault_match_type_id' $timeline
 			AND M.MatchGoals IS NOT NULL
 			AND M.MatchGoalsOpponent IS NOT NULL
 			ORDER BY M.MatchDateTime
 		") or die(mysqli_error());
 		$k = 0;
 		while($data_m = mysqli_fetch_array($get_matches)) {
-			if ($data_m['goals'] > $data_m['goals_o']) {
+			if ($data_m['goals'] > $data_m['goals_opponent']) {
 				$wins = $wins + 1;
 				$streak++;
 				$streak2++;
@@ -776,17 +755,17 @@ if (SHOW_STAFF == 1) {
 				$track = 1;
 				$track2 = 1;
 			}
-			if ($data_m['goals'] == $data_m['goals_o']) {
+			if ($data_m['goals'] == $data_m['goals_opponent']) {
 				$draws = $draws + 1;
-				$streak=0;
+				$streak = 0;
 				$track = 0;
 				$track2 = 1;
 				$streak2++;
 			}
-			if ($data_m['goals'] < $data_m['goals_o']) {
+			if ($data_m['goals'] < $data_m['goals_opponent']) {
 				$loses = $loses + 1;
-				$streak=0;
-				$streak2=0;
+				$streak = 0;
+				$streak2 = 0;
 				$track = 0;
 				$track2 = 0;
 			}
@@ -840,7 +819,7 @@ if (SHOW_STAFF == 1) {
 		echo "<td align='left' valign='middle'>".$locale_no_staff_added."</td>\n";
 		echo "</tr>\n";
 	}
-	mysqli_free_result($query);
+	mysqli_free_result($get_managers);
 	
 	echo "</table>\n";
 }

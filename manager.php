@@ -96,15 +96,15 @@ if ($manager_data['manager_pc'] == 1) {
 	echo "<p><b>".$locale_playing_career."</b><br>".$manager_data['manager_pc']."</p>";
 }
 if ($manager_data['manager_player_id'] != 0) {
-	$get_player_info = mysqli_query($db_connect, "SELECT
+	$get_player = mysqli_query($db_connect, "SELECT
 		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
 		P.PlayerID AS player_id
 		FROM team_players AS P
 		WHERE P.PlayerID = '$id'
 		LIMIT 1
 	") or die(mysqli_error());
-	$player_data = mysqli_fetch_array($get_player_info);
-	mysqli_free_result($get_player_info);
+	$player_data = mysqli_fetch_array($get_player);
+	mysqli_free_result($get_player);
 
 	echo "<p><b>".$locale_link_to_stats."</b><br><a href='player.php?id=".$player_data['player_id']."'>".$player_data['player_name']."</p>\n";
 }
@@ -121,7 +121,7 @@ echo "<select name='match_type_manager'>\n";
 echo "<option value='0'>".$locale_all."</option>\n";
 while($data = mysqli_fetch_array($get_match_types)) {
 	if ($data['MatchTypeID'] == $default_match_type_id) {
-		echo "<option value='".$data['MatchTypeID']."' selected>".$data['MatchTypeName']."</option>\n";
+		echo "<option value='".$data['MatchTypeID']."' SELECTED>".$data['MatchTypeName']."</option>\n";
 	} else {
 		echo "<option value='".$data['MatchTypeID']."'>".$data['MatchTypeName']."</option>\n";
 	}
@@ -186,17 +186,6 @@ $get_seasons = mysqli_query($db_connect, "SELECT
 	AND S.SeasonManagerID = '$id'
 	ORDER BY season_name
 ") or die(mysqli_error());
-
-if ($default_season_id == 0) {
-	$tdefault_season_id = '%';
-} else {
-	$tdefault_season_id = $default_season_id;
-}
-if ($default_match_type_id == 0) {
-	$tdefault_match_type_id = '%';
-} else {
-	$tdefault_match_type_id = $default_match_type_id;
-}
 $total_all = 0;
 $total_wins = 0;
 $total_draws = 0;
@@ -231,7 +220,7 @@ while($data = mysqli_fetch_array($get_seasons)) {
 	$y = mysqli_num_rows($get_timeline);
 
 	if ($y > 0) {
-		$timeline = " AND ";
+		$timeline = ' AND (';
 		$x = 1;
 		while($date_time = mysqli_fetch_array($get_timeline)) {
 			$timeline .= "(M.MatchDateTime <= '$date_time[end_date] 00:00:00' AND M.MatchDateTime >= '$date_time[start_date] 00:00:00')";
