@@ -49,7 +49,7 @@ echo "<form action='".$PHP_SELF."' method='post'>Username:<br>\n";
 echo "<input type='text' name='user' size='20'><br><br>Password:<br>\n";
 echo "<input type='password' name='password'><br><br>Select Season:<br>\n";
 echo "<select name='season'>\n";
-$get_seasons = mysqli_query($db_connect, "SELECT * FROM team_season_names ORDER BY SeasonName") or die(mysqli_error());
+$get_seasons = mysqli_query($db_connect, "SELECT * FROM team_season_names ORDER BY SeasonName DESC") or die(mysqli_error());
 while($sdata = mysqli_fetch_array($get_seasons)) {
 	echo "<option value='".$sdata['SeasonID']."___".$sdata['SeasonName']."'>".$sdata['SeasonName']."</option>\n";
 }

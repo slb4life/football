@@ -480,6 +480,8 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			echo "<br>Copy this Manager to Season: <select name='copy_season'>";
 			$get_season = mysqli_query($db_connect, "SELECT * FROM team_season_names ORDER BY SeasonName") or die(mysqli_error());
 			while($data = mysqli_fetch_array($get_season)) {
+				if (!isset($check_season[$i])){ $check_season[$i] = 0; }
+
 				if ($data['SeasonID'] != $check_season[$i]) {
 					echo "<option value='".$data['SeasonID']."'>".$data['SeasonName']."</option>\n";
 				} else {

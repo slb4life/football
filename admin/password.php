@@ -51,7 +51,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 	echo "<body>\n";
 	include('menu.php');
 
-	if (isset($check) && ($check != null)) {
+	if (isset($check) && ($check != NULL)) {
 		echo "<center><font color='red'>".$check."</font></center>";
 	}
 	echo "<table align='center' width='600'><tr>\n";
