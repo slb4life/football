@@ -5,7 +5,7 @@ if (isset($_POST['submit'])) { $submit = $_POST['submit']; }
 
 if (isset($submit)) {
 	include('user.php');
-	$db_connect = mysqli_connect("$db_host","$db_user","$db_password","$db_name") or die(mysqli_error($db_connect));
+	$db_connect = mysqli_connect("$db_host", "$db_user", "$db_password", "$db_name") or die(mysqli_error($db_connect));
 
 	$db_username = trim($_POST['username']);
 	$db_password = trim($_POST['password']);
