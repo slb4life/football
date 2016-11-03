@@ -6,7 +6,7 @@ if (isset($_REQUEST['id'])){ $id = $_REQUEST['id']; }
 if ($id == '' || !is_numeric($id)) {
 	$id = 1;
 }
-$query = mysqli_query($db_connect, "SELECT
+$get_pages = mysqli_query($db_connect, "SELECT
 	page_title,
 	page_content,
 	publish
@@ -15,8 +15,8 @@ $query = mysqli_query($db_connect, "SELECT
 	AND publish = '1'
 	LIMIT 1
 ") or die(mysqli_error());
-$data = mysqli_fetch_array($query);
-mysqli_free_result($query);
+$data = mysqli_fetch_array($get_pages);
+mysqli_free_result($get_pages);
 
 echo "<h1>".$data['page_title']."</h1>\n";
 echo "<table align='center' width='100%' cellspacing='0' cellpadding='0' border='0' bgcolor='#".(BORDERCOLOR)."'>\n";

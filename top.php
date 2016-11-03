@@ -168,7 +168,7 @@ if (mysqli_num_rows($get_pages) > 0) {
 	echo "<tr>\n";
 	echo "<td align='left' valign='top' bgcolor='#".(CELLBGCOLORBOTTOM)."'>\n";
 	while($data = mysqli_fetch_array($get_pages)) {
-		echo "<a href='additional_page.php?id=".$data['page_id']."'>".$data['page_title']."</a><br>\n";
+		echo "<a href='page.php?id=".$data['page_id']."'>".$data['page_title']."</a><br>\n";
 	}
 	echo "</td>\n";
 	echo "</tr>\n";
