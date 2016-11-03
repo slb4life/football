@@ -11,7 +11,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 	$opponent_id = $_REQUEST['opponent_id'];
 
 	include('user.php');
-	$db_connect = mysqli_connect("$db_host","$db_user","$db_password","$db_name") or die(mysqli_error());
+	$db_connect = mysqli_connect("$db_host", "$db_user", "$db_password", "$db_name") or die(mysqli_error());
 
 	mysqli_query($db_connect, "DELETE FROM team_players_opponent WHERE PlayerID = '$player_id' AND OpponentID = '$opponent_id' LIMIT 1") or die(mysqli_error());
 	header("Location: $HTTP_REFERER");

@@ -7,7 +7,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 	echo "Authorization Failed.<br><a href='index.php'>Restart, Please</a>";
 } else {
 	include('user.php');
-	$db_connect = mysqli_connect("$db_host","$db_user","$db_password","$db_name") or die(mysqli_error());
+	$db_connect = mysqli_connect("$db_host", "$db_user", "$db_password", "$db_name") or die(mysqli_error());
 	
 	$season_id = $_SESSION['season_id'];
 	$season_name = $_SESSION['season_name'];

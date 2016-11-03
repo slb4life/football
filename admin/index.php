@@ -5,7 +5,7 @@ if (file_exists('installer.php')) {
 }
 
 include('user.php');
-$db_connect = mysqli_connect("$db_host","$db_user","$db_password", "$db_name") or die(mysqli_error());
+$db_connect = mysqli_connect("$db_host", "$db_user", "$db_password", "$db_name") or die(mysqli_error());
 
 $PHP_SELF = $_SERVER['PHP_SELF'];
 

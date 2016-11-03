@@ -2,7 +2,7 @@
 session_start();
 include("admin/user.php");
 
-$db_connect = mysqli_connect($db_host, $db_user, $db_password, $db_name) or die(mysqli_error());
+$db_connect = mysqli_connect("$db_host", "$db_user", "$db_password", "$db_name") or die(mysqli_error());
 $get_preferences = mysqli_query($db_connect, "SELECT * FROM team_preferences WHERE id = '1' LIMIT 1") or die(mysqli_error());
 $data = mysqli_fetch_array($get_preferences);
 
