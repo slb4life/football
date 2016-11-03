@@ -3,6 +3,7 @@ echo "<center>";
 echo "<a href='news.php?session_id=".$session."'>News</a> |\n";
 echo "<a href='seasons.php?session_id=".$session."'>Seasons</a> |\n";
 echo "<a href='match_types.php?session_id=".$session."'>Match Types</a> |\n";
+echo "<a href='player_positions.php?session_id=".$session."'>Player Positions</a> |\n";
 echo "<a href='opponents.php?session_id=".$session."'>Opponents</a> |\n";
 echo "<a href='players.php?session_id=".$session."'>Players</a> |\n";
 echo "<a href='managers.php?session_id=".$session."'>Managers</a> |\n";

@@ -4,7 +4,7 @@ $session_id = $_REQUEST['session_id'];
 $session = $_SESSION['session'];
 
 if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
-	echo "Authorization failed.<br><a href='index.php'>Restart, please</a>";
+	echo "Authorization Failed.<br><a href='index.php'>Restart, Please</a>";
 } else {
 	include('user.php');
 	$db_connect = mysqli_connect("$db_host","$db_user","$db_password", "$db_name") or die(mysqli_error());
@@ -22,13 +22,13 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 
 	if (isset($add_submit)) {
 		$match_type = trim($_POST['match_type']);
-		$query = mysqli_query($db_connect, "SELECT MatchTypeName FROM team_match_types WHERE MatchTypeName = '$match_type'") or die(mysqli_error());
+		$get_match_types = mysqli_query($db_connect, "SELECT MatchTypeName FROM team_match_types WHERE MatchTypeName = '$match_type'") or die(mysqli_error());
 
-		if (mysqli_num_rows($query) > 0) {
-			echo "There is already Match Type Named: ".$match_type." in Database.<br>Please write another Match Type.";
+		if (mysqli_num_rows($get_match_types) > 0) {
+			echo "There Is Already Match Type Named: ".$match_type." In Database.<br>Please Write Another Match Type.";
 			exit();
 		}
-		mysqli_free_result($query);
+		mysqli_free_result($get_match_types);
 
 		if (!get_magic_quotes_gpc()) {
 			$match_type = addslashes($match_type);
@@ -51,14 +51,14 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 	
 	} else if (isset($delete_submit)) {
 		$match_type_id = $_POST['match_type_id'];
-		$query = mysqli_query($db_connect, "SELECT MatchTypeID FROM team_matches WHERE MatchTypeID = '$match_type_id'") or die(mysqli_error());
+		$get_match_types = mysqli_query($db_connect, "SELECT MatchTypeID FROM team_matches WHERE MatchTypeID = '$match_type_id'") or die(mysqli_error());
 
-		if (mysqli_num_rows($query) == 0) {
+		if (mysqli_num_rows($get_match_types) == 0) {
 			mysqli_query($db_connect, "DELETE FROM team_match_types WHERE MatchTypeID = '$match_type_id'") or die(mysqli_error());
 			header("Location: $PHP_SELF?session_id=$session");
 
 		} else {
-			echo "Permission to Delete is Denied!<br>Match Type is already in use.<br>Push back Button to get back";
+			echo "Permission To Delete Is Denied!<br>Match Type Is Already In Use.<br>Push Back Button To Get Back";
 			exit();
 		}
 	}
@@ -85,11 +85,11 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<input type='submit' name='add_submit' value='Add Type'>\n";
 		echo "</form>\n";
 	} else if ($action == 'modify') {
-		$match_type_id = $_REQUEST['match_type'];
-		$get_match_type = mysqli_query($db_connect, "SELECT * FROM team_match_types WHERE MatchTypeID = '$match_type_id' LIMIT 1") or die(mysqli_error());
-		$data = mysqli_fetch_array($get_match_type);
+		$match_type_id = $_REQUEST['match_type_id'];
+		$get_match_types = mysqli_query($db_connect, "SELECT * FROM team_match_types WHERE MatchTypeID = '$match_type_id' LIMIT 1") or die(mysqli_error());
+		$data = mysqli_fetch_array($get_match_types);
 		echo "<form method='post' action='".$PHP_SELF."?session_id=".$session."'>\n";
-		echo "<h1>Modify / Delete type</h1>\n";
+		echo "<h1>Modify / Delete Type</h1>\n";
 		echo "<table width='100%' cellspacing='3' cellpadding='3' border='0'><tr>\n";
 		echo "<td align='left' valign='top'>Match Type Name:</td>\n";
 		echo "<td align='left' valign='top'>";
@@ -103,18 +103,18 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "</form>\n";
 		echo "<br>";
 		echo "<a href='".$PHP_SELF."?session_id=".$session."'>Add Match Type</a>\n";
-		mysqli_free_result($get_match_type);
+		mysqli_free_result($get_match_types);
 	}
 	echo "</td>\n";
-	echo "<td align='left' valign='top'>\n";
+	echo "<td align='left' valign='top'>";
 	$get_match_types = mysqli_query($db_connect, "SELECT * FROM team_match_types ORDER BY MatchTypeName") or die(mysqli_error());
 
 	if (mysqli_num_rows($get_match_types) < 1) {
-		echo "<b>No Match Types so far in Database</b>";
+		echo "<b>No Match Types So Far In Database</b>";
 	} else {
-		echo "<b>Match Types so far in Database:</b><br><br>";
+		echo "<b>Match Types So Far In Database:</b><br><br>";
 		while($data = mysqli_fetch_array($get_match_types)) {
-			echo "<a href='".$PHP_SELF."?session_id=".$session."&amp;action=modify&amp;match_type=".$data['MatchTypeID']."'>".$data['MatchTypeName']."</a><br>";
+			echo "<a href='".$PHP_SELF."?session_id=".$session."&amp;action=modify&amp;match_type_id=".$data['MatchTypeID']."'>".$data['MatchTypeName']."</a><br>";
 		}
 	}
 	echo "</td>\n";

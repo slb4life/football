@@ -22,13 +22,13 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 
 	if (isset($add_submit)) {
 		$season_name = trim($_POST['season_name']);
-		$query = mysqli_query($db_connect, "SELECT SeasonName FROM team_season_names WHERE SeasonName = '$season_name'") or die(mysqli_error());
+		$get_seasons = mysqli_query($db_connect, "SELECT SeasonName FROM team_season_names WHERE SeasonName = '$season_name'") or die(mysqli_error());
 
-		if (mysqli_num_rows($query) > 0) {
-			echo "There is already Season Named: ".$season_name." in Database.<br>Please write another Name for the Season.";
+		if (mysqli_num_rows($get_seasons) > 0) {
+			echo "There Is Already Season Named: ".$season_name." In Database.<br>Please Write Another Name For The Season.";
 			exit();
 		}
-		mysqli_free_result($query);
+		mysqli_free_result($get_seasons);
 
 		if ($season_name != '') {
 			mysqli_query($db_connect, "INSERT INTO team_season_names SET SeasonName = '$season_name'") or die(mysqli_error());
@@ -48,12 +48,12 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 
 	} else if (isset($delete_submit)) {
 		$season_id = $_POST['season_id'];
-		$query = mysqli_query($db_connect, "SELECT M.MatchID FROM team_matches M, team_seasons S WHERE M.MatchSeasonID = '$season_id' OR S.SeasonPlayerID = '$season_id'") or die(mysqli_error());
+		$get_seasons = mysqli_query($db_connect, "SELECT M.MatchID FROM team_matches AS M, team_seasons AS S WHERE M.MatchSeasonID = '$season_id' OR S.SeasonPlayerID = '$season_id'") or die(mysqli_error());
 
-		if (mysqli_num_rows($query) == 0) {
+		if (mysqli_num_rows($get_seasons) == 0) {
 			mysqli_query($db_connect, "DELETE FROM team_season_names WHERE SeasonID = '$season_id'") or die(mysqli_error());
 		} else {
-			echo "There is already Match or Player Booked on that Season you wanted to Delete. You must Delete Match or Player first.";
+			echo "There Is Already Match Or Player Booked On This Season You Wanted To Delete. You Must Delete Match And Player First.";
 			exit();
 		}
 		header("Location: $PHP_SELF?session_id=$session");
@@ -81,12 +81,13 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<input type='submit' name='add_submit' value='Add Season'>\n";
 		echo "</form>\n";
 	} else if ($action == 'modify') {
-		$season_id = $_REQUEST['season'];
-		$get_season = mysqli_query($db_connect, "SELECT * FROM team_season_names WHERE SeasonID = '$season_id' LIMIT 1") or die(mysqli_error());
-		$data = mysqli_fetch_array($get_season);
+		$season_id = $_REQUEST['season_id'];
+		$get_seasons = mysqli_query($db_connect, "SELECT * FROM team_season_names WHERE SeasonID = '$season_id' LIMIT 1") or die(mysqli_error());
+		$data = mysqli_fetch_array($get_seasons);
 		echo "<form method='post' action='".$PHP_SELF."?session_id=".$session."'>\n";
 		echo "<h1>Modify / Delete Season</h1>\n";
-		echo "<table width='100%' cellspacing='3' cellpadding='3' border='0'><tr>\n";
+		echo "<table width='100%' cellspacing='3' cellpadding='3' border='0'>\n";
+		echo "<tr>\n";
 		echo "<td align='left' valign='top'>Season Name (Years):</td>\n";
 		echo "<td align='left' valign='top'>";
 		echo "<input type='text' name='season_name' value='".$data['SeasonName']."'>";
@@ -108,18 +109,18 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "</form>\n";
 		echo "<br>";
 		echo "<a href='".$PHP_SELF."?session_id=".$session."'>Add Season</a>\n";
-		mysqli_free_result($get_season);
+		mysqli_free_result($get_seasons);
 	}
 	echo "</td>\n";
 	echo "<td align='left' valign='top'>";
 	$get_seasons = mysqli_query($db_connect, "SELECT * FROM team_season_names ORDER BY SeasonName") or die(mysqli_error());
 
 	if (mysqli_num_rows($get_seasons) < 1) {
-		echo "<b>No Seasons so far in Database</b>";
+		echo "<b>No Seasons So Far In Database</b>";
 	} else {
-		echo "<b>Seasons so far in Database:</b><br><br>";
+		echo "<b>Seasons So Far In Database:</b><br><br>";
 		while($data = mysqli_fetch_array($get_seasons)) {
-			echo "<a href='".$PHP_SELF."?session_id=".$session."&amp;action=modify&amp;season=".$data['SeasonID']."'>".$data['SeasonName']."</a>";
+			echo "<a href='".$PHP_SELF."?session_id=".$session."&amp;action=modify&amp;season_id=".$data['SeasonID']."'>".$data['SeasonName']."</a>";
 
 			if ($data['SeasonPublish'] == 0) {
 				echo " (NB)<br>";
@@ -128,7 +129,8 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			}
 		}
 	}
-	echo "<br>NB = This Season is not Published Yet.";
+	echo "<br>";
+	echo "NB = This Season Is Not Published Yet.";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
