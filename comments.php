@@ -13,7 +13,7 @@ echo "<td>\n";
 echo "<table width='100%' cellspacing='1' cellpadding='5' border='0'>\n";
 echo "<tr>\n";
 echo "<td bgcolor='#".(CELLBGCOLORBOTTOM)."' align='center'>\n";
-$get_details = mysqli_query($db_connect, "SELECT
+$get_matches = mysqli_query($db_connect, "SELECT
 	O.OpponentName AS opponent_name,
 	O.OpponentID AS opponent_id,
 	M.MatchID AS match_id,
@@ -32,16 +32,16 @@ $get_details = mysqli_query($db_connect, "SELECT
 	MT.MatchTypeName AS match_type_name,
 	M.MatchPublishOptional AS publish_optional,
 	P.PreviewText AS preview_text
-	FROM (team_matches M, team_match_types MT, team_opponents O)
-	LEFT OUTER JOIN team_previews P ON M.MatchID = P.PreviewMatchID
+	FROM (team_matches AS M, team_match_types AS MT, team_opponents AS O)
+	LEFT OUTER JOIN team_previews AS P ON M.MatchID = P.PreviewMatchID
 	WHERE M.MatchID = '$id'
 	AND M.MatchTypeID = MT.MatchTypeID
 	AND M.MatchOpponent = O.OpponentID
 	LIMIT 1
 ")or die(mysqli_error());
 
-$mdata = mysqli_fetch_array($get_details);
-mysqli_free_result($get_details);
+$mdata = mysqli_fetch_array($get_matches);
+mysqli_free_result($get_matches);
 
 $logos = 0;
 $image_url_1 = "images/team_logo.png";
@@ -219,7 +219,7 @@ if ($mdata['match_place_id'] == 1) {
 	echo "<br>\n";
 }
 $show_pictures = 0;
-$query = mysqli_query($db_connect, "SELECT
+$get_pictures = mysqli_query($db_connect, "SELECT
 	PictureID AS picture_id,
 	PictureName AS picture_name,
 	PictureText AS picture_text
@@ -228,11 +228,11 @@ $query = mysqli_query($db_connect, "SELECT
 	LIMIT 1
 ") or die(mysqli_error());
 
-if (mysqli_num_rows($query) > 0) {
+if (mysqli_num_rows($get_pictures) > 0) {
 	$show_pictures = 1;
-	$picture_data = mysqli_fetch_array($query);
+	$picture_data = mysqli_fetch_array($get_pictures);
 }
-mysqli_free_result($query);
+mysqli_free_result($get_pictures);
 
 echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
 echo "<tr align='left' bgcolor='".(CELLBGCOLORTOP)."'>\n";

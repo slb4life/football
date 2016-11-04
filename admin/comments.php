@@ -50,24 +50,24 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 
 	if (!isset($action)) {
 		echo "<h1>Fan Comments</h1>";
-		echo "Choose a Match from the right first...";
+		echo "Choose A Match From The Right First...";
 	} else if ($action == 'modify') {
 		echo "<h1>Fan Comments</h1>";
-		$get_match = mysqli_query($db_connect, "SELECT
-			DATE_FORMAT(team_matches.MatchDateTime, '%b %D %Y at %H:%i') AS match_date,
-			team_opponents.OpponentName AS opponent_name,
-			team_match_types.MatchTypeName AS match_type_name,
-			team_match_places.MatchPlaceName AS match_place_name,
-			team_matches.MatchNeutral AS match_neutral
-			FROM team_matches, team_match_types, team_match_places, team_opponents
+		$get_matches = mysqli_query($db_connect, "SELECT
+			DATE_FORMAT(M.MatchDateTime, '%b %D %Y at %H:%i') AS match_date,
+			O.OpponentName AS opponent_name,
+			MT.MatchTypeName AS match_type_name,
+			MP.MatchPlaceName AS match_place_name,
+			M.MatchNeutral AS match_neutral
+			FROM team_matches AS M, team_match_types AS MT, team_match_places AS MP, team_opponents AS O
 			WHERE MatchSeasonID = '$season_id'
-			AND team_matches.MatchTypeID = team_match_types.MatchTypeID
-			AND team_matches.MatchPlaceID = team_match_places.MatchPlaceID
-			AND team_matches.MatchOpponent = team_opponents.OpponentID
+			AND M.MatchTypeID = MT.MatchTypeID
+			AND M.MatchPlaceID = MP.MatchPlaceID
+			AND M.MatchOpponent = O.OpponentID
 			AND MatchID = '$match_id'
 			LIMIT 1
 		") or die(mysqli_error());
-		while($data = mysqli_fetch_array($get_match)) {
+		while($data = mysqli_fetch_array($get_matches)) {
 			echo "<b>".$data['match_date'].", vs. ".$data['opponent_name']."<br>".$data['match_place_name']."";
 
 			if ($data['match_neutral'] == 1) {
@@ -75,67 +75,65 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 				echo ": ".$data['match_type_name']."</b><br><br>\n";
 			}
 		}
-		mysqli_free_result($get_match);
+		mysqli_free_result($get_matches);
 
-		$query = mysqli_query($db_connect, "SELECT
+		$get_comments = mysqli_query($db_connect, "SELECT
 			ID AS id,
 			Name AS name,
 			Comments AS comments,
-			IP As ip
+			IP AS ip
 			FROM team_comments WHERE MatchID = '$match_id'
 			ORDER by Time DESC
 		") or die(mysqli_error());
-		while($data = mysqli_fetch_array($query)) {
+		while($data = mysqli_fetch_array($get_comments)) {
 			$data['comments'] = str_replace('<br>', "\r\n", $data['comments']);
 			echo "<form method='post' action='".$PHP_SELF."?session_id=".$session."'>\n";
 			echo "<table width='100%' cellspacing='3' cellpadding='3' border='0'><tr>\n";
-			echo "<td align='left' valign='top' colspan='2'><b>Fan name:</b><br><input type='text' name='name' value='".$data['name']."'></td>\n";
+			echo "<td align='left' valign='top' colspan='2'><b>Fan Name:</b><br><input type='text' name='name' value='".$data['name']."'></td>\n";
 			echo "</tr><tr>\n";
 			echo "<td align='left' valign='top' colspan='2'><b>Comments:</b><br><textarea name='comments' cols='40' rows='10'>".$data['comments']."</textarea></td>\n";
 			echo "</tr><tr>\n";
-			echo "<td align='left' valign='top' colspan='2'>Comment was sent from IP Address ".$data['ip']."</td>\n";
+			echo "<td align='left' valign='top' colspan='2'>Comment Was Sent From IP Address ".$data['ip']."</td>\n";
 			echo "</tr><tr>\n";
 			echo "<td align='left' valign='top' colspan='2'>";
-			echo "<input type='hidden' name='id' value='".$data['id']."'>";
-			echo "<input type='submit' name='modify_submit' value='Modify'>&nbsp;";
-			echo "<input type='submit' name='delete_submit' value='Delete'>";
-			echo "<br>";
+			echo "<input type='hidden' name='id' value='".$data['id']."'>\n";
+			echo "<input type='submit' name='modify_submit' value='Modify'>\n";
+			echo "<input type='submit' name='delete_submit' value='Delete'>\n";
 			echo "</td>\n";
 			echo "</tr>\n";
 			echo "</table>\n";
 			echo "</form>\n";
-			echo "<hr width='100%'>\n";
 		}
-		if (mysqli_num_rows($query) == 0) {
-			echo "Nobody has made a Comment Yet..";
+		if (mysqli_num_rows($get_comments) == 0) {
+			echo "Nobody Has Made A Comment Yet..";
 		}
-		mysqli_free_result($query);
+		mysqli_free_result($get_comments);
 	}
 	echo "</td>\n";
 	echo "<td align='left' valign='top' width='300'>\n";
 	$get_matches = mysqli_query($db_connect, "SELECT
-		DATE_FORMAT(team_matches.MatchDateTime, '%b %D %Y at %H:%i') AS match_date,
-		team_opponents.OpponentName AS opponent_name,
-		team_matches.MatchID AS match_id,
-		team_match_types.MatchTypeName AS match_type_name,
-		team_matches.MatchStadium AS match_stadium,
-		team_match_places.MatchPlaceName AS match_place_name,
-		team_matches.MatchPublish AS publish,
-		team_matches.MatchNeutral AS match_neutral,
-		team_previews.PreviewText AS preview_text
-		FROM (team_matches, team_match_types, team_match_places, team_opponents)
-		LEFT OUTER JOIN team_previews ON team_matches.MatchID = team_previews.PreviewMatchID
+		DATE_FORMAT(M.MatchDateTime, '%b %D %Y at %H:%i') AS match_date,
+		O.OpponentName AS opponent_name,
+		M.MatchID AS match_id,
+		MT.MatchTypeName AS match_type_name,
+		M.MatchStadium AS match_stadium,
+		MP.MatchPlaceName AS match_place_name,
+		M.MatchPublish AS publish,
+		M.MatchNeutral AS match_neutral,
+		P.PreviewText AS preview_text
+		FROM (team_matches AS M, team_match_types AS MT, team_match_places AS MP, team_opponents AS O)
+		LEFT OUTER JOIN team_previews AS P ON M.MatchID = P.PreviewMatchID
 		WHERE MatchSeasonID = '$season_id'
-		AND team_matches.MatchTypeID = team_match_types.MatchTypeID
-		AND team_matches.MatchPlaceID = team_match_places.MatchPlaceID
-		AND team_matches.MatchOpponent = team_opponents.OpponentID
+		AND M.MatchTypeID = MT.MatchTypeID
+		AND M.MatchPlaceID = MP.MatchPlaceID
+		AND M.MatchOpponent = O.OpponentID
 		ORDER BY match_date
 	") or die(mysqli_error());
 
 	if (mysqli_num_rows($get_matches) <1) {
-		echo "<b>No matches: ".$season_name."</b>";
+		echo "<b>No Matches: ".$season_name."</b>";
 	} else {
-		echo "<b>Matches in ".$season_name.":</b><br><br>";
+		echo "<b>Matches In ".$season_name.":</b><br><br>";
 		while($data = mysqli_fetch_array($get_matches)) {
 			echo "<a href='".$PHP_SELF."?session_id=".$session."&amp;action=modify&amp;match_id=".$data['match_id']."'>".$data['match_date'].", vs. ".$data['opponent_name']."</a><br>".$data['match_place_name']."";
 
