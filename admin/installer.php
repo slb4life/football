@@ -41,14 +41,14 @@ if (isset($submit)) {
 	") or die(mysqli_error($db_connect));
 
 	mysqli_query($db_connect, "CREATE TABLE `team_comments` (
-		`ID` int(11) NOT NULL auto_increment,
-		`MatchID` int(11) NOT NULL default '0',
-		`Name` varchar(128) NOT NULL default '',
-		`Comments` text NOT NULL,
-		`Time` datetime NOT NULL default '2000-01-01 00:00:00',
-		`IP` varchar(64) NOT NULL default '',
-		PRIMARY KEY  (`ID`),
-		KEY `MatchID` (`MatchID`)
+		`CommentID` int(11) NOT NULL auto_increment,
+		`CommentMatchID` int(11) NOT NULL default '0',
+		`CommentName` varchar(128) NOT NULL default '',
+		`CommentContent` text NOT NULL,
+		`CommentDateTime` datetime NOT NULL default '2000-01-01 00:00:00',
+		`CommentIP` varchar(64) NOT NULL default '',
+		PRIMARY KEY  (`CommentID`),
+		KEY `CommentMatchID` (`CommentMatchID`)
 		) ENGINE=MyISAM
 	") or die(mysqli_error($db_connect));
 

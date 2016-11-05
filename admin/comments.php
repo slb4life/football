@@ -21,20 +21,20 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 	if (isset($_POST['delete_submit'])){ $delete_submit = $_POST['delete_submit']; }
 
 	if (isset($modify_submit)) {
-		$name = trim($_POST['name']);
-		$comments = str_replace("\r\n", '<br>', trim($_POST['comments']));
-		$id = $_POST['id'];
+		$comment_id = $_POST['comment_id'];
+		$comment_name = trim($_POST['comment_name']);
+		$comment_content = str_replace("\r\n", '<br>', trim($_POST['comment_content']));
 		mysqli_query($db_connect, "UPDATE team_comments SET
-			Name = '$name',
-			Comments = '$comments'
-			WHERE ID = '$id'
+			CommentName = '$comment_name',
+			CommentContent = '$comment_content'
+			WHERE CommentID = '$comment_id'
 			LIMIT 1
 		") or die(mysqli_error());
 		header("Location: $HTTP_REFERER");
 
 	} else if (isset($delete_submit)) {
-		$id = $_POST['id'];
-		mysqli_query($db_connect, "DELETE FROM team_comments WHERE ID = '$id' LIMIT 1") or die(mysqli_error());
+		$comment_id = $_POST['comment_id'];
+		mysqli_query($db_connect, "DELETE FROM team_comments WHERE CommentID = '$comment_id' LIMIT 1") or die(mysqli_error());
 		header("Location: $HTTP_REFERER");
 	}
 	echo "<!DOCTYPE html>\n";
@@ -68,35 +68,36 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			LIMIT 1
 		") or die(mysqli_error());
 		while($data = mysqli_fetch_array($get_matches)) {
-			echo "<b>".$data['match_date'].", vs. ".$data['opponent_name']."<br>".$data['match_place_name']."";
+			echo "<b>".$data['match_date'].", vs. ".$data['opponent_name']."</b><br>".$data['match_place_name']."<br>";
 
 			if ($data['match_neutral'] == 1) {
-				echo "(match_neutral)";
-				echo ": ".$data['match_type_name']."</b><br><br>\n";
+				echo "(Neutral)";
+				echo ": ".$data['match_type_name']."<br><br>\n";
 			}
 		}
 		mysqli_free_result($get_matches);
 
 		$get_comments = mysqli_query($db_connect, "SELECT
-			ID AS id,
-			Name AS name,
-			Comments AS comments,
-			IP AS ip
-			FROM team_comments WHERE MatchID = '$match_id'
-			ORDER by Time DESC
+			CommentID AS comment_id,
+			CommentName AS comment_name,
+			CommentContent AS comment_content,
+			CommentDateTime AS comment_date,
+			CommentIP AS comment_ip
+			FROM team_comments WHERE CommentMatchID = '$match_id'
+			ORDER by comment_date DESC
 		") or die(mysqli_error());
 		while($data = mysqli_fetch_array($get_comments)) {
-			$data['comments'] = str_replace('<br>', "\r\n", $data['comments']);
+			$data['comment_content'] = str_replace('<br>', "\r\n", $data['comment_content']);
 			echo "<form method='post' action='".$PHP_SELF."?session_id=".$session."'>\n";
 			echo "<table width='100%' cellspacing='3' cellpadding='3' border='0'><tr>\n";
-			echo "<td align='left' valign='top' colspan='2'><b>Fan Name:</b><br><input type='text' name='name' value='".$data['name']."'></td>\n";
+			echo "<td align='left' valign='top' colspan='2'><b>Fan Name:</b><br><input type='text' name='comment_name' value='".$data['comment_name']."'></td>\n";
 			echo "</tr><tr>\n";
-			echo "<td align='left' valign='top' colspan='2'><b>Comments:</b><br><textarea name='comments' cols='40' rows='10'>".$data['comments']."</textarea></td>\n";
+			echo "<td align='left' valign='top' colspan='2'><b>Comments:</b><br><textarea name='comment_content' cols='40' rows='10'>".$data['comment_content']."</textarea></td>\n";
 			echo "</tr><tr>\n";
-			echo "<td align='left' valign='top' colspan='2'>Comment Was Sent From IP Address ".$data['ip']."</td>\n";
+			echo "<td align='left' valign='top' colspan='2'>Comment Was Sent From IP Address ".$data['comment_ip']."</td>\n";
 			echo "</tr><tr>\n";
 			echo "<td align='left' valign='top' colspan='2'>";
-			echo "<input type='hidden' name='id' value='".$data['id']."'>\n";
+			echo "<input type='hidden' name='comment_id' value='".$data['comment_id']."'>\n";
 			echo "<input type='submit' name='modify_submit' value='Modify'>\n";
 			echo "<input type='submit' name='delete_submit' value='Delete'>\n";
 			echo "</td>\n";
@@ -105,7 +106,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			echo "</form>\n";
 		}
 		if (mysqli_num_rows($get_comments) == 0) {
-			echo "Nobody Has Made A Comment Yet..";
+			echo "<br>Nobody Has Made A Comment Yet..";
 		}
 		mysqli_free_result($get_comments);
 	}
@@ -135,10 +136,10 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 	} else {
 		echo "<b>Matches In ".$season_name.":</b><br><br>";
 		while($data = mysqli_fetch_array($get_matches)) {
-			echo "<a href='".$PHP_SELF."?session_id=".$session."&amp;action=modify&amp;match_id=".$data['match_id']."'>".$data['match_date'].", vs. ".$data['opponent_name']."</a><br>".$data['match_place_name']."";
+			echo "<a href='".$PHP_SELF."?session_id=".$session."&amp;action=modify&amp;match_id=".$data['match_id']."'>".$data['match_date'].", vs. ".$data['opponent_name']."</a><br>".$data['match_place_name']."<br>";
 
 			if ($data['match_neutral'] == 1) {
-				echo "(match_neutral)";
+				echo "(Neutral)";
 				echo ": ".$data['match_type_name']."<br><br>\n";
 			}
 		}

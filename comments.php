@@ -252,10 +252,10 @@ echo "<tr bgcolor='".(CELLBGCOLORTOP)."'>\n";
 echo "<td align='left' valign='top'>\n";
 echo "<form method='POST' action='add_comment.php'>\n";
 echo "<input name='script_name' type='hidden' value='".$script_name."'>".$locale_name.":<br>\n";
-echo "<input type='text' name='name' size='40'><br><br>".$locale_comment.":<br>\n";
-echo "<textarea cols='40' rows='5' name='comments'></textarea><br><br>\n";
+echo "<input type='text' name='comment_name' size='40'><br><br>".$locale_comment.":<br>\n";
+echo "<textarea cols='40' rows='5' name='comment_content'></textarea><br><br>\n";
 echo "<input type='submit' name='submit' value='".$locale_add_comment."'>\n";
-echo "<input type='hidden' name='id' value='".$id."'><br><br>".$locale_name_and_comments_required."\n";
+echo "<input type='hidden' name='comment_match_id' value='".$id."'><br><br>".$locale_name_and_comments_required."\n";
 echo "</form>\n";
 echo "</td>\n";
 echo "</tr>\n";
@@ -269,19 +269,19 @@ echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
 echo "<tr bgcolor='".(CELLBGCOLORTOP)."'>\n";
 echo "<td align='left' valign='top'>";
 $get_comments = mysqli_query($db_connect, "SELECT
-	Name,
-	Comments,
-	DATE_FORMAT(Time, '$how_to_print_in_report') AS Time
+	CommentName AS comment_name,
+	CommentContent AS comment_content,
+	DATE_FORMAT(CommentDateTime, '$how_to_print_in_report') AS comment_date
 	FROM team_comments
-	WHERE MatchID = '$id'
-	ORDER BY Time DESC
+	WHERE CommentMatchID = '$id'
+	ORDER BY comment_date DESC
 ") or die(mysqli_error());
 
 if (mysqli_num_rows($get_comments) == 0) {
 	echo "".$locale_no_comments_yet."";
 } else {
 	while($data = mysqli_fetch_array($get_comments)) {
-		echo "<b>- ".$data['Name']." -</b> ".$data['Time']."<br>".$data['Comments']."<br><br>";
+		echo "<b>- ".$data['comment_name']." -</b> ".$data['comment_date']."<br>".$data['comment_content']."<br><br>";
 	}
 }
 mysqli_free_result($get_comments);
