@@ -9,7 +9,7 @@ echo "<td>\n";
 echo "<table width='100%' cellspacing='1' cellpadding='5' border='0'>\n";
 echo "<tr>\n";
 echo "<td bgcolor='#".(CELLBGCOLORBOTTOM)."' align='center'>\n";
-$get_details = mysqli_query($db_connect, "SELECT
+$get_match_details = mysqli_query($db_connect, "SELECT
 	O.OpponentName AS opponent_name,
 	O.OpponentID AS opponent_id,
 	M.MatchID AS match_id,
@@ -33,8 +33,8 @@ $get_details = mysqli_query($db_connect, "SELECT
 	AND M.MatchOpponent = O.OpponentID
 	LIMIT 1
 ") or die(mysqli_error());
-$mdata = mysqli_fetch_array($get_details);
-mysqli_free_result($get_details);
+$mdata = mysqli_fetch_array($get_match_details);
+mysqli_free_result($get_match_details);
 
 $logos = 0;
 $image_url_1 = "images/team_logo.png";
