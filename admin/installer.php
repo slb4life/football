@@ -198,11 +198,11 @@ if (isset($submit)) {
 	") or die(mysqli_error($db_connect));
 
 	mysqli_query($db_connect, "CREATE TABLE `team_pages` (
-		`page_id` int(10) NOT NULL auto_increment,
-		`page_title` varchar(255) NOT NULL,
-		`page_content` text NOT NULL,
-		`publish` tinyint(1) NOT NULL,
-		PRIMARY KEY  (`page_id`)
+		`PageID` int(10) NOT NULL auto_increment,
+		`PageTitle` varchar(255) NOT NULL,
+		`PageContent` text NOT NULL,
+		`PagePublish` tinyint(1) NOT NULL,
+		PRIMARY KEY  (`PageID`)
 		) ENGINE=MyISAM
 	") or die(mysqli_error($db_connect));
 

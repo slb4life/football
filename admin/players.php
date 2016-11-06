@@ -608,7 +608,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 	if ($get_total < 1) {
 		echo "<b>No Players: ".$season_name."</b>";
 	} else {
-		echo "<b>Player Squad: ".$season_name."</b><br><br>Number of Players: ".$get_total."<br><br>";
+		echo "<b>Player Squad: ".$season_name."</b><br><br>Number Of Players: ".$get_total."<br><br>";
 		while($data = mysqli_fetch_array($get_players)) {
 			echo "<a href='".$PHP_SELF."?session_id=".$session."&amp;action=modify&amp;player_id=".$data['player_id']."'>#".$data['player_number']." ".$data['player_name']."</a>";
 
@@ -619,7 +619,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			}
 		}
 	}
-	echo "<br><br>NB = This Player is not Published yet.";
+	echo "<br>NB = This Page Is Not Published Yet.";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";

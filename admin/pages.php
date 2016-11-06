@@ -13,6 +13,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 	$season_name = $_SESSION['season_name'];
 
 	$PHP_SELF = $_SERVER['PHP_SELF'];
+	$HTTP_REFERER = $_SERVER['HTTP_REFERER'];
 	
 	if (isset($_REQUEST['action'])){ $action = $_REQUEST['action']; }
 	if (isset($_POST['add_submit'])){ $add_submit = $_POST['add_submit']; }
@@ -22,37 +23,38 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 	if (isset($add_submit)) {
 		$page_title = trim($_POST['page_title']);
 		$page_content = trim($_POST['page_content']);
+		if (isset($_POST['publish'])){ $publish = $_POST['publish']; }
 
 		if (!get_magic_quotes_gpc()) {
 			$page_title = addslashes($page_title);
 			$page_content = addslashes($page_content);
 		}
+		if (!isset($publish)){ $publish = 0; }
+
 		if ($page_title != '') {
-			mysqli_query($db_connect, "INSERT INTO team_pages SET page_title = '$page_title', page_content = '$page_content', publish = '1'") or die(mysqli_error());
+			mysqli_query($db_connect, "INSERT INTO team_pages SET PageTitle = '$page_title', PageContent = '$page_content', PagePublish = '$publish'") or die(mysqli_error());
 			header("Location: $PHP_SELF?session_id=$session");
 		}
 	} else if (isset($modify_submit)) {
+		$page_id = $_POST['page_id'];
 		$page_title = trim($_POST['page_title']);
 		$page_content = trim($_POST['page_content']);
 		$publish = $_POST['publish'];
-		$page_id = $_POST['page_id'];
 
 		if (!get_magic_quotes_gpc()) {
 			$page_title = addslashes($page_title);
 			$page_content = addslashes($page_content);
 		}
-		if (!isset($publish)) {
-			$publish = 0;
-		}
+		if (!isset($publish)){ $publish = 0; }
 
 		if ($page_title != '') {
-			mysqli_query($db_connect, "UPDATE team_pages SET page_title = '$page_title', page_content = '$page_content', publish = '$publish' WHERE page_id = '$page_id'") or die(mysqli_error());
+			mysqli_query($db_connect, "UPDATE team_pages SET PageTitle = '$page_title', PageContent = '$page_content', PagePublish = '$publish' WHERE PageID = '$page_id'") or die(mysqli_error());
 		}
-		header("Location: $PHP_SELF?session_id=$session");
+		header("Location: $HTTP_REFERER");
 
 	} else if (isset($delete_submit)) {
 		$page_id = $_POST['page_id'];
-		mysqli_query($db_connect, "DELETE FROM team_pages WHERE page_id = '$page_id'") or die(mysqli_error());
+		mysqli_query($db_connect, "DELETE FROM team_pages WHERE PageID = '$page_id'") or die(mysqli_error());
 		header("Location: $PHP_SELF?session_id=$session");
 	}
 	echo "<!DOCTYPE html>\n";
@@ -75,25 +77,35 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<td align='left' valign='top'>Page Title:</td>\n";
 		echo "<td align='left' valign='top'><input type='text' name='page_title'></td>\n";
 		echo "</tr><tr>\n";
-		echo "<td align='left' valign='top' colspan='2'>Page Content:<br>It's possible to use HTML....<br><textarea name='page_content' cols='80' rows='40'></textarea></td>\n";
+		echo "<td align='left' valign='top' colspan='2'>Page Content:</td>\n";
+		echo "</tr><tr>\n";
+		echo "<td align='left' valign='top' colspan='2'><textarea name='page_content' cols='50' rows='30'></textarea></td>\n";
+		echo "</tr><tr>\n";
+		echo "<td align='left' valign='top'>Published:</td>\n";
+		echo "<td align='left' valign='top'><input type='checkbox' name='publish' value='1' CHECKED></td>\n";
 		echo "</tr>\n";
 		echo "</table>\n";
 		echo "<input type='submit' name='add_submit' value='Add Page'>\n";
 		echo "</form>\n";
 	} else if ($action == 'modify') {
 		$page_id = $_REQUEST['page_id'];
-		$get_page = mysqli_query($db_connect,"SELECT * FROM team_pages WHERE page_id = '$page_id' LIMIT 1") or die(mysqli_error());
+		$get_page = mysqli_query($db_connect,"SELECT PageID AS page_id, PageTitle AS page_title, PageContent AS page_content, PagePublish AS publish FROM team_pages WHERE PageID = '$page_id' LIMIT 1") or die(mysqli_error());
 		$data = mysqli_fetch_array($get_page);
 		echo "<form method='post' action='".$PHP_SELF."?session_id=".$session."'>\n";
 		echo "<h1>Modify / Delete Page</h1>\n";
 		echo "<table width='100%' cellspacing='3' cellpadding='3' border='0'>\n";
 		echo "<tr>\n";
 		echo "<td align='left' valign='top'>Page Title:</td>\n";
-		echo "<td align='left' valign='top'><input type='text' name='page_title' value='".$data['page_title']."'><input type='hidden' name='page_id' value='".$data['page_id']."'></td>\n";
+		echo "<td align='left' valign='top'>";
+		echo "<input type='text' name='page_title' value='".$data['page_title']."'>";
+		echo "<input type='hidden' name='page_id' value='".$data['page_id']."'>";
+		echo "</td>\n";
 		echo "</tr><tr>\n";
-		echo "<td align='left' valign='top' colspan='2'>Page Content:<br>It's possible to use HTML..<br><textarea name='page_content' cols='80' rows='40'>".$data['page_content']."</textarea></td>\n";
+		echo "<td align='left' valign='top' colspan='2'>Page Content:</td>\n";
 		echo "</tr><tr>\n";
-		echo "<td align='left' valign='top'>Publish this Page?:</td>\n";
+		echo "<td align='left' valign='top' colspan='2'><textarea name='page_content' cols='50' rows='30'>".$data['page_content']."</textarea></td>\n";
+		echo "</tr><tr>\n";
+		echo "<td align='left' valign='top'>Published:</td>\n";
 		echo "<td align='left' valign='top'>";
 
 		if ($data['publish'] == 1) {
@@ -111,16 +123,23 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 	}
 	echo "</td>\n";
 	echo "<td align='left' valign='top'>";
-	$get_pages = mysqli_query($db_connect, "SELECT page_id, page_title FROM team_pages ORDER BY page_title") or die(mysqli_error());
+	$get_pages = mysqli_query($db_connect, "SELECT PageID AS page_id, PageTitle AS page_title, PagePublish AS publish FROM team_pages ORDER BY page_title") or die(mysqli_error());
 
 	if (mysqli_num_rows($get_pages) < 1) {
-		echo "<b>No Pages so far in Database</b>";
+		echo "<b>No Pages So Far In Database</b>";
 	} else {
-		echo "<b>Pages so far in Database:</b><br><br>";
+		echo "<b>Pages So Far In Database:</b><br><br>";
 		while($data = mysqli_fetch_array($get_pages)) {
-			echo "<a href='".$PHP_SELF."?session_id=".$session."&amp;action=modify&amp;page_id=".$data['page_id']."'>".$data['page_title']."</a><br>";
+			echo "<a href='".$PHP_SELF."?session_id=".$session."&amp;action=modify&amp;page_id=".$data['page_id']."'>".$data['page_title']."</a>";
+
+			if ($data['publish'] == 0) {
+				echo " (NB)<br>";
+			} else {
+				echo "<br>";
+			}
 		}
 	}
+	echo "<br>NB = This Page Is Not Published Yet.";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";

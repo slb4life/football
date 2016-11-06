@@ -154,7 +154,7 @@ echo "</table>\n";
 echo "</td>\n";
 echo "</tr>\n";
 echo "</table>\n";
-$get_pages = mysqli_query($db_connect, "SELECT page_id, page_title FROM team_pages WHERE publish = '1' ORDER BY page_title") or die(mysqli_error());
+$get_pages = mysqli_query($db_connect, "SELECT PageID AS page_id, PageTitle AS page_title FROM team_pages WHERE PagePublish = '1' ORDER BY page_title") or die(mysqli_error());
 
 if (mysqli_num_rows($get_pages) > 0) {
 	echo "<br>\n";
@@ -187,8 +187,7 @@ if (SHOW_FEATURED_PLAYER == 1) {
 	echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
 	echo "<tr>\n";
 	echo "<td bgcolor='#".(CELLBGCOLORTOP)."' align='left' valign='middle'><b><i>".$locale_featured_player."</i></b></td>\n";
-	echo "</tr>\n";
-	echo "<tr>\n";
+	echo "</tr><tr>\n";
 	echo "<td align='left' valign='top' bgcolor='#".(CELLBGCOLORBOTTOM)."'>";
 	$get_featured_player = mysqli_query($db_connect, "SELECT
 		P.PlayerID AS player_id,
