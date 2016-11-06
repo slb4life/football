@@ -42,7 +42,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			$manager_profile = addslashes($manager_profile);
 			$manager_pc = addslashes($manager_pc);
 		}
-		if (!isset($publish)) { $publish = 0; }
+		if (!isset($publish)){ $publish = 0; }
 
 		if ($manager_first_name != '') {
 			mysqli_query($db_connect, "INSERT INTO team_managers SET
@@ -61,6 +61,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		header("Location: $HTTP_REFERER");
 		
 	} else if (isset($modify_submit)) {
+		$manager_id = $_POST['manager_id'];
 		$manager_first_name = trim($_POST['manager_first_name']);
 		$manager_last_name = trim($_POST['manager_last_name']);
 		$manager_pob = trim($_POST['manager_pob']);
@@ -69,7 +70,6 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		$manager_profile = str_replace("\r\n","<br>", trim($_POST['manager_profile']));
 		$manager_pc = str_replace("\r\n","<br>", trim($_POST['manager_pc']));
 		$publish = $_POST['publish'];
-		$manager_id = $_POST['manager_id'];
 
 		if (!get_magic_quotes_gpc()) {
 			$manager_first_name = addslashes($manager_first_name);
@@ -78,7 +78,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			$manager_profile = addslashes($manager_profile);
 			$manager_pc = addslashes($manager_pc);
 		}
-		if (!isset($publish)) { $publish = 0; }
+		if (!isset($publish)){ $publish = 0; }
 
 		if ($manager_first_name != '') {
 			mysqli_query($db_connect, "UPDATE team_managers SET
@@ -102,21 +102,21 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		mysqli_query($db_connect, "DELETE FROM team_managers_time WHERE ManagerID = '$manager_id'") or die(mysqli_error());
 
 	} else if(isset($copy_season_submit)) {
-		$copy_season = $_POST['copy_season'];
 		$manager_id = $_POST['manager_id'];
+		$copy_season = $_POST['copy_season'];
 		mysqli_query($db_connect, "INSERT INTO team_seasons SET SeasonID = '$copy_season', SeasonManagerID = '$manager_id'") or die(mysqli_error());
 		header("Location: $HTTP_REFERER");
 
 	} else if (isset($remove_season_submit)) {
-		$remove_season = $_POST['remove_season'];
 		$manager_id = $_POST['manager_id'];
+		$remove_season = $_POST['remove_season'];
 		mysqli_query($db_connect, "DELETE FROM team_seasons WHERE SeasonID = '$remove_season' AND SeasonManagerID = '$manager_id' LIMIT 1") or die(mysqli_error());
 		header("Location: $HTTP_REFERER");
 		
 	} else if (isset($add_timeline)) {
+		$manager_id = $_POST['manager_id'];
 		$start_date = $_POST['start_year']."-".$_POST['start_month']."-".$_POST['start_day'];
 		$end_date = $_POST['end_year']."-".$_POST['end_month']."-".$_POST['end_day'];
-		$manager_id = $_POST['manager_id'];
 		mysqli_query($db_connect, "INSERT INTO team_managers_time SET ManagerID = '$manager_id', StartDate = '$start_date', EndDate = '$end_date'") or die(mysqli_error());
 		header("Location: $HTTP_REFERER");
 

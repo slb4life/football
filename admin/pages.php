@@ -23,7 +23,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 	if (isset($add_submit)) {
 		$page_title = trim($_POST['page_title']);
 		$page_content = trim($_POST['page_content']);
-		if (isset($_POST['publish'])){ $publish = $_POST['publish']; }
+		$publish = $_POST['publish'];
 
 		if (!get_magic_quotes_gpc()) {
 			$page_title = addslashes($page_title);
@@ -126,9 +126,9 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 	$get_pages = mysqli_query($db_connect, "SELECT PageID AS page_id, PageTitle AS page_title, PagePublish AS publish FROM team_pages ORDER BY page_title") or die(mysqli_error());
 
 	if (mysqli_num_rows($get_pages) < 1) {
-		echo "<b>No Pages So Far In Database</b>";
+		echo "<b>No Pages In Database</b>";
 	} else {
-		echo "<b>Pages So Far In Database:</b><br><br>";
+		echo "<b>Pages In Database:</b><br><br>";
 		while($data = mysqli_fetch_array($get_pages)) {
 			echo "<a href='".$PHP_SELF."?session_id=".$session."&amp;action=modify&amp;page_id=".$data['page_id']."'>".$data['page_title']."</a>";
 

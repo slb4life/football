@@ -91,9 +91,9 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			WHERE ID = '1'
 		") or die(mysqli_error());
 	}
-	$pref = mysqli_query($db_connect, "SELECT * FROM team_preferences WHERE ID = '1'") or die(mysqli_error());
-	$pdata = mysqli_fetch_array($pref);
-	mysqli_free_result($pref);
+	$get_preferences = mysqli_query($db_connect, "SELECT * FROM team_preferences WHERE ID = '1'") or die(mysqli_error());
+	$pdata = mysqli_fetch_array($get_preferences);
+	mysqli_free_result($get_preferences);
 
 	$pdata['contact'] = str_replace('<br>', "\r\n", $pdata['contact']);
 	echo "<!DOCTYPE html>\n";
@@ -187,7 +187,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 	echo "</select>\n";
 	echo "</td>\n";
 	echo "</tr><tr>\n";
-	echo "<td align='left' valign='top'>Default Season (This season):</td>\n";
+	echo "<td align='left' valign='top'>Default Season:</td>\n";
 	echo "<td align='left' valign='top'>";
 	echo "<select name='default_season'>";
 	echo "<option value='0'>All</option>\n";

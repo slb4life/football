@@ -35,7 +35,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		$player_weight = trim($_POST['player_weight']);
 		$player_description = str_replace("\r\n","<br>", trim($_POST['player_description']));
 		$player_pc = str_replace("\r\n","<br>", trim($_POST['player_pc']));
-		if (isset($_POST['publish'])){ $publish = $_POST['publish']; }
+		$publish = $_POST['publish'];
 		$all_data = 1;
 		$in_squad = 1;
 		$show_stats = 1;

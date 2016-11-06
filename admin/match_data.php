@@ -52,8 +52,8 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		$match_id = $_POST['match_id'];
 		$season_id = $_POST['season_id'];
 		$goal_minute = trim($_POST['goal_minute']);
-		if (isset($_POST['own_goal'])){ $own_goal = $_POST['own_goal']; }
-		if (isset($_POST['penalty'])){ $penalty = $_POST['penalty']; }
+		$own_goal = $_POST['own_goal'];
+		$penalty = $_POST['penalty'];
 		$goal_own_scorer = trim($_POST['goal_own_scorer']);
 
 		if (isset($own_goal) && isset($penalty)) {

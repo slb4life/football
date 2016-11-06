@@ -24,9 +24,9 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		$injured_reason = trim($_POST['injured_reason']);
 		$injured_player_id = $_POST['injured_player_id'];
 		$get_matches = mysqli_query($db_connect, "SELECT
-			DATE_FORMAT(team_matches.MatchDateTime, '%b %D %Y at %H:%i') AS match_date,
+			DATE_FORMAT(M.MatchDateTime, '%b %D %Y at %H:%i') AS match_date,
 			MatchID AS match_id
-			FROM team_matches
+			FROM team_matches AS M
 			WHERE MatchSeasonID = '$season_id'
 			ORDER BY match_date
 		") or die(mysqli_error());
@@ -96,24 +96,24 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<table align='center' width='600'><tr>\n";
 		echo "<td align='left' valign='top'>";
 		echo "<form method='post' action='".$PHP_SELF."?session_id=".$session."'>";
-		echo "<h1>Injured players</h1>";
+		echo "<h1>Injured Players</h1>";
 		echo "Selected Player: ".$data['player_name']."<br><br>";
-		echo "Select Matches where Player is not in Squad due to Injury.<br><br>\n";
+		echo "Select Matches Where Player Is Not In Squad Due To Injury.<br><br>\n";
 		echo "<table width='100%' cellspacing='3' cellpadding='3' border='0'><tr>\n";
-		echo "<td align='left' valign='middle'><form method='post' action='".$PHP_SELF."?session_id=".$session."'>Reason for Injury:</td>\n";
+		echo "<td align='left' valign='middle'><form method='post' action='".$PHP_SELF."?session_id=".$session."'>Reason For Injury:</td>\n";
 		echo "<td align='left' valign='middle'><input type='text' name='injured_reason' value='".$injury_reason."'></td>\n";
 		echo "<tr>\n";
 		$get_matches = mysqli_query($db_connect, "SELECT
-			DATE_FORMAT(team_matches.MatchDateTime, '%b %D %Y at %H:%i') AS match_date,
-			team_matches.MatchID AS match_id,
-			team_opponents.OpponentName AS opponent_name,
-			team_match_types.MatchTypeName AS match_type_name,
-			team_match_places.MatchPlaceName AS match_place
-			FROM team_matches, team_match_types, team_match_places, team_opponents
+			DATE_FORMAT(M.MatchDateTime, '%b %D %Y at %H:%i') AS match_date,
+			M.MatchID AS match_id,
+			O.OpponentName AS opponent_name,
+			MT.MatchTypeName AS match_type_name,
+			MP.MatchPlaceName AS match_place
+			FROM team_matches AS M, team_match_types AS MT, team_match_places AS MP, team_opponents AS O
 			WHERE MatchSeasonID = '$season_id'
-			AND team_matches.MatchTypeID = team_match_types.MatchTypeID
-			AND team_matches.MatchPlaceID = team_match_places.MatchPlaceID
-			AND team_matches.MatchOpponent = team_opponents.OpponentID
+			AND M.MatchTypeID = MT.MatchTypeID
+			AND M.MatchPlaceID = MP.MatchPlaceID
+			AND M.MatchOpponent = O.OpponentID
 			ORDER BY match_date
 		") or die(mysqli_error());
 		$i = 0;
@@ -152,7 +152,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 	$get_players = mysqli_query($db_connect, "SELECT
 		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
 		P.PlayerID AS player_id
-		FROM team_players P,team_seasons S
+		FROM team_players AS P, team_seasons AS S
 		WHERE P.PlayerID = S.SeasonPlayerID
 		AND S.SeasonID = '$season_id'
 		ORDER BY player_name

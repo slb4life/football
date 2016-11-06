@@ -32,7 +32,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		$minute = $_POST['minute'];
 		$match_opponent = trim($_POST['match_opponent']);
 		$match_place_id = $_POST['match_place_id'];
-		if (isset($_POST['match_neutral'])){ $match_neutral = $_POST['match_neutral']; }
+		$match_neutral = $_POST['match_neutral'];
 		$match_stadium = trim($_POST['match_stadium']);
 		$match_type_id = $_POST['match_type_id'];
 		$match_additional_type = trim($_POST['match_additional_type']);
@@ -40,8 +40,8 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		$match_attendance = trim($_POST['match_attendance']);
 		$goals = trim($_POST['goals']);
 		$goals_opponent = trim($_POST['goals_opponent']);
-		if (isset($_POST['match_overtime'])){ $match_overtime = $_POST['match_overtime']; }
-		if (isset($_POST['match_penalty_shootout'])){ $match_penalty_shootout = $_POST['match_penalty_shootout']; }
+		$match_overtime = $_POST['match_overtime'];
+		$match_penalty_shootout = $_POST['match_penalty_shootout'];
 		$penalty_goals = trim($_POST['penalty_goals']);
 		$penalty_goals_opponent = trim($_POST['penalty_goals_opponent']);
 		$match_report = str_replace("\r\n",'<br>', trim($_POST['match_report']));
@@ -108,7 +108,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		$minute = $_POST['minute'];
 		$match_opponent = trim($_POST['match_opponent']);
 		$match_place_id = $_POST['match_place_id'];
-		if (isset($_POST['match_neutral'])){ $match_neutral = $_POST['match_neutral']; }
+		$match_neutral = $_POST['match_neutral'];
 		$match_stadium = trim($_POST['match_stadium']);
 		$match_type_id = $_POST['match_type_id'];
 		$match_additional_type = trim($_POST['match_additional_type']);
@@ -116,8 +116,8 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		$match_attendance = trim($_POST['match_attendance']);
 		$goals = trim($_POST['goals']);
 		$goals_opponent = trim($_POST['goals_opponent']);
-		if (isset($_POST['match_overtime'])){ $match_overtime = $_POST['match_overtime']; }
-		if (isset($_POST['match_penalty_shootout'])){ $match_penalty_shootout = $_POST['match_penalty_shootout']; }
+		$match_overtime = $_POST['match_overtime'];
+		$match_penalty_shootout = $_POST['match_penalty_shootout'];
 		$penalty_goals = trim($_POST['penalty_goals']);
 		$penalty_goals_opponent = trim($_POST['penalty_goals_opponent']);
 		$shots = trim($_POST['shots']);
@@ -260,7 +260,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<h1>Add Match</h1>\n";
 		echo "<table cellspacing='3' cellpadding='3' width='100%' border='0'>\n";
 		echo "<tr>\n";
-		echo "<td align='left' valign='top'>*Date and Time:</td>\n";
+		echo "<td align='left' valign='top'>*Date And Time:</td>\n";
 		echo "<td align='left' valign='top'>";
 		echo "<select name='day'>";
 		for($i = 1 ; $i < 32 ; $i++) {
@@ -325,7 +325,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "</select>";
 		echo "</td>\n";
 		echo "</tr><tr>\n";
-		echo "<td align='left' valign='top'>*Home or Away?</td>\n";
+		echo "<td align='left' valign='top'>*Home Or Away?</td>\n";
 		echo "<td align='left' valign='top'>";
 		echo "<input type='radio' name='match_place_id' value='1' CHECKED> Home Match<br>";
 		echo "<input type='radio' name='match_place_id' value='2'> Away Match<br>";
@@ -462,7 +462,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<tr>\n";
 		echo "<td align='left' valign='top' bgcolor='#99CCFF' colspan='2'><b>Match Info:</b></td>\n";
 		echo "</tr><tr>\n";
-		echo "<td align='left' valign='top'>*Date and Time:</td>\n";
+		echo "<td align='left' valign='top'>*Date And Time:</td>\n";
 		echo "<td align='left' valign='top'>";
 		echo "<select name='day'>";
 		for($i = 1 ; $i < 32 ; $i++) {
@@ -527,7 +527,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "</select>\n";
 		echo "</td>\n";
 		echo "</tr><tr>\n";
-		echo "<td align='left' valign='top'>*Home or Away?</td>\n";
+		echo "<td align='left' valign='top'>*Home Or Away?</td>\n";
 		echo "<td align='left' valign='top'>";
 
 		if ($match_data['match_place_id'] == 1) {
@@ -539,7 +539,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		}
 		echo "</td>\n";
 		echo "</tr><tr>\n";
-		echo "<td align='left' valign='top'>Neutral ?</td>\n";
+		echo "<td align='left' valign='top'>Neutral?</td>\n";
 		echo "<td align='left' valign='top'>";
 
 		if ($match_data['match_neutral'] == 1) {
@@ -1146,12 +1146,12 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 	if (mysqli_num_rows($get_matches) < 1) {
 		echo "<b>No Matches: ".$season_name."</b>";
 	} else {
-		echo "<b>Matches in ".$season_name.":</b><br><br>";
+		echo "<b>Matches In ".$season_name.":</b><br><br>";
 		while($data = mysqli_fetch_array($get_matches)) {
 			echo "<a href='".$PHP_SELF."?session_id=".$session."&amp;action=modify&amp;match_id=".$data['match_id']."'>".$data['match_date'].", vs. ".$data['opponent_name']."</a><br>".$data['match_place_name']."";
 
 			if ($data['match_neutral'] == 1) {
-				echo "(Neutral)";
+				echo " (Neutral)";
 			}
 			echo ": ".$data['match_type_name']."";
 
@@ -1162,7 +1162,6 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			}
 		}
 	}
-	echo "<br><br>";
 	echo "NB = This Match Is Not Published Yet.";
 	echo "</td>\n";
 	echo "</tr>\n";
