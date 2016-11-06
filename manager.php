@@ -14,15 +14,15 @@ if ($id == '' || !is_numeric($id)) {
 	$id = 1;
 }
 $get_manager = mysqli_query($db_connect, "SELECT
-	CONCAT(M.ManagerFirstName, ' ', M.ManagerLastName) AS manager_name,
-	M.ManagerID AS manager_id,
-	M.ManagerProfile AS manager_description,
-	M.ManagerPC AS manager_pc,
-	DATE_FORMAT(M.ManagerDOB, '$how_to_print_in_manager') AS manager_dob,
-	M.ManagerPOB AS manager_pob,
-	M.ManagerPlayerID AS manager_player_id
-	FROM team_managers AS M
-	WHERE M.ManagerID = '$id'
+	CONCAT(ManagerFirstName, ' ', ManagerLastName) AS manager_name,
+	ManagerID AS manager_id,
+	ManagerProfile AS manager_description,
+	ManagerPC AS manager_pc,
+	DATE_FORMAT(ManagerDOB, '$how_to_print_in_manager') AS manager_dob,
+	ManagerPOB AS manager_pob,
+	ManagerPlayerID AS manager_player_id
+	FROM team_managers
+	WHERE ManagerID = '$id'
 	LIMIT 1
 ") or die(mysqli_error());
 $manager_data = mysqli_fetch_array($get_manager);
@@ -210,12 +210,12 @@ while($data = mysqli_fetch_array($get_seasons)) {
 	$record = 0;
 	$record2 = 0;
 	$get_timeline = mysqli_query($db_connect, "SELECT
-		MT.StartDate AS start_date,
-		MT.EndDate AS end_date
-		FROM team_managers_time AS MT, team_managers AS M
-		WHERE MT.ManagerID = M.ManagerID
+		T.TimelineStartDate AS timeline_start_date,
+		T.TimelineEndDate AS timeline_end_date
+		FROM team_timeline AS T, team_managers AS M
+		WHERE T.TimelineManagerID = M.ManagerID
 		AND M.ManagerID = '$id'
-		ORDER BY start_date
+		ORDER BY timeline_start_date
 	") or die(mysqli_error());
 	$y = mysqli_num_rows($get_timeline);
 
@@ -223,7 +223,7 @@ while($data = mysqli_fetch_array($get_seasons)) {
 		$timeline = ' AND (';
 		$x = 1;
 		while($date_time = mysqli_fetch_array($get_timeline)) {
-			$timeline .= "(M.MatchDateTime <= '$date_time[end_date] 00:00:00' AND M.MatchDateTime >= '$date_time[start_date] 00:00:00')";
+			$timeline .= "(M.MatchDateTime <= '$date_time[timeline_end_date] 00:00:00' AND M.MatchDateTime >= '$date_time[timeline_start_date] 00:00:00')";
 			if ($x != $y) {
 				$timeline .= " OR ";
 			}

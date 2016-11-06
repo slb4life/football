@@ -107,13 +107,13 @@ if (isset($submit)) {
 		) ENGINE=MyISAM
 	") or die(mysqli_error($db_connect));
 
-	mysqli_query($db_connect, "CREATE TABLE `team_managers_time` (
-		`ID` int(10) NOT NULL auto_increment,
-		`ManagerID` int(10) unsigned NOT NULL,
-		`StartDate` date NOT NULL,
-		`EndDate` date NOT NULL,
-		PRIMARY KEY  (`ID`),
-		KEY `ManagerID` (`ManagerID`)
+	mysqli_query($db_connect, "CREATE TABLE `team_timeline` (
+		`TimelineID` int(10) NOT NULL auto_increment,
+		`TimelineManagerID` int(10) unsigned NOT NULL,
+		`TimelineStartDate` date NOT NULL,
+		`TimelineEndDate` date NOT NULL,
+		PRIMARY KEY  (`TimelineID`),
+		KEY `TimelineManagerID` (`TimelineManagerID`)
 		) ENGINE=MyISAM
 	") or die(mysqli_error($db_connect));
 

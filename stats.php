@@ -713,19 +713,19 @@ if (SHOW_STAFF == 1) {
 		$record = 0;
 		$record2 = 0;
 		$get_timeline = mysqli_query($db_connect, "SELECT
-			T.StartDate AS start_date,
-			T.EndDate AS end_date
-			FROM team_managers_time T, team_managers M
-			WHERE T.ManagerID = M.ManagerID
+			T.TimelineStartDate AS timeline_start_date,
+			T.TimelineEndDate AS timeline_end_date
+			FROM team_timeline T, team_managers M
+			WHERE T.TimelineManagerID = M.ManagerID
 			AND M.ManagerID = '$id'
-			ORDER BY start_date
-		") or die(mysqli_error());
+			ORDER BY timeline_start_date
+		") or die(mysqli_error($db_connect));
 		$y = mysqli_num_rows($get_timeline);
 		if ($y > 0) {
 			$timeline = ' AND (';
 			$x = 1;
-			while($macth_date = mysqli_fetch_array($get_timeline)) {
-				$timeline .= "(M.MatchDateTime <= '".$macth_date['end_date']." 00:00:00' AND M.MatchDateTime >= '".$macth_date['start_date']." 00:00:00')";
+			while($match_date = mysqli_fetch_array($get_timeline)) {
+				$timeline .= "(M.MatchDateTime <= '".$match_date['timeline_end_date']." 00:00:00' AND M.MatchDateTime >= '".$match_date['timeline_start_date']." 00:00:00')";
 				if ($x != $y) {
 					$timeline .= ' OR ';
 				}

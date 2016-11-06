@@ -99,7 +99,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		$manager_id = $_POST['manager_id'];
 		mysqli_query($db_connect, "DELETE FROM team_managers WHERE ManagerID = '$manager_id' LIMIT 1") or die(mysqli_error());
 		mysqli_query($db_connect, "DELETE FROM team_seasons WHERE SeasonManagerID = '$manager_id'") or die(mysqli_error());
-		mysqli_query($db_connect, "DELETE FROM team_managers_time WHERE ManagerID = '$manager_id'") or die(mysqli_error());
+		mysqli_query($db_connect, "DELETE FROM team_timeline WHERE TimelineManagerID = '$manager_id'") or die(mysqli_error());
 
 	} else if(isset($copy_season_submit)) {
 		$manager_id = $_POST['manager_id'];
@@ -115,15 +115,15 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		
 	} else if (isset($add_timeline)) {
 		$manager_id = $_POST['manager_id'];
-		$start_date = $_POST['start_year']."-".$_POST['start_month']."-".$_POST['start_day'];
-		$end_date = $_POST['end_year']."-".$_POST['end_month']."-".$_POST['end_day'];
-		mysqli_query($db_connect, "INSERT INTO team_managers_time SET ManagerID = '$manager_id', StartDate = '$start_date', EndDate = '$end_date'") or die(mysqli_error());
+		$timeline_start_date = $_POST['start_year']."-".$_POST['start_month']."-".$_POST['start_day'];
+		$timeline_end_date = $_POST['end_year']."-".$_POST['end_month']."-".$_POST['end_day'];
+		mysqli_query($db_connect, "INSERT INTO team_timeline SET TimelineManagerID = '$manager_id', TimelineStartDate = '$timeline_start_date', TimelineEndDate = '$timeline_end_date'") or die(mysqli_error());
 		header("Location: $HTTP_REFERER");
 
 	} else if (isset($remove_timeline)) {
 		$manager_id = $_POST['manager_id'];
 		$remove_timeline_select = $_POST['remove_timeline_select'];
-		mysqli_query($db_connect, "DELETE FROM team_managers_time WHERE ID = '$remove_timeline_select' LIMIT 1") or die(mysqli_error());
+		mysqli_query($db_connect, "DELETE FROM team_timeline WHERE TimelineID = '$remove_timeline_select' LIMIT 1") or die(mysqli_error());
 		header("Location: $HTTP_REFERER");
 	}
 	echo "<!DOCTYPE html>\n";
@@ -219,18 +219,18 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "</form>\n";
 	} else if ($action == 'modify') {
 		$get_manager = mysqli_query($db_connect, "SELECT
-			M.ManagerID AS manager_id,
-			M.ManagerFirstName AS manager_first_name,
-			M.ManagerLastName AS manager_last_name,
-			M.ManagerPublish AS publish,
-			M.ManagerPOB AS manager_pob,
+			ManagerID AS manager_id,
+			ManagerFirstName AS manager_first_name,
+			ManagerLastName AS manager_last_name,
+			ManagerPublish AS publish,
+			ManagerPOB AS manager_pob,
 			DAYOFMONTH(ManagerDOB) AS day,
 			MONTH(ManagerDOB) AS month,
 			YEAR(ManagerDOB) AS year,
-			M.ManagerPC AS manager_pc,
-			M.ManagerProfile AS manager_profile,
-			M.ManagerPlayerID AS manager_player_id
-			FROM team_managers AS M
+			ManagerPC AS manager_pc,
+			ManagerProfile AS manager_profile,
+			ManagerPlayerID AS manager_player_id
+			FROM team_managers
 			WHERE ManagerID = '$manager_id'
 			LIMIT 1
 		") or die(mysqli_error());
@@ -305,9 +305,9 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<td align='left' valign='top'>";
 		echo "<select name='manager_player_id'>";
 		$get_player = mysqli_query($db_connect, "SELECT
-			CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
-			P.PlayerID AS player_id
-			FROM team_players AS P
+			CONCAT(PlayerFirstName, ' ', PlayerLastName) AS player_name,
+			PlayerID AS player_id
+			FROM team_players
 			ORDER BY player_name
 		") or die(mysqli_error());
 
@@ -349,18 +349,18 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<hr width='100%'>\n";
 		echo "<form method='post' action='".$PHP_SELF."?session_id=".$session."'>\n";
 		$get_timeline = mysqli_query($db_connect, "SELECT
-			MT.ID AS id,
-			MT.StartDate AS start_date,
-			MT.EndDate AS end_date
-			FROM team_managers_time AS MT
-			WHERE MT.ManagerID = '$manager_id'
-			ORDER BY start_date
+			TimelineID AS timeline_id,
+			TimelineStartDate AS timeline_start_date,
+			TimelineEndDate AS timeline_end_date
+			FROM team_timeline
+			WHERE TimelineManagerID = '$manager_id'
+			ORDER BY timeline_start_date
 		") or die(mysqli_error());
 
 		if (mysqli_num_rows($get_timeline) > 0) {
 			echo "<b>Current Timeline (YYYY-MM-DD):</b><br>";
 			while($data = mysqli_fetch_array($get_timeline)) {
-				echo "".$data['start_date']." - ".$data['end_date']."<br>\n";
+				echo "".$data['timeline_start_date']." - ".$data['timeline_end_date']."<br>\n";
 			}
 			mysqli_data_seek($get_timeline, 0);
 			echo "<br>\n";
@@ -442,7 +442,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		while($data = mysqli_fetch_array($get_timeline)) {
 			echo "<b>Remove Timeline:</b><br>";
 			echo "<select name='remove_timeline_select'>";
-			echo "<option value='".$data['id']."'>".$data['start_date']." - ".$data['end_date']."</option>\n";
+			echo "<option value='".$data['timeline_id']."'>".$data['timeline_start_date']." - ".$data['timeline_end_date']."</option>\n";
 			echo "</select>\n";
 			echo "<input type='submit' name='remove_timeline' value='Remove'><br>\n";
 		}
@@ -454,7 +454,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<form method='post' action='".$PHP_SELF."?session_id=".$session."'>\n";
 		echo "<table width='100%' cellspacing='0' cellpadding='0' border='0'>\n";
 		echo "<tr>\n";
-		echo "<td align='left' valign='top'><b>Already in Squad in Season(s):</b><br>";
+		echo "<td align='left' valign='top'><b>Already In Squad In Season(s):</b><br>";
 		$get_seasons = mysqli_query($db_connect, "SELECT
 			SN.SeasonName AS season_name,
 			S.SeasonID AS season_id
