@@ -18,16 +18,16 @@ if ($id == '' || !is_numeric($id)) {
 }
 $get_player_info = mysqli_query($db_connect, "SELECT
 	CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
-	P.PlayerID AS player_id,
-	P.PlayerNumber AS player_nember,
-	P.PlayerDescription AS player_description,
-	DATE_FORMAT(P.PlayerDOB, '$how_to_print_in_player') AS player_dob,
-	P.PlayerPOB AS player_pob,
-	P.PlayerHeight AS player_height,
-	P.PlayerWeight AS player_weight,
-	P.PlayerPC AS player_pc,
-	P.PlayerShowStats AS show_stats,
-	P.PlayerPositionID AS player_position
+	PlayerID AS player_id,
+	PlayerNumber AS player_nember,
+	PlayerDescription AS player_description,
+	DATE_FORMAT(PlayerDOB, '$how_to_print_in_player') AS player_dob,
+	PlayerPOB AS player_pob,
+	PlayerHeight AS player_height,
+	PlayerWeight AS player_weight,
+	PlayerPC AS player_pc,
+	PlayerShowStats AS show_stats,
+	PlayerPositionID AS player_position
 	FROM (team_players AS P)
 	WHERE P.PlayerID = '$id'
 	LIMIT 1
@@ -142,12 +142,12 @@ $get_transfers = mysqli_query($db_connect, "SELECT
 	S.SeasonName AS season_name,
 	O.OpponentName AS opponent_name,
 	O.OpponentID AS opponent_id,
-	T.Value AS value,
-	T.InOrOut AS in_or_out
+	T.TransferValue AS transfer_value,
+	T.TransferStatus AS transfer_status
 	FROM (team_season_names AS S, team_opponents AS O, team_transfers AS T)
-	WHERE O.OpponentID = T.ClubID
-	AND T.SeasonID = S.SeasonID
-	AND T.PlayerID = '$id'
+	WHERE O.OpponentID = T.TransferOpponentID
+	AND T.TransferSeasonID = S.SeasonID
+	AND T.TransferPlayerID = '$id'
 ") or die(mysqli_error());
 $j = 1;
 while($data = mysqli_fetch_array($get_transfers)) {
@@ -156,7 +156,7 @@ while($data = mysqli_fetch_array($get_transfers)) {
 	} else {
 		$bg_color = '#'.BGCOLOR2;
 	}
-	if ($data['in_or_out'] == 0) {
+	if ($data['transfer_status'] == 0) {
 		$team_name_home = "<a href='opponent.php?id=".$data['opponent_id']."'>".$data['opponent_name']."";
 		$team_name_away = TEAM_NAME;
 	} else {
@@ -167,7 +167,7 @@ while($data = mysqli_fetch_array($get_transfers)) {
 	echo "<td align='left' valign='middle' bgcolor='".$bg_color."'>".$data['season_name']."</td>\n";
 	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>".$team_name_home."</td>\n";
 	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>".$team_name_away."</td>\n";
-	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>".$data['value']."</td>\n";
+	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>".$data['transfer_value']."</td>\n";
 	echo "</tr>\n";
 	$j++;
 }

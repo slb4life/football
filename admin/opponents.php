@@ -22,13 +22,13 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 
 	if (isset($add_submit)) {
 		$opponent_name = trim($_POST['opponent_name']);
-		$query = mysqli_query($db_connect, "SELECT OpponentName FROM team_opponents WHERE OpponentName = '$opponent_name'") or die(mysqli_error());
+		$get_opponents = mysqli_query($db_connect, "SELECT OpponentName FROM team_opponents WHERE OpponentName = '$opponent_name'") or die(mysqli_error());
 
-		if (mysqli_num_rows($query) > 0) {
-			echo "There is already Opponent Named: ".$opponent_name." in Database.";
+		if (mysqli_num_rows($get_opponents) > 0) {
+			echo "There Is Already Opponent Named: ".$opponent_name." In Database.";
 			exit();
 		}
-		mysqli_free_result($query);
+		mysqli_free_result($get_opponents);
 
 		if (!get_magic_quotes_gpc()) {
 			$opponent_name = addslashes($opponent_name);
@@ -62,13 +62,13 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		header("Location: $HTTP_REFERER");
 	} else if (isset($delete_submit)) {
 		$opponent_id = $_POST['opponent_id'];
-		$query = mysqli_query($db_connect, "SELECT MatchID FROM team_matches WHERE MatchOpponent = '$opponent_id'") or die(mysqli_error());
+		$remove_check = mysqli_query($db_connect, "SELECT MatchID FROM team_matches WHERE MatchOpponent = '$opponent_id'") or die(mysqli_error());
 
-		if (mysqli_num_rows($query) == 0) {
+		if (mysqli_num_rows($remove_check) == 0) {
 			mysqli_query($db_connect, "DELETE FROM team_opponents WHERE OpponentID = '$opponent_id'") or die(mysqli_error());
 			header("Location: $PHP_SELF?session_id=$session");
 		} else {
-			echo "Permission to delete is denied!<br>Opponent is already in use.<br>Push back button to get back";
+			echo "Permission To Delete Is Denied!<br>Opponent Is Already In Use.<br>Push Back Button To Get Back";
 			exit();
 		}
 	}

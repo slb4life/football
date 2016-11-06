@@ -16,23 +16,23 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 	$HTTP_REFERER = $_SERVER['HTTP_REFERER'];
 
 	if (isset($_REQUEST['action'])){ $action = $_REQUEST['action']; }
-	if (isset($_REQUEST['id'])){ $id = $_REQUEST['id']; }
+	if (isset($_REQUEST['transfer_id'])){ $transfer_id = $_REQUEST['transfer_id']; }
 	if (isset($_POST['add'])){ $add = $_POST['add']; }
-	if (isset($_POST['club_id'])){ $club_id = $_POST['club_id']; }
 	if (isset($_POST['player_id'])){ $player_id = $_POST['player_id']; }
-	if (isset($_POST['in_or_out'])){ $in_or_out = $_POST['in_or_out']; }
-	if (isset($_POST['value'])){ $value = $_POST['value']; }
+	if (isset($_POST['opponent_id'])){ $opponent_id = $_POST['opponent_id']; }
+	if (isset($_POST['transfer_status'])){ $transfer_status = $_POST['transfer_status']; }
+	if (isset($_POST['transfer_value'])){ $transfer_value = $_POST['transfer_value']; }
 
 	if (get_magic_quotes_gpc()) {
-		$value = addslashes($value);
+		$transfer_value = addslashes($transfer_value);
 	}
 	if (isset($add)) {
-		mysqli_query($db_connect, "INSERT INTO team_transfers SET SeasonID = '$season_id', PlayerID = '$player_id', ClubID = '$club_id', InOrOut = '$in_or_out', Value = '$value'") or die(mysqli_error());
+		mysqli_query($db_connect, "INSERT INTO team_transfers SET TransferSeasonID = '$season_id', TransferPlayerID = '$player_id', TransferOpponentID = '$opponent_id', TransferStatus = '$transfer_status', TransferValue = '$transfer_value'") or die(mysqli_error());
 		header("Location: $HTTP_REFERER");
 
 	} else if (isset($action) == 'delete') {
-		$id = $_REQUEST['id'];
-		mysqli_query($db_connect, "DELETE FROM team_transfers WHERE ID = '$id'") or die(mysqli_error());
+		$transfer_id = $_REQUEST['transfer_id'];
+		mysqli_query($db_connect, "DELETE FROM team_transfers WHERE TransferID = '$transfer_id'") or die(mysqli_error());
 		header("Location: $HTTP_REFERER");
 
 	} else {
@@ -51,11 +51,11 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<td align='left' valign='top'>";
 		echo "<select name='player_id'>";
 		$get_players = mysqli_query($db_connect, "SELECT
-			CONCAT(team_players.PlayerFirstName, ' ', team_players.PlayerLastName) AS player_name,
-			team_players.PlayerID AS player_id
-			FROM team_players,team_seasons
-			WHERE team_players.PlayerID = team_seasons.SeasonPlayerID
-			AND team_seasons.SeasonID = '$season_id'
+			CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
+			P.PlayerID AS player_id
+			FROM team_players AS P, team_seasons AS S
+			WHERE P.PlayerID = S.SeasonPlayerID
+			AND S.SeasonID = '$season_id'
 			ORDER BY player_name
 		") or die(mysqli_error());
 		$get_total = mysqli_num_rows($get_players);
@@ -68,11 +68,11 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			}
 		}
 		echo "</select>\n";
-		echo "<select name='in_or_out'>\n";
+		echo "<select name='transfer_status'>\n";
 		echo "<option value='0'>From</option>\n";
 		echo "<option value='1'>To</option>\n";
 		echo "</select>\n";
-		echo "<select name='club_id'>";
+		echo "<select name='opponent_id'>";
 		$get_opponents = mysqli_query($db_connect, "SELECT * FROM team_opponents ORDER BY OpponentName") or die(mysqli_error());
 		
 		if (mysqli_num_rows($get_opponents) < 1) {
@@ -84,7 +84,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		}
 		echo "</select>\n";
 		echo "<br><br>";
-		echo "Value: <input type='text' name='value'>\n";
+		echo "Transfer Value: <input type='text' name='transfer_value'>\n";
 		echo "<input type='submit' name='add' value='Add Transfer'>\n";
 		echo "</td>\n";
 		echo "</tr>\n";
@@ -94,25 +94,25 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<td align='left' valign='top'>";
 		$get_transfers = mysqli_query($db_connect, "SELECT
 			CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
-			T.ID AS id,
-			T.InOrOut AS in_or_out
-			FROM (team_transfers T, team_players P)
-			WHERE T.PlayerID = P.PlayerID
-			AND T.SeasonID = '$season_id'
-			ORDER BY id
+			T.TransferID AS transfer_id,
+			T.TransferStatus AS transfer_status
+			FROM (team_transfers AS T, team_players AS P)
+			WHERE T.TransferPlayerID = P.PlayerID
+			AND T.TransferSeasonID = '$season_id'
+			ORDER BY transfer_id
 		") or die(mysqli_error());
 
 		if (mysqli_num_rows($get_transfers) < 1) {
-			echo "<b>No Trasfers for this Season</b>";
+			echo "<b>No Trasfers For This Season</b>";
 		} else {
 			echo "<b>Delete Transfer:</b><br><br>";
 			while($data = mysqli_fetch_array($get_transfers)) {
-				if ($data['in_or_out'] == 0) {
+				if ($data['transfer_status'] == 0) {
 					echo "In: ";
 				} else {
 					echo "Out: ";
 				}
-				echo "".$data['player_name']." <a href='".$PHP_SELF."?session_id=".$session."&amp;action=delete&amp;id=".$data['id']."'><img src='../images/remove.png' border='0' alt='Remove'></a><br>";
+				echo "".$data['player_name']." <a href='".$PHP_SELF."?session_id=".$session."&amp;action=delete&amp;transfer_id=".$data['transfer_id']."'><img src='../images/remove.png' border='0' alt='Remove'></a><br>";
 			}
 		}
 		mysqli_free_result($get_transfers);

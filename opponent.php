@@ -57,9 +57,9 @@ echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><b>".$loc
 echo "</tr>\n";
 echo "<tr>\n";
 echo "<td align='left' valign='middle'>";
-$query = mysqli_query($db_connect, "SELECT
-	P.PlayerID AS player_id,
-	CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name
+$get_players = mysqli_query($db_connect, "SELECT
+	CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
+	P.PlayerID AS player_id
 	FROM team_players AS P, team_players_opponent AS PO
 	WHERE P.PlayerID = PO.PlayerID
 	AND PO.OpponentID = '$id'
@@ -68,18 +68,18 @@ $query = mysqli_query($db_connect, "SELECT
 ") or die(mysqli_error());
 $i = 1;
 
-if (mysqli_num_rows($query) == 0) {
-	echo "".$locale_no_player_has_played_for_this_team."";
+if (mysqli_num_rows($get_players) == 0) {
+	echo "".$locale_none."";
 } else {
-	while($data = mysqli_fetch_array($query)) {
+	while($data = mysqli_fetch_array($get_players)) {
 		echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>";
-		if ($i < mysqli_num_rows($query)) {
+		if ($i < mysqli_num_rows($get_players)) {
 			echo ", ";
 		}
 		$i++;
 	}
 }
-mysqli_free_result($query);
+mysqli_free_result($get_players);
 
 echo "</td>\n";
 echo "</tr>\n";
@@ -96,18 +96,18 @@ echo "<td align='center' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><b>".$l
 echo "<td align='center' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'><b>".$locale_transfer_value."</b></td>\n";
 echo "</tr>\n";
 $get_transfers = mysqli_query($db_connect, "SELECT
+	CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
 	S.SeasonName AS season_name,
 	O.OpponentName AS opponent_name,
 	O.OpponentID AS opponent_id,
-	T.Value AS value,
+	T.TransferValue AS transfer_value,
 	P.PlayerID AS player_id,
-	CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
-	T.InOrOut AS in_or_out
-	FROM (team_players P, team_season_names S, team_opponents O, team_transfers T)
-	WHERE O.OpponentID = T.ClubID
-	AND T.SeasonID = S.SeasonID
+	T.TransferStatus AS transfer_status
+	FROM (team_players AS P, team_season_names AS S, team_opponents AS O, team_transfers AS T)
+	WHERE O.OpponentID = T.TransferOpponentID
+	AND T.TransferSeasonID = S.SeasonID
 	AND O.OpponentID = '$id'
-	AND P.PlayerID = T.PlayerID
+	AND P.PlayerID = T.TransferPlayerID
 	ORDER BY season_name
 ") or die(mysqli_error());
 $j = 1;
@@ -117,7 +117,7 @@ while($data = mysqli_fetch_array($get_transfers)) {
 	} else {
 		$bg_color = BGCOLOR2;
 	}
-	if ($data['in_or_out'] == 0) {
+	if ($data['transfer_status'] == 0) {
 		$team_name_home = "<a href='opponent.php?id=".$data['opponent_id']."'>".$data['opponent_name']."";
 		$team_name_away = TEAM_NAME;
 	} else {
@@ -129,7 +129,7 @@ while($data = mysqli_fetch_array($get_transfers)) {
 	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'><a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a></td>\n";
 	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>".$team_name_home."</td>\n";
 	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>".$team_name_away."</td>\n";
-	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>".$data['value']."</td>\n";
+	echo "<td align='center' valign='middle' bgcolor='".$bg_color."'>".$data['transfer_value']."</td>\n";
 	echo "</tr>\n";
 	$j++;
 }
@@ -155,7 +155,7 @@ mysqli_free_result($get_match_types);
 
 echo "</select>\n";
 echo "<input type='submit' name='submit2' value='".$locale_change."'>";
-$query = mysqli_query($db_connect, "SELECT
+$get_opponents = mysqli_query($db_connect, "SELECT
 	OpponentName As opponent_name,
 	OpponentID AS opponent_id
 	FROM team_opponents
@@ -163,7 +163,7 @@ $query = mysqli_query($db_connect, "SELECT
 ") or die(mysqli_error());
 echo "<br>".$locale_change_opponent.": \n";
 echo "<select name='opponent_id'>\n";
-while($data = mysqli_fetch_array($query)) {
+while($data = mysqli_fetch_array($get_opponents)) {
 	if ($data['opponent_id'] == $id) {
 		echo "<option value='".$data['opponent_id']."' selected>".$data['opponent_name']."</option>\n";
 	} else {
@@ -172,7 +172,7 @@ while($data = mysqli_fetch_array($query)) {
 }
 echo "</select>\n";
 echo "<input type='submit' name='change_opponent' value='".$locale_change."'>\n";
-mysqli_free_result($query);
+mysqli_free_result($get_opponents);
 
 if ($default_match_type_id == 0) {
 	$default_match_type_id = '%';
@@ -181,11 +181,11 @@ echo "</td>\n";
 echo "</tr>\n";
 echo "</table>\n";
 $get_matches = mysqli_query($db_connect, "SELECT
+	DATE_FORMAT(M.MatchDateTime, '$how_to_print_in_report') AS match_date,
 	M.MatchID AS match_id,
 	M.MatchPlaceID AS match_place_id,
 	M.MatchPublish AS publish,
 	M.MatchNeutral AS neutral,
-	DATE_FORMAT(M.MatchDateTime, '$how_to_print_in_report') AS match_date,
 	MT.MatchTypeName AS match_type_name,
 	M.MatchAdditionalType AS match_additional_type,
 	M.MatchGoals AS goals,

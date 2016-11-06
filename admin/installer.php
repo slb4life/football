@@ -378,14 +378,14 @@ if (isset($submit)) {
 	") or die(mysqli_error($db_connect));
 
 	mysqli_query($db_connect, "CREATE TABLE `team_transfers` (
-		`ID` int(10) NOT NULL auto_increment,
-		`SeasonID` int(10) NOT NULL,
-		`PlayerID` int(10) NOT NULL,
-		`ClubID` int(10) NOT NULL,
-		`Value` varchar(255) NOT NULL,
-		`InOrOut` tinyint(1) NOT NULL,
-		PRIMARY KEY  (`ID`),
-		KEY `SeasonID` (`SeasonID`,`PlayerID`,`ClubID`)
+		`TransferID` int(10) NOT NULL auto_increment,
+		`TransferSeasonID` int(10) NOT NULL,
+		`TransferPlayerID` int(10) NOT NULL,
+		`TransferOpponentID` int(10) NOT NULL,
+		`TransferValue` varchar(255) NOT NULL,
+		`TransferStatus` tinyint(1) NOT NULL,
+		PRIMARY KEY  (`TransferID`),
+		KEY `TransferSeasonID` (`TransferSeasonID`,`TransferPlayerID`,`TransferOpponentID`)
 		) ENGINE=MyISAM
 	") or die(mysqli_error($db_connect));
 

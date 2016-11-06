@@ -163,7 +163,6 @@ $locale_change_opponent = 'Change Opponent';
 $locale_date = 'Date';
 $locale_stadium = 'Stadium';
 $locale_opponent_stats_not_complete = 'Opponent Statistics Are Not Complete...';
-$locale_no_player_has_played_for_this_team = 'No Player Has Played For This Team...';
 $locale_our_players_that_played_for_this_team = 'Our Players That Played For This Team';
 
 // Record_book.php
