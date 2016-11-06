@@ -715,7 +715,7 @@ if (SHOW_STAFF == 1) {
 		$get_timeline = mysqli_query($db_connect, "SELECT
 			T.TimelineStartDate AS timeline_start_date,
 			T.TimelineEndDate AS timeline_end_date
-			FROM team_timeline T, team_managers M
+			FROM team_timelines T, team_managers M
 			WHERE T.TimelineManagerID = M.ManagerID
 			AND M.ManagerID = '$id'
 			ORDER BY timeline_start_date

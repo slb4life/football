@@ -212,7 +212,7 @@ while($data = mysqli_fetch_array($get_seasons)) {
 	$get_timeline = mysqli_query($db_connect, "SELECT
 		T.TimelineStartDate AS timeline_start_date,
 		T.TimelineEndDate AS timeline_end_date
-		FROM team_timeline AS T, team_managers AS M
+		FROM team_timelines AS T, team_managers AS M
 		WHERE T.TimelineManagerID = M.ManagerID
 		AND M.ManagerID = '$id'
 		ORDER BY timeline_start_date

@@ -99,7 +99,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		$manager_id = $_POST['manager_id'];
 		mysqli_query($db_connect, "DELETE FROM team_managers WHERE ManagerID = '$manager_id' LIMIT 1") or die(mysqli_error());
 		mysqli_query($db_connect, "DELETE FROM team_seasons WHERE SeasonManagerID = '$manager_id'") or die(mysqli_error());
-		mysqli_query($db_connect, "DELETE FROM team_timeline WHERE TimelineManagerID = '$manager_id'") or die(mysqli_error());
+		mysqli_query($db_connect, "DELETE FROM team_timelines WHERE TimelineManagerID = '$manager_id'") or die(mysqli_error());
 
 	} else if(isset($copy_season_submit)) {
 		$manager_id = $_POST['manager_id'];
@@ -117,13 +117,13 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		$manager_id = $_POST['manager_id'];
 		$timeline_start_date = $_POST['start_year']."-".$_POST['start_month']."-".$_POST['start_day'];
 		$timeline_end_date = $_POST['end_year']."-".$_POST['end_month']."-".$_POST['end_day'];
-		mysqli_query($db_connect, "INSERT INTO team_timeline SET TimelineManagerID = '$manager_id', TimelineStartDate = '$timeline_start_date', TimelineEndDate = '$timeline_end_date'") or die(mysqli_error());
+		mysqli_query($db_connect, "INSERT INTO team_timelines SET TimelineManagerID = '$manager_id', TimelineStartDate = '$timeline_start_date', TimelineEndDate = '$timeline_end_date'") or die(mysqli_error());
 		header("Location: $HTTP_REFERER");
 
 	} else if (isset($remove_timeline)) {
 		$manager_id = $_POST['manager_id'];
 		$remove_timeline_select = $_POST['remove_timeline_select'];
-		mysqli_query($db_connect, "DELETE FROM team_timeline WHERE TimelineID = '$remove_timeline_select' LIMIT 1") or die(mysqli_error());
+		mysqli_query($db_connect, "DELETE FROM team_timelines WHERE TimelineID = '$remove_timeline_select' LIMIT 1") or die(mysqli_error());
 		header("Location: $HTTP_REFERER");
 	}
 	echo "<!DOCTYPE html>\n";
@@ -352,7 +352,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			TimelineID AS timeline_id,
 			TimelineStartDate AS timeline_start_date,
 			TimelineEndDate AS timeline_end_date
-			FROM team_timeline
+			FROM team_timelines
 			WHERE TimelineManagerID = '$manager_id'
 			ORDER BY timeline_start_date
 		") or die(mysqli_error());
@@ -600,7 +600,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			}
 		}
 	}
-	echo "<br><br>";
+	echo "<br>";
 	echo "NB = This Manager is not Published yet.";
 	echo "</td>\n";
 	echo "</tr>\n";

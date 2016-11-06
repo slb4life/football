@@ -107,7 +107,7 @@ if (isset($submit)) {
 		) ENGINE=MyISAM
 	") or die(mysqli_error($db_connect));
 
-	mysqli_query($db_connect, "CREATE TABLE `team_timeline` (
+	mysqli_query($db_connect, "CREATE TABLE `team_timelines` (
 		`TimelineID` int(10) NOT NULL auto_increment,
 		`TimelineManagerID` int(10) unsigned NOT NULL,
 		`TimelineStartDate` date NOT NULL,
