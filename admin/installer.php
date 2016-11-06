@@ -178,12 +178,12 @@ if (isset($submit)) {
 	") or die(mysqli_error($db_connect));
 
 	mysqli_query($db_connect, "CREATE TABLE `team_news` (
-		`news_id` mediumint(6) unsigned NOT NULL auto_increment,
-		`news_date` datetime NOT NULL default '2000-01-01 00:00:00',
-		`news_subject` varchar(255) NOT NULL default '',
-		`news_content` text NOT NULL,
-		`news_picture_text` varchar(255) NOT NULL,
-		PRIMARY KEY  (`news_id`)
+		`NewsID` mediumint(6) unsigned NOT NULL auto_increment,
+		`NewsDateTime` datetime NOT NULL default '2000-01-01 00:00:00',
+		`NewsSubject` varchar(255) NOT NULL default '',
+		`NewsContent` text NOT NULL,
+		`NewsPictureInfo` varchar(255) NOT NULL,
+		PRIMARY KEY  (`NewsID`)
 		) ENGINE=MyISAM
 	") or die(mysqli_error($db_connect));
 

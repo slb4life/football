@@ -30,29 +30,29 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			$news_content = addslashes($news_content);
 		}
 		if ($news_subject != '') {
-			mysqli_query($db_connect, "INSERT INTO team_news SET news_subject = '$news_subject', news_content = '$news_content', news_picture_text = '$news_picture_text', news_date = CURRENT_TIMESTAMP()")or die(mysqli_error());
+			mysqli_query($db_connect, "INSERT INTO team_news SET NewsSubject = '$news_subject', NewsContent = '$news_content', NewsPictureInfo = '$news_picture_info', NewsDateTime = CURRENT_TIMESTAMP()") or die(mysqli_error());
 			header("Location: $PHP_SELF?session_id=$session");
 		}
 	} else if (isset($modify_submit)) {
-		$news_subject = trim($_POST['news_subject']);
-		$news_picture_text = trim($_POST['news_picture_text']);
-		$news_content = trim($_POST['news_content']);
 		$news_id = $_POST['news_id'];
+		$news_subject = trim($_POST['news_subject']);
+		$news_picture_info = trim($_POST['news_picture_info']);
+		$news_content = trim($_POST['news_content']);
 		$news_content = str_replace("\r\n", '<br>', $news_content);
 
 		if (!get_magic_quotes_gpc()) {
 			$news_subject = addslashes($news_subject);
-			$news_picture_text = addslashes($news_picture_text);
+			$news_picture_info = addslashes($news_picture_info);
 			$news_content = addslashes($news_content);
 		}
 		if ($news_subject != '') {
-			mysqli_query($db_connect, "UPDATE team_news SET news_subject = '$news_subject', news_content = '$news_content', news_picture_text = '$news_picture_text', news_date = CURRENT_TIMESTAMP() WHERE news_id = '$news_id'") or die(mysqli_error());
+			mysqli_query($db_connect, "UPDATE team_news SET NewsSubject = '$news_subject', NewsContent = '$news_content', NewsPictureInfo = '$news_picture_info', NewsDateTime = CURRENT_TIMESTAMP() WHERE NewsID = '$news_id'") or die(mysqli_error());
 		}
 		header("Location: $HTTP_REFERER");
 
 	} else if (isset($delete_submit)) {
 		$news_id = $_POST['news_id'];
-		mysqli_query($db_connect, "DELETE FROM team_news WHERE news_id = '$news_id'") or die(mysqli_error());
+		mysqli_query($db_connect, "DELETE FROM team_news WHERE NewsID = '$news_id'") or die(mysqli_error());
 		header("Location: $PHP_SELF?session_id=$session");
 	}
 	echo "<!DOCTYPE html>\n";
@@ -82,7 +82,15 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "</form>\n";
 	} else if ($action == 'modify') {
 		$news_id = $_REQUEST['news_id'];
-		$get_news = mysqli_query($db_connect, "SELECT * FROM team_news WHERE news_id = '$news_id' LIMIT 1") or die(mysqli_error());
+		$get_news = mysqli_query($db_connect, "SELECT
+			NewsID AS news_id,
+			NewsSubject AS news_subject,
+			NewsContent AS news_content,
+			NewsPictureInfo AS news_picture_info
+			FROM team_news
+			WHERE NewsID = '$news_id'
+			LIMIT 1
+		") or die(mysqli_error($db_connect));
 		$data = mysqli_fetch_array($get_news);
 
 		$data['news_content'] = str_replace('<br>', "\r\n", $data['news_content']);
@@ -96,7 +104,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<td align='left' valign='top' colspan='2'>News Content:<br><textarea name='news_content' cols='40' rows='10'>".$data['news_content']."</textarea></td>\n";
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top'>Picture Text:</td>\n";
-		echo "<td align='left' valign='top'><input type='text' name='news_picture_text' value='".$data['news_picture_text']."'></td>\n";
+		echo "<td align='left' valign='top'><input type='text' name='news_picture_info' value='".$data['news_picture_info']."'></td>\n";
 		echo "</tr>\n";
 		echo "</table>\n";
 		echo "<input type='submit' name='modify_submit' value='Modify News'>\n";
@@ -108,7 +116,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 
 		echo "<hr width='100%'>\n";
 		echo "<form enctype='multipart/form-data' method='post' action='image_upload.php?session_id=".$session."'>\n";
-		echo "<b>Upload Picture to this News</b><br>\n";
+		echo "<b>Upload Picture To This News</b><br>\n";
 		echo "<input type='hidden' name='MAX_FILE_SIZE' value='8000000'>\n";
 		echo "<input name='image_file' type='file'>\n";
 		echo "<input name='action' type='hidden' value='10'>\n";
@@ -120,23 +128,23 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 
 		if (file_exists($image_url)) {
 			echo "<img src='".$image_url."' alt=''>";
-			echo "<br><a href='delete_picture.php?session_id=".$session."&amp;news_id=".$news_id."&amp;action=10&amp;type=jpg'>Delete this Picture</a>";
+			echo "<br><a href='delete_picture.php?session_id=".$session."&amp;news_id=".$news_id."&amp;action=10&amp;type=jpg'>Delete This Picture</a>";
 		} else if (file_exists($image_url2)) {
 			echo "<img src='".$image_url2."' alt=''>";
-			echo "<br><a href='delete_picture.php?session_id=".$session."&amp;news_id=".$news_id."&amp;action=10&amp;type=png'>Delete this Picture</a>";
+			echo "<br><a href='delete_picture.php?session_id=".$session."&amp;news_id=".$news_id."&amp;action=10&amp;type=png'>Delete This Picture</a>";
 		} else {
 			echo "<img src='../images/no_image.png' alt='' width='100' height='100'>";
 		}
 	}
 
 	echo "</td>\n";
-	echo "<td align='left' valign='top'>\n";
-	$get_news = mysqli_query($db_connect, "SELECT * FROM team_news ORDER BY news_date DESC") or die(mysqli_error());
+	echo "<td align='left' valign='top'>";
+	$get_news = mysqli_query($db_connect, "SELECT NewsID AS news_id, NewsSubject AS news_subject, NewsDateTime AS news_date FROM team_news ORDER BY news_date DESC") or die(mysqli_error());
 	
 	if (mysqli_num_rows($get_news) < 1) {
-		echo "<b>No News so far in Database</b>";
+		echo "<b>No News In Database</b>";
 	} else {
-		echo "<b>News so far in Database:</b><br><br>";
+		echo "<b>News In Database:</b><br><br>";
 		while($data = mysqli_fetch_array($get_news)) {
 			echo "<a href='".$PHP_SELF."?session_id=".$session."&amp;action=modify&amp;news_id=".$data['news_id']."'>".$data['news_subject']."</a><br>\n";
 		}

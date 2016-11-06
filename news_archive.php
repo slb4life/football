@@ -12,11 +12,11 @@ echo "</tr><tr>\n";
 echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORBOTTOM)."'>\n";
 echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
 $get_news = mysqli_query($db_connect, "SELECT
-	N.news_id AS news_id,
-	N.news_subject AS news_subject,
-	DATE_FORMAT(N.news_date, '$how_to_print') AS news_date
-	FROM team_news N
-	ORDER BY N.news_date DESC, N.news_id DESC
+	DATE_FORMAT(NewsDateTime, '$how_to_print') AS news_date,
+	NewsID AS news_id,
+	NewsSubject AS news_subject
+	FROM team_news
+	ORDER BY news_date DESC, news_id DESC
 	LIMIT 5
 ") or die(mysqli_error());
 

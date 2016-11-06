@@ -193,11 +193,11 @@ if (!isset($news_id)) {
 	echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORBOTTOM)."'>\n";
 	echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
 	$get_news = mysqli_query($db_connect, "SELECT
-		N.news_id AS news_id,
-		N.news_subject AS news_subject,
-		N.news_content AS news_content,
-		DATE_FORMAT(N.news_date, '$how_to_print') AS news_date
-		FROM team_news AS N
+		DATE_FORMAT(NewsDateTime, '$how_to_print') AS news_date,
+		NewsID AS news_id,
+		NewsSubject AS news_subject,
+		NewsContent AS news_content
+		FROM team_news
 		ORDER BY news_date DESC, news_id DESC
 		LIMIT 5
 	") or die(mysqli_error());
@@ -237,19 +237,20 @@ if (!isset($news_id)) {
 		$news_id = 1;
 	}
 	$get_news = mysqli_query($db_connect, "SELECT
-		N.news_id AS news_id,
-		N.news_subject AS news_subject,
-		N.news_content AS news_content,
-		N.news_picture_text AS news_picture_text,
-		DATE_FORMAT(N.news_date, '$how_to_print') AS news_date
-		FROM team_news AS N
-		WHERE news_id = '$news_id'
+		DATE_FORMAT(NewsDateTime, '$how_to_print') AS news_date,
+		NewsID AS news_id,
+		NewsSubject AS news_subject,
+		NewsContent AS news_content,
+		NewsPictureInfo AS news_picture_info
+		FROM team_news
+		WHERE NewsID = '$news_id'
 		LIMIT 1
 	") or die(mysqli_error());
 	$data = mysqli_fetch_array($get_news);
 	$data['news_content'] = str_replace('\r\n', '<br>', $data['news_content']);
 	mysqli_free_result($get_news);
 
+	echo "<br>";
 	echo "<table align='center' width='100%' cellspacing='0' cellpadding='0' border='0' bgcolor='#".(BORDERCOLOR)."'>\n";
 	echo "<tr>\n";
 	echo "<td>\n";
@@ -272,7 +273,7 @@ if (!isset($news_id)) {
 		}
 		echo "<table width='10%' align='right' cellspacing='5' cellpadding='5' border='0'>\n";
 		echo "<tr>\n";
-		echo "<td align='center' valign='top'><img src='".$image_url."' alt=''><br><small>".$data['news_picture_text']."</small></td>\n";
+		echo "<td align='center' valign='top'><img src='".$image_url."' alt=''><br><small>".$data['news_picture_info']."</small></td>\n";
 		echo "</tr>\n";
 		echo "</table>\n";
 	}
