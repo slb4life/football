@@ -49,9 +49,9 @@ if (SHOW_NEXT_MATCH == 1) {
 			}
 			echo "<br>\n";
 			$get_preview = mysqli_query($db_connect, "SELECT							
-				P.PreviewText AS preview_text
-				FROM team_previews AS P
-				WHERE P.PreviewMatchID = '$data[match_id]'
+				PreviewText AS preview_text
+				FROM team_previews
+				WHERE PreviewMatchID = '$data[match_id]'
 				LIMIT 1
 			") or die(mysqli_error());
 			$data = mysqli_fetch_array($get_preview);

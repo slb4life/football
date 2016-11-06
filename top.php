@@ -190,13 +190,13 @@ if (SHOW_FEATURED_PLAYER == 1) {
 	echo "</tr><tr>\n";
 	echo "<td align='left' valign='top' bgcolor='#".(CELLBGCOLORBOTTOM)."'>";
 	$get_featured_player = mysqli_query($db_connect, "SELECT
-		P.PlayerID AS player_id,
-		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
-		P.PlayerDescription AS player_description,
-		P.PlayerNumber AS player_number
-		FROM team_players AS P
-		WHERE P.PlayerDescription != ''
-		AND P.PlayerPublish = '1'
+		CONCAT(PlayerFirstName, ' ', PlayerLastName) AS player_name,
+		PlayerID AS player_id,
+		PlayerNumber AS player_number,
+		PlayerDescription AS player_description
+		FROM team_players
+		WHERE PlayerDescription != ''
+		AND PlayerPublish = '1'
 		ORDER BY RAND()
 		LIMIT 1
 	") or die(mysqli_error());

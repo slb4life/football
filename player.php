@@ -17,7 +17,7 @@ if ($id == '' || !is_numeric($id)) {
 	$id = 1;
 }
 $get_player_info = mysqli_query($db_connect, "SELECT
-	CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
+	CONCAT(PlayerFirstName, ' ', PlayerLastName) AS player_name,
 	PlayerID AS player_id,
 	PlayerNumber AS player_nember,
 	PlayerDescription AS player_description,
@@ -28,8 +28,8 @@ $get_player_info = mysqli_query($db_connect, "SELECT
 	PlayerPC AS player_pc,
 	PlayerShowStats AS show_stats,
 	PlayerPositionID AS player_position
-	FROM (team_players AS P)
-	WHERE P.PlayerID = '$id'
+	FROM team_players
+	WHERE PlayerID = '$id'
 	LIMIT 1
 ") or die(mysqli_error());
 $player_data = mysqli_fetch_array($get_player_info);
@@ -203,8 +203,8 @@ if (!isset($season_id_page)) {
 		echo "<input type='submit' name='submit2' value='".$locale_change."'>\n";
 	}
 	$sql = "SELECT
-		P.PlayerID AS player_id,
 		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
+		P.PlayerID AS player_id,
 		P.PlayerPublish AS publish
 		FROM (team_seasons AS S)
 		LEFT OUTER JOIN team_players AS P ON P.PlayerID = S.SeasonPlayerID
