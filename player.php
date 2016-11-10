@@ -16,7 +16,7 @@ $id = $_REQUEST['id'];
 if ($id == '' || !is_numeric($id)) {
 	$id = 1;
 }
-$get_player_info = mysqli_query($db_connect, "SELECT
+$get_player = mysqli_query($db_connect, "SELECT
 	CONCAT(PlayerFirstName, ' ', PlayerLastName) AS player_name,
 	PlayerID AS player_id,
 	PlayerNumber AS player_nember,
@@ -32,8 +32,8 @@ $get_player_info = mysqli_query($db_connect, "SELECT
 	WHERE PlayerID = '$id'
 	LIMIT 1
 ") or die(mysqli_error());
-$player_data = mysqli_fetch_array($get_player_info);
-mysqli_free_result($get_player_info);
+$player_data = mysqli_fetch_array($get_player);
+mysqli_free_result($get_player);
 
 echo "<form method='post' action='change.php'>\n";
 echo "<input name='script_name' type='hidden' value='".$script_name."'>\n";

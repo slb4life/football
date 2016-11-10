@@ -12,7 +12,7 @@ echo "<td align='center' bgcolor='#".(CELLBGCOLORBOTTOM)."'>\n";
 echo "<table width='100%' cellspacing='1' cellpadding='2' border='0'>\n";
 echo "<tr>\n";
 echo "<td align='left' valign='middle' bgcolor='#".(CELLBGCOLORTOP)."'>\n";
-$query = mysqli_query($db_connect, "SELECT
+$get_preview = mysqli_query($db_connect, "SELECT
 	P.PreviewText AS preview_text,
 	P.PreviewTextUnder AS preview_text_under,
 	P.PreviewTickets AS preview_tickets,
@@ -33,11 +33,11 @@ $query = mysqli_query($db_connect, "SELECT
 	LIMIT 1
 ") or die(mysqli_error());
 //$opponent_id_record = $opponent_id;
-$data = mysqli_fetch_array($query);
+$data = mysqli_fetch_array($get_preview);
 $match_season_id = $data['match_season_id'];
 $match_time_unix = $data['match_time_unix'];
 $opponent_id = $data['opponent_id'];
-mysqli_free_result($query);
+mysqli_free_result($get_preview);
 
 $today = getdate();
 $current_month = $today['mon'];
@@ -88,7 +88,7 @@ $get_squad = mysqli_query($db_connect, "SELECT
 	AND P.PlayerInSquadList = '1'
 	ORDER BY player_position
 ") or die(mysqli_error());
-$injured_query = mysqli_query($db_connect, "SELECT
+$get_injured = mysqli_query($db_connect, "SELECT
 	CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
 	P.PlayerID AS player_id,
 	P.PlayerPublish AS publish,
@@ -97,11 +97,11 @@ $injured_query = mysqli_query($db_connect, "SELECT
 	WHERE P.PlayerID = I.InjuredPlayerID
 	AND I.InjuredMatchID = '$id'
 ") or die(mysqli_error());
-while($data = mysqli_fetch_array($injured_query)) {
+while($data = mysqli_fetch_array($get_injured)) {
 	$check[] = $data['player_id'];
 }
 if ($current_time_unix < $match_time_unix) {
-	$suspended_query = mysqli_query($db_connect, "SELECT
+	$get_suspended = mysqli_query($db_connect, "SELECT
 		CONCAT(P.PlayerFirstName, ' ', P.PlayerLastName) AS player_name,
 		P.PlayerID AS player_id,
 		P.PlayerPublish AS publish,
@@ -110,7 +110,7 @@ if ($current_time_unix < $match_time_unix) {
 		WHERE P.PlayerID = S.SuspendedPlayerID
 		AND S.SuspendedMatchID = '$id'
 	") or die(mysqli_error());
-	while($data = mysqli_fetch_array($suspended_query)) {
+	while($data = mysqli_fetch_array($get_suspended)) {
 		$check[] = $data['player_id'];
 	}
 	$qty_check = count($check);
@@ -146,12 +146,12 @@ if ($current_time_unix < $match_time_unix) {
 
 	echo "<br>";
 
-	if (mysqli_num_rows($injured_query) > 0) {
-		mysqli_data_seek($injured_query, 0);
+	if (mysqli_num_rows($get_injured) > 0) {
+		mysqli_data_seek($get_injured, 0);
 	}
-	if (mysqli_num_rows($injured_query) > 0) {
+	if (mysqli_num_rows($get_injured) > 0) {
 		echo "<b>".$locale_injured.":</b><br>";
-		while($data = mysqli_fetch_array($injured_query)) {
+		while($data = mysqli_fetch_array($get_injured)) {
 			if ($data['publish'] == 1) {
 				echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>";
 			} else {
@@ -167,14 +167,14 @@ if ($current_time_unix < $match_time_unix) {
 		echo "<b>".$locale_injured.":</b><br>".$locale_nobody."<br>";
 	}
 	echo "<br>";
-	mysqli_free_result($injured_query);
+	mysqli_free_result($get_injured);
 
-	if (mysqli_num_rows($suspended_query) > 0) {
-		mysqli_data_seek($suspended_query, 0);
+	if (mysqli_num_rows($get_suspended) > 0) {
+		mysqli_data_seek($get_suspended, 0);
 	}
-	if (mysqli_num_rows($suspended_query) > 0) {
+	if (mysqli_num_rows($get_suspended) > 0) {
 		echo "<b>".$locale_suspended.":</b><br>";
-		while($data = mysqli_fetch_array($suspended_query)) {
+		while($data = mysqli_fetch_array($get_suspended)) {
 			if ($data['publish'] == 1) {
 				echo "<a href='player.php?id=".$data['player_id']."'>".$data['player_name']."</a>";
 			} else {
@@ -190,7 +190,7 @@ if ($current_time_unix < $match_time_unix) {
 		echo "<b>".$locale_suspended.":</b><br>".$locale_nobody."<br>";
 	}
 	echo "<br>";
-	mysqli_free_result($suspended_query);
+	mysqli_free_result($get_suspended);
 }
 echo "</td>\n";
 echo "</tr>\n";
@@ -209,7 +209,7 @@ echo "<tr align='left' bgcolor='#".(CELLBGCOLORTOP)."'>\n";
 echo "<td align='left' valign='middle'><font class='bigname'><b>".$locale_history."</b></font></td>\n";
 echo "</tr>\n";
 echo "</table>\n";
-$get_matches = mysqli_query($db_connect, "SELECT
+$get_match = mysqli_query($db_connect, "SELECT
 	M.MatchID AS id,
 	M.MatchPlaceID AS match_place_id,
 	M.MatchPublish AS publish,
@@ -250,7 +250,7 @@ $total_draws = 0;
 $total_goals = 0;
 $total_goals_against = 0;
 $i = 0;
-while($data = mysqli_fetch_array($get_matches)) {
+while($data = mysqli_fetch_array($get_match)) {
 	$id[$i] = $data['id'];
 	$match_date[$i] = $data['match_date'];
 	$match_type_name[$i] = $data['match_type_name'];
