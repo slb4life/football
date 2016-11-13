@@ -29,7 +29,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			FROM team_matches
 			WHERE MatchSeasonID = '$season_id'
 			ORDER BY match_date
-		")or die(mysqli_error());
+		") or die(mysqli_error());
 		mysqli_query($db_connect, "DELETE FROM team_suspended WHERE SuspendedPlayerID = '$suspended_player_id' AND SuspendedSeasonID = '$season_id'") or die(mysqli_error());
 		$i = 0;
 		while($mdata = mysqli_fetch_array($get_matches)) {

@@ -38,7 +38,7 @@ $get_match_details = mysqli_query($db_connect, "SELECT
 	AND M.MatchTypeID = MT.MatchTypeID
 	AND M.MatchOpponent = O.OpponentID
 	LIMIT 1
-")or die(mysqli_error());
+") or die(mysqli_error());
 
 $mdata = mysqli_fetch_array($get_match_details);
 mysqli_free_result($get_match_details);
