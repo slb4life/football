@@ -146,7 +146,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<td align='left' valign='top'>Last Name:</td>\n";
 		echo "<td align='left' valign='top'><input type='text' name='manager_last_name'></td>\n";
 		echo "</tr><tr>\n";
-		echo "<td align='left' valign='top'>Date of Birth:</td>\n";
+		echo "<td align='left' valign='top'>Date Of Birth:</td>\n";
 		echo "<td align='left' valign='top'>\n";
 		echo "<select name='dob_day'>\n";
 		for($i = 1 ; $i < 32 ; $i++) {
@@ -186,7 +186,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "</select>\n";
 		echo "</td>\n";
 		echo "</tr><tr>\n";
-		echo "<td align='left' valign='top'>Place of Birth:</td>\n";
+		echo "<td align='left' valign='top'>Place Of Birth:</td>\n";
 		echo "<td align='left' valign='top'><input type='text' name='manager_pob'></td>\n";
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top' colspan='2'>Profile:<br><textarea name='manager_profile' cols='40' rows='15'></textarea></td>\n";
@@ -250,7 +250,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "<td align='left' valign='top'>Last Name:</td>\n";
 		echo "<td align='left' valign='top'><input type='text' name='manager_last_name' value='".$pdata['manager_last_name']."'></td>\n";
 		echo "</tr><tr>\n";
-		echo "<td align='left' valign='top'>Date of Birth:</td>\n";
+		echo "<td align='left' valign='top'>Date Of Birth:</td>\n";
 		echo "<td align='left' valign='top'>";
 		echo "<select name='dob_day'>";
 		for($i = 1 ; $i < 32 ; $i++) {
@@ -290,7 +290,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "</select>\n";
 		echo "</td>\n";
 		echo "</tr><tr>\n";
-		echo "<td align='left' valign='top'>Place of Birth:</td>\n";
+		echo "<td align='left' valign='top'>Place Of Birth:</td>\n";
 		echo "<td align='left' valign='top'><input type='text' name='manager_pob' value='".$pdata['manager_pob']."'></td>\n";
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top' colspan='2'>Profile:<br>\n";
@@ -589,7 +589,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 	if ($get_total < 1) {
 		echo "<b>No Managers.</b>";
 	} else {
-		echo "<b>Managers: ".$season_name."</b><br><br>Number of Managers: ".$get_total."<br><br>";
+		echo "<b>Managers: ".$season_name."</b><br><br>Number Of Managers: ".$get_total."<br><br>";
 		while($data = mysqli_fetch_array($get_managers)) {
 			echo "<a href='".$PHP_SELF."?session_id=".$session."&amp;action=modify&amp;manager_id=".$data['manager_id']."'>".$data['manager_name']."</a>";
 
@@ -601,7 +601,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		}
 	}
 	echo "<br>";
-	echo "NB = This Manager is not Published yet.";
+	echo "NB = This Manager Is Not Published Yet.";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";

@@ -68,10 +68,10 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			LIMIT 1
 		") or die(mysqli_error());
 		while($data = mysqli_fetch_array($get_matches)) {
-			echo "<b>".$data['match_date'].", vs. ".$data['opponent_name']."</b><br>".$data['match_place_name']."<br>";
+			echo "<b>".$data['match_date'].", vs. ".$data['opponent_name']."</b><br>".$data['match_place_name']."";
 
 			if ($data['match_neutral'] == 1) {
-				echo "(Neutral)";
+				echo " (Neutral)";
 				echo ": ".$data['match_type_name']."<br><br>\n";
 			}
 		}
@@ -136,10 +136,10 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 	} else {
 		echo "<b>Matches In ".$season_name.":</b><br><br>";
 		while($data = mysqli_fetch_array($get_matches)) {
-			echo "<a href='".$PHP_SELF."?session_id=".$session."&amp;action=modify&amp;match_id=".$data['match_id']."'>".$data['match_date'].", vs. ".$data['opponent_name']."</a><br>".$data['match_place_name']."<br>";
+			echo "<a href='".$PHP_SELF."?session_id=".$session."&amp;action=modify&amp;match_id=".$data['match_id']."'>".$data['match_date'].", vs. ".$data['opponent_name']."</a><br>".$data['match_place_name']."";
 
 			if ($data['match_neutral'] == 1) {
-				echo "(Neutral)";
+				echo " (Neutral)";
 				echo ": ".$data['match_type_name']."<br><br>\n";
 			}
 		}

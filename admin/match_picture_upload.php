@@ -94,7 +94,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			echo "<b>".$data['match_date'].", vs. ".$data['opponent_name']."<br>".$data['match_place']."";
 
 			if ($data['neutral'] == 1) {
-				echo "(neutral)";
+				echo " (Neutral)";
 			}
 			echo ": ".$data['match_type_name']."</b><br><br>\n";
 		}
@@ -173,7 +173,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 			echo "<a href='".$PHP_SELF."?session_id=".$session."&amp;action=modify&amp;match_id=".$data['match_id']."'>".$data['match_date'].", vs. ".$data['opponent_name']."</a><br>".$data['match_place']."";
 
 			if ($data['neutral'] == 1) {
-				echo "(neutral)";
+				echo " (Neutral)";
 				echo ": ".$data['match_type_name']."";
 			}
 			if ($data['publish'] == 1) {

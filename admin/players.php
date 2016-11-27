@@ -210,7 +210,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "</select>\n";
 		echo "</td>\n";
 		echo "</tr><tr>\n";
-		echo "<td align='left' valign='top'>Date of Birth:</td>\n";
+		echo "<td align='left' valign='top'>Date Of Birth:</td>\n";
 		echo "<td align='left' valign='top'>";
 		echo "<select name='dob_day'>";
 		for($i = 1 ; $i < 32 ; $i++) {
@@ -250,7 +250,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "</select>\n";
 		echo "</td>\n";
 		echo "</tr><tr>\n";
-		echo "<td align='left' valign='top'>Place of Birth:</td>\n";
+		echo "<td align='left' valign='top'>Place Of Birth:</td>\n";
 		echo "<td align='left' valign='top'><input type='text' name='player_pob'></td>\n";
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top'>Height:</td>\n";
@@ -331,7 +331,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "</select>\n";
 		echo "</td>\n";
 		echo "</tr><tr>\n";
-		echo "<td align='left' valign='top'>Date of Birth:</td>\n";
+		echo "<td align='left' valign='top'>Date Of Birth:</td>\n";
 		echo "<td align='left' valign='top'>";
 		echo "<select name='dob_day'>";
 		for($i = 1 ; $i < 32 ; $i++) {
@@ -371,7 +371,7 @@ if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 		echo "</select>\n";
 		echo "</td>\n";
 		echo "</tr><tr>\n";
-		echo "<td align='left' valign='top'>Place of Birth:</td>\n";
+		echo "<td align='left' valign='top'>Place Of Birth:</td>\n";
 		echo "<td align='left' valign='top'><input type='text' name='player_pob' value='".$pdata['player_pob']."'></td>\n";
 		echo "</tr><tr>\n";
 		echo "<td align='left' valign='top'>Height:</td>\n";
