@@ -6,11 +6,13 @@ $locale_latest_match = 'Latest Match';
 $locale_quick_links = 'Quick Links';
 $locale_news = 'News';
 $locale_latest_news = 'Latest News';
+$locale_news = 'News';
+$locale_no_news = 'No News Add Yet.';
 $locale_player_stats = 'Player Stats';
 $locale_players = 'Players';
 $locale_matches = 'Matches';
 $locale_this_season = 'This Season';
-$locale_record_book = 'Recordbook';
+$locale_record_book = 'Record Book';
 $locale_this_day = 'This Day In History';
 $locale_special_links = 'Specials';
 $locale_timeline = 'Timeline';
@@ -19,12 +21,15 @@ $locale_search_top = 'Search';
 $locale_search = 'Search';
 $locale_search_more = 'Type Part Of The Player Or Opponent Name And Press Search';
 $locale_next_match = 'Next Match';
-$locale_season_ended = 'Season has ended';
-$locale_top_scorers = 'TOP Scorers';
+$locale_start_of_season = 'Start of Season';
+$locale_end_of_season = 'End of Season';
 $locale_top_appearances = 'TOP Appearances';
+$locale_top_scorers = 'TOP Goal Scorers';
+$locale_top_assists = 'TOP Goal Assists';
 $locale_top_bookings = 'TOP Bookings';
 $locale_featured_player = 'Featured Player';
 $locale_contact = 'Contact';
+$locale_none = 'None';
 
 // Player Positions
 $locale_goalkeeper = 'Goalkeeper';
@@ -46,6 +51,7 @@ $locale_name = 'Name';
 $locale_openings_short = 'Openin.';
 $locale_to_the_field_short = 'Subst.';
 $locale_goals_short = 'Goals';
+$locale_goal_assists_short = 'Assists';
 $locale_yellow_cards_short = 'Yellows';
 $locale_red_cards_short = 'Reds';
 $locale_by_number = 'By Number';
@@ -53,6 +59,7 @@ $locale_alphabetically = 'Alphabetically';
 $locale_in_opening = 'In Opening Squad';
 $locale_substituted = 'Substituted In';
 $locale_goals_long = 'Goals';
+$locale_goal_assists_long = 'Goal Assists';
 $locale_yellow_cards_long = 'Yellow Cards';
 $locale_red_cards_long = 'Red Cards';
 $locale_match_statistics = 'Matches';
@@ -77,9 +84,9 @@ $locale_lose_proc_short = 'L%';
 
 // Matches.php
 $locale_date_and_time = 'Date & Time';
-$locale_match_type = 'Comp.';
-$locale_hometeam = 'Home Team';
-$locale_awayteam = 'Away Team';
+$locale_match_type = 'Match Type';
+$locale_home_team = 'Home Team';
+$locale_away_team = 'Away Team';
 $locale_final_score = 'Final Score';
 
 // Match_details.php
@@ -97,7 +104,6 @@ $locale_penalty_short = 'Pen.';
 $locale_opening_squads = 'Opening Squads';
 $locale_substitutes = 'Substitutes';
 $locale_substitutions = 'Substitutions';
-$locale_none = 'None';
 $locale_other_statistics = 'Other Statistics';
 $locale_shots = 'Shots';
 $locale_shots_on_goal = 'Shots On Goal';
@@ -135,9 +141,11 @@ $locale_height = 'Height';
 $locale_playing_career = 'Playing Career';
 $locale_link_to_stats = 'Link To Player Stats';
 $locale_previous_clubs = 'Previous Clubs';
-$locale_latest_yellow_cards = 'Latest 10 Matches Where Played Has Been Booked';
-$locale_latest_red_cards = 'Latest 10 Matches Where Played Has Been Sent Off';
+$locale_latest_goal_assists = 'Latest 10 Matches Where Player Has Assist On One Or More Goals';
+$locale_latest_yellow_cards = 'Latest 10 Matches Where Player Has Been Booked';
+$locale_latest_red_cards = 'Latest 10 Matches Where Player Has Been Sent Off';
 $locale_opponent = 'Opponent';
+$locale_assists = 'Assists';
 $locale_cards = 'Cards';
 $locale_show_season_stats = 'Show Season By Season';
 
@@ -155,8 +163,7 @@ $locale_change_opponent = 'Change Opponent';
 $locale_date = 'Date';
 $locale_stadium = 'Stadium';
 $locale_opponent_stats_not_complete = 'Opponent Statistics Are Not Complete...';
-$locale_players_played_for_this_team = 'Our Players Played For This Team';
-$locale_no_players_have_played_for_this_team = 'No Our Players Have Played For This Team...';
+$locale_our_players_that_played_for_this_team = 'Our Players That Played For This Team';
 
 // Record_book.php
 $locale_record_book = 'Records';
@@ -174,8 +181,8 @@ $locale_lowest_crowd_in_home = 'Smallest Attendance In Home Match';
 $locale_lowest_crowd_in_away = 'Smallest Attendance In Away Match';
 
 // Search_engine.php
-$locale_players_name = 'Player\'s name';
-$locale_opponents_name = 'Opponent\'s name';
+$locale_players_name = 'Player\'s Name';
+$locale_opponents_name = 'Opponent\'s Name';
 $locale_search_results = 'Search Results';
 $locale_no_results = 'No Results.';
 
@@ -227,9 +234,10 @@ $locale_winning_percent = 'Winning Percent';
 $locale_draw_percent = 'Drawing Percent';
 $locale_losing_percent = 'Losing Percent';
 $locale_individual_leaders = 'Individual Leaders';
-$locale_most_goals = 'Most Goals';
-$locale_most_booked = 'Most Booked';
 $locale_most_appearances = 'Most Appearances';
+$locale_most_goals = 'Most Goal Scorers';
+$locale_most_assists = 'Most Goal Assists';
+$locale_most_booked = 'Most Booked';
 
 // This_season.php
 $locale_all_players = 'All Players';
@@ -238,7 +246,7 @@ $locale_youngest_player = 'Youngest Player';
 $locale_oldest_player = 'Oldest Player';
 
 // News Archive
-$locale_to_news_archive = 'To News Archive';
 $locale_news_archive = 'News Archive';
+$locale_no_news_archive = 'No News Add to Archive Yet.';
 
 ?>
