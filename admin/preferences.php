@@ -4,7 +4,7 @@ $session_id = $_REQUEST['session_id'];
 $session = $_SESSION['session'];
 
 if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
-	print("Authorization Failed.<br><a href='index.php'>Restart, Please</a>");
+	echo "Authorization Failed.<br><a href='index.php'>Restart, Please</a>";
 } else {
 	include('user.php');
 	$db_connect = mysqli_connect("$db_host", "$db_user", "$db_password", "$db_name") or die(mysqli_error());

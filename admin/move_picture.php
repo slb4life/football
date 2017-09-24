@@ -3,7 +3,7 @@ session_start();
 $session_id = $_REQUEST['session_id'];
 $session = $_SESSION['session'];
 
-if (!isset($session_id) || $session_id != "$session") {
+if (!isset($session_id) || $session_id != "$session" || $session_id == '') {
 	echo "Authorization Failed.<br><a href='index.php'>Restart, Please</a>";
 } else {
 	include('user.php');
